@@ -1,0 +1,13 @@
+:root{font-family:system-ui,-apple-system,sans-serif;color-scheme:dark;--ink:#e9edf2;--muted:#b0bac9;--panel:#161c26ed;--border:#445064;--accent:#ffbd75}
+:root[data-background="light"]{color-scheme:light;--ink:#18212b;--muted:#4e5c6a;--panel:#fffffff2;--border:#ccd3dd;--accent:#914308}
+*{box-sizing:border-box}html,body,main{width:100%;height:100%;margin:0;overflow:hidden;background:transparent;color:var(--ink)}
+[hidden]{display:none!important}main{position:relative}canvas{display:block;width:100%;height:100%;touch-action:none;outline-offset:-4px;cursor:grab}canvas:active{cursor:grabbing}
+#status{position:absolute;inset:0;z-index:2;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;padding:32px;text-align:center;background:var(--panel)}
+#status strong{font-size:17px;font-weight:600}#status p{font-size:13px;line-height:1.7;color:var(--muted);max-width:440px;margin:0}
+.spinner{width:30px;height:30px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite}
+#hint{position:absolute;top:20px;left:16px;right:16px;text-align:center;font-size:12px;line-height:1.6;color:var(--muted);pointer-events:none;margin:0}
+#controls{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);display:flex;align-items:center;justify-content:center;gap:4px;max-width:calc(100% - 28px);width:max-content;padding:7px;border:1px solid var(--border);border-radius:14px;background:var(--panel);box-shadow:0 8px 32px #0002;flex-wrap:wrap}
+button,select{font:inherit;font-size:12px;min-height:36px;min-width:36px;padding:7px 12px;border:1px solid transparent;border-radius:8px;background:transparent;color:var(--ink);cursor:pointer}
+button:hover,select:hover{border-color:var(--border)}button[aria-pressed="true"]{color:var(--accent);border-color:var(--border)}button:focus-visible,select:focus-visible,canvas:focus-visible{outline:2px solid var(--accent);outline-offset:2px}select{max-width:180px;background:var(--panel)}
+@keyframes spin{to{transform:rotate(360deg)}}@media(prefers-reduced-motion:reduce){.spinner{animation:none}}
+@media(max-width:480px){#controls{bottom:14px}button,select{padding:6px 8px;font-size:11px}#hint{font-size:11px}}

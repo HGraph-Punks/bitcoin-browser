@@ -1,0 +1,75 @@
+/* About shares the shell's single page scrollbar; details stay in document flow. */
+.about-page {
+  max-width: 1040px;
+  margin: 0 auto;
+  container-type: inline-size;
+  overflow-wrap: anywhere;
+}
+
+.about-hero {
+  padding: clamp(24px, 4vw, 44px);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: radial-gradient(ellipse at top right, var(--accent-bg), transparent 65%), var(--surface);
+}
+
+.about-hero .page-header { margin: 0; }
+.about-hero .page-header h1 { font-size: clamp(30px, 4vw, 46px); letter-spacing: -.04em; }
+.about-hero .page-header p { margin-top: 12px; color: var(--text); font-size: 19px; }
+.about-intro { max-width: 650px; margin: 14px 0 0; color: var(--text-2); font-size: 14px; line-height: 1.75; }
+.about-build-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+.about-tag { border: 1px solid var(--border-strong); border-radius: 7px; padding: 6px 9px; color: var(--text-2); background: var(--surface); font-size: 11px; line-height: 1.5; }
+
+.about-story-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-top: 20px; }
+.about-card { min-width: 0; padding: clamp(22px, 3vw, 30px); border: 1px solid var(--border); border-radius: 16px; background: var(--surface); }
+.about-card h2 { margin: 10px 0 14px; font-size: 24px; font-weight: 650; letter-spacing: -.025em; }
+.about-card p { margin: 0; color: var(--text-2); font-size: 13px; line-height: 1.75; }
+.about-card .about-credit { margin-top: 20px; font-size: 12px; }
+.about-creator-heading { display: flex; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 18px; }
+.about-creator-heading > div { min-width: 0; }
+.about-creator-heading h2 { margin: 8px 0 0; }
+.about-creator-logo { display: block; flex: 0 0 72px; width: 72px; height: 72px; object-fit: contain; image-rendering: auto; }
+.about-creator-logo[hidden] { display: none; }
+.about-website-link { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; max-width: 100%; margin-top: 16px; padding: 8px 12px; border: 1px solid var(--border-strong); border-radius: 8px; background: var(--surface-2); color: var(--text); font-size: 13px; font-weight: 550; line-height: 1.6; text-decoration: underline; text-underline-offset: 3px; }
+.about-website-link:hover { background: var(--hover); border-color: var(--accent); }
+.about-website-link:focus-visible { outline:2px solid var(--focus-ring); outline-offset: 3px; }
+.about-website-link > span { flex: 0 0 auto; color: var(--text-2); }
+.about-card .about-website-note { margin-top: 7px; font-size: 11px; }
+
+.about-principles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; padding: 28px 6px; }
+.about-principles h2, .about-help h2, .about-technical-grid h2 { margin: 0 0 8px; font-size: 14px; font-weight: 650; }
+.about-principles p, .about-help p, .about-technical-grid p, .about-license > p { margin: 0; color: var(--text-2); font-size: 12px; line-height: 1.7; }
+.about-help { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; margin-bottom: 24px; padding: 20px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); }
+.about-help > div { flex: 1 1 260px; }
+.about-help > .button { flex: 0 1 auto; }
+.about-page .button { min-height: 40px; height: auto; padding-top: 9px; padding-bottom: 9px; white-space: normal; line-height: 1.5; }
+
+.about-disclosure { border-top: 1px solid var(--border); }
+.about-disclosure > summary { min-height: 52px; padding: 16px 8px; border-radius: 6px; color: var(--text-2); font-weight: 550; line-height: 1.6; cursor: pointer; }
+.about-disclosure > summary:hover { background: var(--surface); color: var(--text); }
+.about-disclosure > summary:focus-visible { outline:2px solid var(--focus-ring); outline-offset: 2px; }
+.about-technical-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: 30px; padding: 12px 8px 28px; }
+.about-build-info { margin: 14px 0 0; }
+.about-build-info > div { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 12px; line-height: 1.6; }
+.about-build-info dt { color: var(--text-2); }
+.about-build-info dd { margin: 0; color: var(--text); }
+.about-technical-grid .button { margin-top: 12px; }
+.about-technical-grid h3 { margin: 24px 0 0; color: var(--text-2); font-size: 12px; font-weight: 550; }
+.about-folder-actions { display: flex; flex-wrap: wrap; gap: 0 8px; }
+.about-boundaries { padding: 0 8px 24px; }
+.about-boundaries h2 { margin: 0 0 10px; font-size: 14px; font-weight: 650; }
+.about-boundaries p { margin: 8px 0 0; color: var(--text-2); font-size: 12px; line-height: 1.7; }
+.about-license > p { padding: 8px; }
+.about-license-text { margin: 4px 0 24px; padding: 16px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); color: var(--text-2); white-space: pre-wrap; overflow-wrap: anywhere; font: 11px/1.7 ui-monospace, "SFMono-Regular", Consolas, monospace; }
+
+/* Container sizing also handles an open inspector and increased text zoom. */
+@container (max-width: 680px) {
+  .about-story-grid, .about-principles, .about-technical-grid { grid-template-columns: minmax(0, 1fr); }
+  .about-principles { gap: 20px; }
+  .about-technical-grid { gap: 24px; }
+}
+
+@media (max-width: 650px) {
+  .about-hero { padding: 24px 20px; }
+  .about-card { padding: 22px 20px; }
+}

@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <meta name="theme-color" content="#0a0c0f">
+  <title>Bitcoin Browser</title>
+  <link rel="icon" type="image/png" href="./assets/bitcoin-browser-logo.png">
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./branding.css">
+  <link rel="stylesheet" href="./donation.css">
+  <link rel="stylesheet" href="./inscriptions.css">
+  <link rel="stylesheet" href="./inscription-viewer.css">
+  <link rel="stylesheet" href="./collector-insights.css">
+  <link rel="stylesheet" href="./runes.css">
+  <link rel="stylesheet" href="./popular-assets.css">
+  <link rel="stylesheet" href="./node-setup.css">
+  <link rel="stylesheet" href="./home.css">
+  <link rel="stylesheet" href="./about.css">
+  <link rel="stylesheet" href="./sponsors.css">
+  <link rel="stylesheet" href="./ai.css">
+  <link rel="stylesheet" href="./release-ux.css">
+</head>
+<body>
+  <div id="app" class="app-shell" aria-busy="true" inert>
+    <button class="skip-content no-drag" data-command="skip-content" type="button">Skip to page content</button>
+    <header class="browser-chrome">
+      <div class="title-row">
+        <div class="window-spacer" aria-hidden="true"></div>
+        <button class="brand no-drag" data-command="home" type="button" aria-label="Bitcoin Browser home">
+          <img class="brand-mark app-logo" src="./assets/bitcoin-browser-logo.png" alt="" aria-hidden="true" width="30" height="30" draggable="false"><span class="brand-name">Bitcoin Browser</span>
+        </button>
+        <div class="title-status" id="title-status"><span class="status-dot unknown"></span><span>Starting</span></div>
+        <div class="chrome-actions no-drag">
+          <button class="icon-button" data-command="command-palette" type="button" aria-label="Open command palette" title="Command palette (Ctrl/Cmd+Shift+P)">⌘</button>
+          <button class="wallet-pill" data-command="wallet" type="button" id="wallet-pill"><span class="wallet-dot"></span><span>Connect wallet</span></button>
+          <button class="icon-button" data-command="settings" type="button" aria-label="Settings" title="Settings">⚙</button>
+        </div>
+      </div>
+      <div class="tab-row no-drag">
+        <div class="tabs" id="tabs" role="tablist" aria-label="Browser tabs"></div>
+        <button class="new-tab" id="new-tab" type="button" aria-label="New tab" title="New tab (Ctrl/Cmd+T)">+</button>
+        <div class="tab-fill"></div>
+      </div>
+      <div class="navigation-row no-drag">
+        <div class="nav-buttons">
+          <button class="icon-button" id="back" type="button" aria-label="Back" title="Back (Alt+Left)">←</button>
+          <button class="icon-button" id="forward" type="button" aria-label="Forward" title="Forward (Alt+Right)">→</button>
+          <button class="icon-button" id="reload" type="button" aria-label="Reload" title="Reload (Ctrl/Cmd+R)">↻</button>
+        </div>
+        <div class="omnibox-wrap">
+          <span class="omnibox-icon" id="omnibox-icon" aria-hidden="true">⌕</span>
+          <input id="omnibox" class="omnibox" role="combobox" aria-expanded="false" aria-haspopup="listbox" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="4096" aria-label="Browse Bitcoin" aria-autocomplete="list" aria-controls="omnibox-suggestions" placeholder="Enter an inscription, Rune, address, transaction or block…">
+          <span class="omnibox-source" id="omnibox-source" title="Current data source">AUTO</span>
+          <button class="omnibox-action" id="bookmark-current" type="button" aria-label="Bookmark current target" title="Bookmark">☆</button>
+          <div class="suggestions hidden" id="omnibox-suggestions" role="listbox" aria-label="Bitcoin lookups and saved items"></div>
+        </div>
+        <button class="source-button" data-command="providers" type="button" id="source-button"><span class="source-led"></span><span id="source-label">Sources</span><span>⌄</span></button>
+        <button class="icon-button" data-command="developer" type="button" id="developer-button" aria-label="Developer inspector" title="Developer inspector">{ }</button>
+      </div>
+    </header>
+
+    <div class="workspace">
+      <aside class="sidebar" aria-label="Primary navigation">
+        <nav>
+          <button class="side-item active" data-route="home" type="button" aria-label="Start" title="Start"><span class="side-icon" aria-hidden="true">⌂</span><span>Start</span></button>
+          <button class="side-item" data-route="inscriptions" type="button" aria-label="Explore inscriptions" title="Explore inscriptions"><span class="side-icon" aria-hidden="true">◈</span><span>Inscriptions</span></button>
+          <button class="side-item" data-route="runes" type="button" aria-label="Explore Runes" title="Explore Runes"><span class="side-icon" aria-hidden="true">ᚱ</span><span>Runes</span></button>
+          <button class="side-item" data-route="ai" type="button" aria-label="Ask Bitcoin with your local AI" title="Ask Bitcoin · local AI"><span class="side-icon" aria-hidden="true">✧</span><span>Ask Bitcoin</span></button>
+          <button class="side-item" data-route="bookmarks" type="button" aria-label="Bookmarks" title="Bookmarks"><span class="side-icon" aria-hidden="true">☆</span><span>Bookmarks</span><span class="side-count" id="bookmark-count"></span></button>
+          <button class="side-item" data-route="history" type="button" aria-label="History" title="History"><span class="side-icon" aria-hidden="true">◴</span><span>History</span></button>
+          <div class="side-divider"></div>
+          <button class="side-item" data-route="wallet" type="button" aria-label="Wallet" title="Wallet"><span class="side-icon" aria-hidden="true">◫</span><span>Wallet</span></button>
+          <button class="side-item" data-route="providers" type="button" aria-label="Data sources" title="Data sources"><span class="side-icon" aria-hidden="true">≋</span><span>Data sources</span></button>
+          <button class="side-item" data-route="services" type="button" aria-label="Local node" title="Local node"><span class="side-icon" aria-hidden="true">⛁</span><span>Local node</span></button>
+        </nav>
+        <div class="sidebar-bottom">
+          <button class="side-item" data-route="settings" type="button" aria-label="Settings" title="Settings"><span class="side-icon" aria-hidden="true">⚙</span><span>Settings</span></button>
+          <button class="side-item" data-route="sponsors" type="button" aria-label="Sponsors and sponsorship inquiries" title="Sponsors"><span class="side-icon" aria-hidden="true">♡</span><span>Sponsors</span></button>
+          <button class="side-item" data-route="about" type="button" aria-label="About Bitcoin Browser" title="About Bitcoin Browser"><span class="side-icon" aria-hidden="true">i</span><span>About</span></button>
+        </div>
+      </aside>
+
+      <main class="main-stage" id="main-stage" tabindex="-1" aria-label="Page content">
+        <div class="page-loading hidden" id="page-loading" role="status" aria-live="polite">
+          <span class="sr-only">Loading page data. Browsing controls remain available.</span>
+          <div class="loading-line" aria-hidden="true"></div>
+        </div>
+        <div id="page" class="page"></div>
+      </main>
+
+      <aside class="developer-drawer" id="developer-drawer" aria-label="Developer inspector" aria-hidden="true">
+        <div class="drawer-header">
+          <div><span class="eyebrow">Developer</span><strong>Protocol inspector</strong></div>
+          <button class="icon-button" id="close-developer" type="button" aria-label="Close developer inspector">×</button>
+        </div>
+        <div class="drawer-tabs" role="tablist">
+          <button class="drawer-tab active" id="drawer-tab-raw" data-drawer-tab="raw" type="button" role="tab" aria-selected="true" aria-controls="drawer-body" tabindex="0">Raw</button>
+          <button class="drawer-tab" id="drawer-tab-graph" data-drawer-tab="graph" type="button" role="tab" aria-selected="false" aria-controls="drawer-body" tabindex="-1">Recursion</button>
+          <button class="drawer-tab" id="drawer-tab-requests" data-drawer-tab="requests" type="button" role="tab" aria-selected="false" aria-controls="drawer-body" tabindex="-1">Sources</button>
+        </div>
+        <div class="drawer-body" id="drawer-body" role="tabpanel" aria-labelledby="drawer-tab-raw"></div>
+      </aside>
+    </div>
+
+    <footer class="status-bar">
+      <button class="status-segment" data-command="providers" type="button"><span class="status-dot unknown" id="network-dot"></span><span id="network-status">Checking sources</span></button>
+      <span class="status-separator"></span>
+      <button class="status-segment" data-command="settings" type="button"><span id="network-name">MAINNET</span></button>
+      <span class="status-fill"></span>
+      <span class="status-segment passive" id="privacy-status">Balanced privacy</span>
+      <span class="status-separator"></span>
+      <span class="status-segment passive" id="cache-status">Cache —</span>
+    </footer>
+  </div>
+
+  <div class="modal-backdrop hidden" id="modal-backdrop" aria-hidden="true">
+    <section class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" tabindex="-1"></section>
+  </div>
+  <div class="palette-backdrop hidden" id="palette-backdrop" aria-hidden="true">
+    <section class="command-palette" role="dialog" aria-modal="true" aria-label="Command palette" tabindex="-1">
+      <input id="palette-input" role="combobox" aria-label="Find a command or Bitcoin target" aria-controls="palette-results" aria-autocomplete="list" aria-expanded="false" autocomplete="off" spellcheck="false" placeholder="Type a command or Bitcoin target…">
+      <div id="palette-results" class="palette-results" role="listbox" aria-label="Commands and Bitcoin targets"></div>
+      <footer><span>↑↓ Navigate</span><span>↵ Select</span><span>Esc Close</span></footer>
+    </section>
+  </div>
+  <div class="toast-region" id="toasts" aria-live="polite" aria-atomic="false"></div>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

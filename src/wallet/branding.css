@@ -1,0 +1,2 @@
+/* Served from the Wallet Bridge's own origin; no cross-partition asset access. */
+header img.mark { display: block; flex: 0 0 40px; object-fit: contain; border-radius: 0; background: none; }

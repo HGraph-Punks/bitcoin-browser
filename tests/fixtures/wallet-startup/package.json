@@ -1,0 +1,6 @@
+{
+  "name": "wallet-startup-diagnostic",
+  "private": true,
+  "type": "module",
+  "main": "../../../scripts/diagnose-wallet-startup.mjs"
+}

@@ -1,0 +1,40 @@
+.inscription-collector-strip{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:9px 20px;border-bottom:1px solid var(--border);background:var(--surface)}
+.collector-badge{display:inline-block;max-width:100%;padding:4px 8px;border:1px solid var(--border-strong);border-radius:7px;color:var(--text-2);background:var(--surface);font-size:11px;line-height:1.5;overflow-wrap:anywhere}
+.collector-special{color:var(--text);background:var(--accent-bg);border-color:var(--accent)}
+.collector-strip-note{color:var(--text-2);font-size:11px;line-height:1.5}
+.collector-section{padding:16px 0;border-top:1px solid var(--border)}
+.collector-section:first-child{border-top:0;padding-top:2px}
+.collector-section h3{margin:0 0 12px;font-size:14px;color:var(--text)}
+.collector-section h4{margin:18px 0 10px;font-size:12px}
+.collector-section p{font-size:12px;line-height:1.7;color:var(--text-2);margin:8px 0}
+.collector-section .collector-note{font-size:11px}
+.collector-rarity{display:block;font-size:22px;color:var(--text);margin:10px 0}
+.collector-traits,.collector-facts{margin:12px 0;overflow-wrap:anywhere}
+.collector-traits>div,.collector-facts>div{padding:9px 0;border-bottom:1px solid var(--border)}
+.collector-traits dt,.collector-facts dt{font-size:11px;color:var(--text-2);line-height:1.6}
+.collector-traits dd,.collector-facts dd{margin:4px 0 0;color:var(--text);font-size:12px;line-height:1.65;unicode-bidi:plaintext}
+.collector-traits dt{font-weight:650;color:var(--text)}
+.collector-origin{display:block;color:var(--text-2);font-size:10px;margin-top:4px}
+.collector-guide{margin-top:14px}
+.collector-guide>summary{font-size:12px;line-height:1.6;min-height:32px;padding:7px 0;cursor:pointer;color:var(--text)}
+.collector-guide>summary:focus-visible,.collector-section .button:focus-visible{outline:2px solid var(--focus-ring);outline-offset:2px}
+.collector-section .button{height:auto;min-height:36px;max-width:100%;white-space:normal;overflow-wrap:anywhere;text-align:left;padding:7px 10px;line-height:1.5}
+.collector-parents .button{margin-bottom:7px}
+.collector-section .collector-warning{padding:10px;border:1px solid var(--warn);border-radius:8px;color:var(--text)}
+.inscription-tile-traits{display:flex;flex-wrap:wrap;gap:5px;margin-top:9px}
+.inscription-collector-tools{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;margin:14px 0}
+.inscription-collector-tools label{font-size:12px;color:var(--text-2)}
+.inscription-collector-tools select{min-height:38px;max-width:100%;padding:7px 10px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text)}
+.inscription-rarity-summary{font-size:12px;color:var(--text-2);line-height:1.7;margin:12px 0}
+.rune-insights{margin:18px 0}
+.rune-insights h3{font-size:15px;margin:0 0 14px}
+.rune-insight-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(210px,100%),1fr));gap:14px}
+.rune-insight-grid>div{min-width:0;border:1px solid var(--border);border-radius:12px;padding:16px;background:var(--surface)}
+.rune-insight-grid strong{display:block;font-size:18px;color:var(--text);line-height:1.55;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+.rune-insight-grid h4{margin:0 0 8px;font-size:12px;font-weight:500;color:var(--text-2)}
+.rune-insight-grid p{color:var(--text-2);font-size:12px;line-height:1.65;margin:8px 0 0}
+.rune-insight-grid progress{display:block;width:100%;height:8px;margin:12px 0;accent-color:var(--accent)}
+.rune-card .rune-card-stats{display:block;color:var(--text-2);font-size:11px;line-height:1.65;white-space:normal;overflow-wrap:anywhere}
+.rune-mint-filter{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:12px}
+.rune-mint-filter select{min-height:38px;max-width:100%;padding:7px 10px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text)}
+@media(max-width:650px){.inscription-collector-strip{padding:9px 12px}.inscription-collector-tools{align-items:flex-start;flex-direction:column}}

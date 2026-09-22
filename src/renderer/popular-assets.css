@@ -1,0 +1,48 @@
+.popular-discovery{margin:26px 0 32px;padding:22px;border:1px solid var(--border);border-radius:18px;background:linear-gradient(135deg,var(--accent-bg),transparent 48%),var(--surface-2);min-width:0}
+.popular-heading{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.popular-heading h2{font-size:22px;letter-spacing:-.025em;margin:5px 0 0}
+.popular-curated-label{font-size:11px;color:var(--text-2);border:1px solid var(--border);padding:6px 9px;border-radius:20px;background:var(--surface)}
+.popular-toolbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:10px 0 18px}
+.popular-context,.popular-network-note{font-size:12px;color:var(--text-2);line-height:1.6;margin:0;max-width:720px}
+.popular-toolbar>.button{flex:0 0 auto;min-height:36px}
+.popular-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.popular-card{display:flex;flex-direction:column;min-width:0;padding:18px;border:1px solid var(--border);border-radius:14px;background:var(--surface);color:var(--text)}
+.popular-card-heading{display:flex;align-items:center;gap:12px;min-width:0}
+.popular-card-heading>div:last-child{min-width:0}
+.popular-card h3{font-size:17px;line-height:1.35;letter-spacing:-.02em;margin:5px 0 0;overflow-wrap:anywhere}
+.popular-emblem{position:relative;flex:0 0 64px;display:flex;align-items:center;justify-content:center;width:64px;height:64px;border-radius:12px;overflow:hidden;background:var(--accent-bg);color:var(--text)}
+.popular-emblem>img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.popular-emblem>.popular-content-preview{background:var(--surface-2)}
+.popular-logo-pixelated{image-rendering:pixelated}
+.popular-image-fallback{width:26px;height:22px;border:1.5px solid var(--text-2);border-radius:5px;opacity:.55;transform:rotate(-8deg)}
+.popular-image-fallback::after{content:"";display:block;width:8px;height:8px;margin:5px;border:1.5px solid var(--text-2);border-radius:50%}
+.popular-with-artwork .popular-card-heading{flex-direction:column;align-items:stretch}
+.popular-with-artwork .popular-emblem{width:100%;height:148px;flex-basis:auto;font-size:42px}
+.popular-with-artwork .popular-emblem>img{padding:10px}
+.popular-tone-orange{background:color-mix(in srgb,var(--accent) 17%,var(--surface-2))}
+.popular-tone-green{background:color-mix(in srgb,var(--good) 14%,var(--surface-2))}
+.popular-tone-violet{background:color-mix(in srgb,var(--info) 17%,var(--surface-2))}
+.popular-logo-light{background:#fff5e6}
+.popular-category{font-size:10px;line-height:1.5;color:var(--text-2)}
+.popular-identity{font-size:10px;color:var(--text-2);overflow-wrap:anywhere;line-height:1.6;margin:13px 0 0}
+.popular-description{font-size:12px;line-height:1.65;color:var(--text-2);margin:8px 0 16px;flex:1}
+.popular-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0 0 16px}
+.popular-facts dt{font-size:10px;line-height:1.5;color:var(--text-2)}
+.popular-facts dd{font-size:13px;font-weight:600;line-height:1.5;margin:4px 0 0;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+.popular-preview-note{font-size:10px;color:var(--text-2);margin-bottom:12px;line-height:1.5}
+.popular-open{width:100%;justify-content:space-between;min-height:38px;background:var(--accent-bg);color:var(--accent-ink);border-color:transparent}
+.popular-open:hover{border-color:var(--accent)}
+.popular-card-details{margin-top:12px;font-size:11px;color:var(--text-2);line-height:1.6;min-width:0}
+.popular-card-details summary,.popular-method summary{cursor:pointer;padding:5px 0;min-height:28px}
+.popular-card-details .button{margin:6px 6px 0 0}
+.popular-exact-id{font-family:"SFMono-Regular",Consolas,"Liberation Mono",monospace;font-size:10px;overflow-wrap:anywhere}
+.popular-footer{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:16px}
+.popular-status{font-size:11px;color:var(--text-2);margin:0}
+.popular-method{border-top:1px solid var(--border);padding-top:10px;margin-top:14px;font-size:11px;color:var(--text-2);line-height:1.7}
+.popular-method p{max-width:900px;margin:8px 0}
+.popular-network-note{margin:16px 0}
+.popular-discovery [hidden]{display:none!important}
+.popular-discovery :is(button,summary):focus-visible{outline:2px solid var(--focus-ring);outline-offset:3px}
+@media(max-width:1050px){.popular-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){.popular-discovery{padding:16px}.popular-grid{grid-template-columns:1fr}.popular-toolbar{align-items:flex-start;flex-direction:column;gap:10px}.popular-heading h2{font-size:20px}.popular-card{padding:16px}}
+@media(prefers-reduced-motion:reduce){.popular-discovery *{scroll-behavior:auto;transition:none;animation:none}}

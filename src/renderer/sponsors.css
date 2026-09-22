@@ -1,0 +1,40 @@
+/* Use the shell's page scrollbar, including at narrow widths and text zoom. */
+.sponsors-page {
+  max-width: 1040px;
+  margin: 0 auto;
+  container-type: inline-size;
+  overflow-wrap: anywhere;
+}
+
+.sponsors-hero {
+  padding: clamp(24px, 4vw, 44px);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: radial-gradient(ellipse at top right, var(--accent-bg), transparent 65%), var(--surface);
+}
+.sponsors-hero .page-header { margin: 0; }
+.sponsors-hero .page-header h1 { font-size: clamp(30px, 4vw, 46px); letter-spacing: -.04em; }
+.sponsors-hero .page-header p { margin-top: 12px; color: var(--text); font-size: 19px; }
+.sponsors-intro { max-width: 650px; margin: 14px 0 0; color: var(--text-2); font-size: 14px; line-height: 1.75; }
+
+.sponsors-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-top: 20px; }
+.sponsors-card { min-width: 0; padding: clamp(22px, 3vw, 30px); border: 1px solid var(--border); border-radius: 16px; background: var(--surface); }
+.sponsors-card h2 { margin: 12px 0 16px; color: var(--text); font-size: 25px; font-weight: 650; letter-spacing: -.025em; }
+.sponsors-card p { margin: 0; color: var(--text-2); font-size: 13px; line-height: 1.75; }
+.sponsors-partner { background: linear-gradient(150deg, var(--accent-bg), transparent 65%), var(--surface); }
+.sponsors-partner-label { display: inline-block; padding: 6px 10px; border: 1px solid var(--border-strong); border-radius: 999px; background: var(--surface); color: var(--text-2); font-size: 11px; line-height: 1.5; }
+.sponsors-partner h2 { margin-top: 24px; font-size: clamp(36px, 5vw, 52px); letter-spacing: -.045em; }
+.sponsors-card .sponsors-inquiry-help { margin-top: 12px; }
+.sponsors-page .sponsors-link { min-height: 44px; height: auto; max-width: 100%; margin-top: 22px; padding: 11px 16px; white-space: normal; text-align: center; font-size: 13px; line-height: 1.5; }
+.sponsors-link > span { flex: 0 0 auto; }
+.sponsors-link:focus-visible { outline:2px solid var(--focus-ring); outline-offset: 3px; }
+.sponsors-card .sponsors-issue-note { margin-top: 12px; font-size: 12px; }
+.sponsors-footnote { margin: 20px 4px 0; color: var(--text-2); font-size: 12px; line-height: 1.7; }
+
+@container (max-width: 700px) {
+  .sponsors-grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 650px) {
+  .sponsors-hero, .sponsors-card { padding: 24px 20px; }
+}

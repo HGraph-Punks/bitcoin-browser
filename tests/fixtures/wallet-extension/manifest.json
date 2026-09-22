@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "Bitcoin Browser packaged smoke wallet",
+  "version": "1.0.0",
+  "description": "Non-signing wallet injection fixture used only by the packaged smoke suite.",
+  "content_scripts": [
+    {
+      "matches": ["https://wallet.satoshi.invalid/*"],
+      "js": ["wallet-provider.js"],
+      "run_at": "document_start",
+      "world": "MAIN"
+    }
+  ]
+}

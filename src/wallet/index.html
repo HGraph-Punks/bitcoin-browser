@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <title>Wallet Bridge</title>
+  <link rel="icon" type="image/png" href="./bitcoin-browser-logo.png">
+  <link rel="stylesheet" href="./wallet.css">
+  <link rel="stylesheet" href="./branding.css">
+</head>
+<body>
+  <header>
+    <img class="mark" src="./bitcoin-browser-logo.png" alt="Bitcoin Browser" width="40" height="40" draggable="false">
+    <div><strong>Wallet Bridge</strong><span>Isolated signing environment</span></div>
+    <div id="bridge-status" class="status">Starting</div>
+  </header>
+  <main>
+    <section class="notice">
+      <strong>Your keys stay in your wallet.</strong>
+      <p>This separate window is the only Bitcoin Browser context where wallet extensions are loaded. On-chain content cannot access it.</p>
+    </section>
+    <section>
+      <div class="section-title"><h1>Detected wallets</h1><button id="refresh" type="button">Refresh</button></div>
+      <div id="wallets" class="wallet-list" aria-live="polite"></div>
+    </section>
+    <section id="request-panel" class="request-panel hidden" aria-live="assertive">
+      <span class="eyebrow">Active request</span>
+      <h2 id="request-title">Waiting for wallet</h2>
+      <p id="request-detail">Review and approve the request in your wallet extension.</p>
+      <div class="spinner" aria-hidden="true"></div>
+    </section>
+  </main>
+  <footer><span id="extension-count">0 extensions loaded</span><span>No seed import</span></footer>
+  <script type="module" src="./wallet.js"></script>
+</body>
+</html>

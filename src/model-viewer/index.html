@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <title>3D inscription</title>
+  <link rel="stylesheet" href="ord://model-viewer/assets/viewer.css">
+  <script type="module" src="ord://model-viewer/assets/viewer.js"></script>
+</head>
+<body>
+  <main id="stage" aria-label="Interactive 3D inscription">
+    <div id="status" role="status" aria-live="polite"><span class="spinner" aria-hidden="true"></span><strong id="status-title">Preparing 3D view…</strong><p id="status-detail">Loading the original model and its textures.</p></div>
+    <p id="hint" hidden>Drag to rotate · Scroll or pinch to zoom</p>
+    <div id="controls" role="toolbar" aria-label="3D controls" hidden>
+      <button id="reset" type="button">Reset view</button>
+      <button id="zoom-out" type="button" aria-label="Zoom out">−</button>
+      <button id="zoom-in" type="button" aria-label="Zoom in">+</button>
+      <button id="rotate" type="button" aria-pressed="false">Auto-rotate</button>
+      <select id="animation" aria-label="Model animation" hidden></select>
+      <button id="play" type="button" aria-pressed="false" hidden>Play animation</button>
+    </div>
+  </main>
+</body>
+</html>

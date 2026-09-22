@@ -1,0 +1,9 @@
+/* Product artwork is independent of Bitcoin symbols, token marks and sponsors. */
+.app-logo { display: block; flex: 0 0 auto; object-fit: contain; image-rendering: auto; }
+.app-logo[hidden] { display: none; }
+.brand-mark.app-logo { width: 30px; height: 30px; background: none; border: 0; border-radius: 0; box-shadow: none; }
+.ai-welcome-mark.app-logo { width: 64px; height: 64px; margin: 0 auto 20px; background: none; border: 0; border-radius: 0; }
+.ai-speaker.ai-assistant-label { display: flex; align-items: center; gap: 7px; }
+.about-product-heading { display: flex; flex-wrap: wrap; align-items: center; gap: 20px; }
+.about-product-heading > .page-header { flex: 1 1 220px; min-width: 0; }
+.about-product-logo { width: 88px; height: 88px; }

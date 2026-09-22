@@ -1,0 +1,51 @@
+/* Release usability: clearer controls without widening any app permissions. */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+.skip-content{position:fixed;top:8px;left:100px;z-index:250;transform:translateY(-160%);padding:10px 16px;min-height:40px;border:1px solid var(--focus-ring);border-radius:8px;background:var(--surface);color:var(--text);cursor:pointer}
+.skip-content:focus{transform:none}
+:focus-visible{outline-color:var(--focus-ring)}
+.main-stage:focus-visible{outline:2px solid var(--focus-ring);outline-offset:-3px}
+.field:focus,select:focus,textarea:focus{border-color:var(--focus-ring)}
+input::placeholder,textarea::placeholder,.omnibox::placeholder{color:var(--muted);opacity:1}
+.side-item{height:40px}
+.side-item[aria-current="page"]{box-shadow:inset 3px 0 var(--accent-ink)}
+.tab-close{flex:0 0 24px;width:24px;height:24px;padding:0}
+.tab:focus-within .tab-close{opacity:1}
+.tabs{overflow-x:auto;overflow-y:hidden;scrollbar-width:none;overscroll-behavior-x:contain}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:0 0 auto;width:clamp(110px,15vw,230px)}
+.toggle{width:42px;height:26px;flex-shrink:0}
+.toggle::after{top:4px;left:4px}
+.toggle.on::after{left:20px}
+.status-segment{min-height:24px}
+.help,.metric-sub,.row-copy span,.card-label,.setting-copy span,.provider-copy>span{font-size:12px;line-height:1.55}
+.page-header h1{text-wrap:balance}
+.page-header p,.card p,.key-value dd,.setting-copy span{overflow-wrap:anywhere}
+.page-loading{inset:0 0 auto;height:3px;padding:0;pointer-events:none;background:transparent;backdrop-filter:none}
+.page-loading>.loading-line{width:100%;height:3px;border-radius:0;background:linear-gradient(90deg,var(--surface-2),var(--accent),var(--surface-2));background-size:200% 100%}
+.lookup-loading>p{color:var(--text-2);line-height:1.6}
+.lookup-loading>.button{margin-top:24px}
+.lookup-recovery .card>.page-actions{justify-content:flex-start;margin-top:18px}
+.recovery-technical{margin-top:24px;border-top:1px solid var(--border);padding-top:12px;overflow-wrap:anywhere}
+.recovery-technical>summary,.entity-technical>summary{min-height:36px;padding:8px 0;cursor:pointer;color:var(--text);font-size:13px}
+.recovery-technical>p,.entity-technical>p{margin-top:12px;line-height:1.6}
+.home-reassurance{color:var(--muted);font-size:12px;line-height:1.6;margin:8px 0 0}
+.home-explore{grid-template-columns:repeat(3,minmax(0,1fr))}
+.home-destination{position:relative;transition:border-color .15s,background .15s}
+.home-destination:hover{border-color:var(--border-strong);background:var(--surface-2)}
+.home-destination:focus-within{outline:2px solid var(--focus-ring);outline-offset:2px}
+.home-destination-button::after{content:"";position:absolute;inset:0;border-radius:14px}
+.inscription-filters{flex-wrap:wrap;overflow-x:visible}
+.provider-actions{flex-wrap:wrap;justify-content:flex-end}
+@media(min-width:961px) and (max-width:1180px){
+  :root{--sidebar:184px}
+  .side-item{justify-content:flex-start;padding:0 10px}
+  .side-item>span:not(.side-icon){display:initial}
+  .sidebar .side-icon{width:20px}
+}
+@container(max-width:750px){.home-explore{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:650px){
+  .skip-content{left:90px}
+  .provider-card{grid-template-columns:auto minmax(0,1fr)}
+  .provider-card>.provider-actions{grid-column:1/-1;justify-content:flex-start}
+  .suggestions{max-height:min(420px,calc(100dvh - var(--chrome-height) - var(--status-height) - 20px))}
+}

@@ -1,0 +1,208 @@
+name: Early beta release
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing tag matching package.json (v1.0.0-rc.2 or v1.0.0-beta.1)
+        required: true
+        type: string
+      platforms:
+        description: Downloads to include; omitted platforms are not advertised as tested
+        required: true
+        default: all
+        type: choice
+        options: [all, macos, windows, linux]
+      windows_signing:
+        description: Windows only; unsigned-beta explicitly labels downloads and does not change Mac signing
+        required: true
+        default: signed
+        type: choice
+        options: [signed, unsigned-beta]
+  push:
+    tags: ['v*-beta.*', 'v*-rc.*']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: beta-release-${{ inputs.tag || github.ref_name }}
+  cancel-in-progress: false
+
+env:
+  npm_config_registry: https://registry.npmjs.org
+
+jobs:
+  plan:
+    name: Validate beta tag and select native builds
+    runs-on: ubuntu-22.04
+    timeout-minutes: 5
+    outputs:
+      tag: ${{ steps.plan.outputs.tag }}
+      version: ${{ steps.plan.outputs.version }}
+      commit: ${{ steps.plan.outputs.commit }}
+      platforms: ${{ steps.plan.outputs.platforms }}
+      windows_signing: ${{ steps.plan.outputs.windows_signing }}
+      matrix: ${{ steps.plan.outputs.matrix }}
+    env:
+      BETA_TAG: ${{ inputs.tag || github.ref_name }}
+      BETA_PLATFORMS: ${{ inputs.platforms || 'all' }}
+      BETA_WINDOWS_SIGNING: ${{ inputs.windows_signing || 'signed' }}
+    steps:
+      - name: Reject unsafe or non-beta refs before checkout
+        run: |
+          node -e 'const tag = process.env.BETA_TAG || ""; if (tag !== tag.trim() || !/^v(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)-(?:beta|rc)\.(?:0|[1-9]\d*)$/.test(tag)) { console.error("An existing beta or RC tag is required"); process.exit(1); }'
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        id: source
+        with:
+          ref: refs/tags/${{ env.BETA_TAG }}
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22.23.2
+          package-manager-cache: false
+      - name: Match package version and bind every job to this commit
+        id: plan
+        run: node scripts/beta-release.mjs plan
+        env:
+          BETA_COMMIT: ${{ steps.source.outputs.commit }}
+
+  verify:
+    name: Beta source and security gates
+    needs: plan
+    runs-on: ubuntu-22.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ needs.plan.outputs.commit }}
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22.23.2
+          package-manager-cache: false
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - run: npm run verify
+      - run: npm run security:beta
+      - run: npm audit --audit-level=high
+
+  build:
+    name: Native beta distribution (${{ matrix.id }})
+    needs: [plan, verify]
+    runs-on: ${{ matrix.runner }}
+    environment: beta
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ needs.plan.outputs.commit }}
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22.23.2
+          architecture: ${{ matrix.arch }}
+          package-manager-cache: false
+      - run: node scripts/beta-release.mjs assert-native ${{ matrix.id }}
+      - name: Install Linux packaging and GUI test dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes --no-install-recommends rpm xvfb dbus-x11 libnss3 libatk-bridge2.0-0 libgtk-3-0 libgbm1 libasound2 libxss1 libx11-xcb1 libdrm2 libxshmfence1
+      - run: npm ci --no-audit --no-fund
+      - name: Verify source on the native platform
+        run: npm run verify
+      - name: Build Linux distribution
+        if: runner.os == 'Linux'
+        run: npm run dist:linux -- --${{ matrix.arch }}
+        env:
+          SATOSHI_BROWSER_RELEASE_HOMEPAGE: ${{ github.server_url }}/${{ github.repository }}
+          SATOSHI_BROWSER_LINUX_MAINTAINER: ${{ vars.BETA_LINUX_MAINTAINER || 'Turtle Moon Command Center <hgraphpunks@gmail.com>' }}
+      - name: Build signed Windows distribution
+        if: runner.os == 'Windows' && needs.plan.outputs.windows_signing == 'signed'
+        run: npm run dist:win -- --${{ matrix.arch }}
+        env:
+          WIN_CSC_LINK: ${{ secrets.WIN_CSC_LINK }}
+          WIN_CSC_KEY_PASSWORD: ${{ secrets.WIN_CSC_KEY_PASSWORD }}
+          SATOSHI_BROWSER_EXPECTED_WINDOWS_PUBLISHER: ${{ vars.BETA_WINDOWS_PUBLISHER }}
+      - name: Build explicitly unsigned Windows beta
+        if: runner.os == 'Windows' && needs.plan.outputs.windows_signing == 'unsigned-beta'
+        run: npm run dist:win -- --${{ matrix.arch }} --unsigned-windows-beta
+      - name: Verify Windows application and installer signing status
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: ./scripts/verify-windows-signatures.ps1 -Architecture ${{ matrix.arch }} -SigningMode ${{ needs.plan.outputs.windows_signing }}
+        env:
+          SATOSHI_BROWSER_EXPECTED_WINDOWS_PUBLISHER: ${{ vars.BETA_WINDOWS_PUBLISHER }}
+      - name: Build signed and notarized macOS distribution
+        if: runner.os == 'macOS'
+        run: npm run dist:mac -- --${{ matrix.arch }}
+        env:
+          CSC_LINK: ${{ secrets.CSC_LINK }}
+          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          SATOSHI_BROWSER_EXPECTED_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+      - name: Run distribution smoke (Linux, sandbox enabled)
+        if: runner.os == 'Linux'
+        run: dbus-run-session -- xvfb-run -a npm run smoke:packaged -- --distribution --report=packaged-smoke-beta-${{ matrix.id }}.json
+      - name: Run distribution smoke
+        if: runner.os == 'macOS' || (runner.os == 'Windows' && needs.plan.outputs.windows_signing == 'signed')
+        run: npm run smoke:packaged -- --distribution --report=packaged-smoke-beta-${{ matrix.id }}.json
+      - name: Run explicitly unsigned Windows distribution smoke
+        if: runner.os == 'Windows' && needs.plan.outputs.windows_signing == 'unsigned-beta'
+        run: npm run smoke:packaged -- --distribution --unsigned-windows-beta --report=packaged-smoke-beta-${{ matrix.id }}.json
+      - name: Stage only the expected installers and archives
+        run: node scripts/beta-release.mjs stage ${{ matrix.id }}
+        env:
+          BETA_WINDOWS_SIGNING: ${{ needs.plan.outputs.windows_signing }}
+      - name: Retain release assets only after all gates pass
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: beta-installers-${{ matrix.id }}
+          path: release/beta-assets/${{ matrix.id }}/*
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 14
+      - name: Retain bounded native evidence even on failure
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: beta-smoke-${{ matrix.id }}
+          path: release/packaged-smoke-beta-${{ matrix.id }}.json
+          if-no-files-found: warn
+          retention-days: 14
+
+  publish:
+    name: Prepare draft prerelease (never publish automatically)
+    needs: [plan, verify, build]
+    runs-on: ubuntu-22.04
+    environment: beta
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ needs.plan.outputs.commit }}
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22.23.2
+          package-manager-cache: false
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          pattern: beta-installers-*
+          path: release/beta-downloads
+          merge-multiple: true
+      - name: Validate complete asset set and unchanged tag; create draft prerelease
+        run: node scripts/beta-release.mjs draft
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BETA_TAG: ${{ needs.plan.outputs.tag }}
+          BETA_COMMIT: ${{ needs.plan.outputs.commit }}
+          BETA_PLATFORMS: ${{ needs.plan.outputs.platforms }}
+          BETA_WINDOWS_SIGNING: ${{ needs.plan.outputs.windows_signing }}

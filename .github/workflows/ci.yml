@@ -1,0 +1,84 @@
+name: CI
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: '23 8 * * 1'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  npm_config_registry: https://registry.npmjs.org
+
+jobs:
+  verify:
+    name: Source and wallet security gates
+    runs-on: ubuntu-22.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22.23.2
+          package-manager-cache: false
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - run: npm run verify
+      - name: Focused wallet and content security regression tests
+        run: npm run security:beta
+      - name: Block high and critical dependency advisories (including build dependencies)
+        run: npm audit --audit-level=high
+
+  package-smoke:
+    name: Native smoke (${{ matrix.id }})
+    if: github.event_name != 'schedule'
+    runs-on: ${{ matrix.runner }}
+    needs: verify
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { id: linux-x64, runner: ubuntu-22.04, arch: x64 }
+          - { id: windows-x64, runner: windows-2022, arch: x64 }
+          - { id: macos-arm64, runner: macos-15, arch: arm64 }
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22.23.2
+          architecture: ${{ matrix.arch }}
+          package-manager-cache: false
+      - run: node scripts/beta-release.mjs assert-native ${{ matrix.id }}
+      - name: Install Linux GUI test dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes --no-install-recommends xvfb dbus-x11 libnss3 libatk-bridge2.0-0 libgtk-3-0 libgbm1 libasound2 libxss1 libx11-xcb1 libdrm2 libxshmfence1
+      - run: npm ci --no-audit --no-fund
+      - run: npm run pack -- --${{ matrix.arch }}
+      - name: Run packaged smoke (Linux, sandbox enabled)
+        if: runner.os == 'Linux'
+        run: dbus-run-session -- xvfb-run -a npm run smoke:packaged -- --report=packaged-smoke-ci-${{ matrix.id }}.json
+      - name: Run packaged smoke
+        if: runner.os != 'Linux'
+        run: npm run smoke:packaged -- --report=packaged-smoke-ci-${{ matrix.id }}.json
+      - name: Retain bounded test evidence, never profiles or unpacked binaries
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: smoke-${{ matrix.id }}
+          path: release/packaged-smoke-ci-${{ matrix.id }}.json
+          if-no-files-found: warn
+          retention-days: 7
