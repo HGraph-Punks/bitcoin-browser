@@ -1,0 +1,2 @@
+# Generated viewer bundles must compare byte-for-byte on every build host.
+* text=auto eol=lf

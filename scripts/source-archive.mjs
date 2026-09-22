@@ -3,23 +3,12 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import { gzipSync } from 'node:zlib';
 import { fileURLToPath } from 'node:url';
+import { walkEligible } from './source-archive-verification.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const pkg = JSON.parse(await fs.readFile(path.join(root, 'package.json'), 'utf8'));
 const outputDirectory = path.join(root, 'release');
 const outputFile = path.join(outputDirectory, `${pkg.name}-${pkg.version}-source.tar.gz`);
-const excluded = new Set(['node_modules', 'release', '.git', 'coverage', '.DS_Store']);
-
-async function walk(directory) {
-  const entries = [];
-  for (const entry of await fs.readdir(directory, { withFileTypes: true })) {
-    if (excluded.has(entry.name)) continue;
-    const absolute = path.join(directory, entry.name);
-    if (entry.isDirectory()) entries.push(...await walk(absolute));
-    else if (entry.isFile()) entries.push(absolute);
-  }
-  return entries;
-}
 
 function writeString(buffer, offset, length, value) {
   Buffer.from(String(value)).copy(buffer, offset, 0, length);
@@ -49,7 +38,7 @@ function header(name, size, mode) {
   return block;
 }
 
-const manifestFiles = (await walk(root))
+const manifestFiles = (await walkEligible(root))
   .filter((file) => path.relative(root, file).split(path.sep).join('/') !== 'SOURCE_MANIFEST.json')
   .sort();
 const manifest = {
@@ -69,7 +58,7 @@ const manifest = {
 await fs.writeFile(path.join(root, 'SOURCE_MANIFEST.json'), `${JSON.stringify(manifest, null, 2)}\n`);
 
 const chunks = [];
-for (const absolute of (await walk(root)).sort()) {
+for (const absolute of await walkEligible(root)) {
   const relative = path.relative(root, absolute).split(path.sep).join('/');
   const stat = await fs.stat(absolute);
   const data = await fs.readFile(absolute);

@@ -112,21 +112,25 @@ export async function validateAssets(directory, version, selection = 'all', wind
   return actual;
 }
 
-export function draftReleaseArguments({ repository, tag, version, commit, remoteCommit, directory, notes, assets, windowsSigning = 'signed' }) {
+export function draftReleaseArguments({ repository, tag, version, commit, remoteCommit, directory, notes, assets, windowsSigning = 'signed', macosSigning = 'signed' }) {
   validateBetaTag(tag, version);
   validateWindowsSigning(windowsSigning);
+  validateMacosSigning(macosSigning);
   if (!/^[a-zA-Z0-9_.-]+\/[a-zA-Z0-9_.-]+$/.test(repository)) throw new Error('Invalid GitHub repository');
   if (!/^[0-9a-f]{40}$/.test(commit) || commit !== remoteCommit) throw new Error('Release tag changed after verification; start a new run for the reviewed tag');
   return ['release', 'create', tag, ...assets.map((name) => path.join(directory, name)),
     '--repo', repository, '--verify-tag', '--target', commit, '--draft', '--prerelease',
-    '--title', `Bitcoin Browser ${version} — early beta${windowsSigning === 'unsigned-beta' && assets.some((name) => name.includes('-windows-')) ? ' (Windows unsigned)' : ''}`, '--notes-file', notes];
+    '--title', `Bitcoin Browser ${version} — early beta${windowsSigning === 'unsigned-beta' && assets.some((name) => name.includes('-windows-')) ? ' (Windows unsigned)' : ''}${macosSigning === 'unsigned-beta' && assets.some((name) => name.includes('-macos-')) ? ' (macOS unsigned)' : ''}`, '--notes-file', notes];
 }
 
-export function renderBetaReleaseNotes(template, assets, selection = 'all', windowsSigning = 'signed') {
+export function renderBetaReleaseNotes(template, assets, selection = 'all', windowsSigning = 'signed', macosSigning = 'signed') {
   validateWindowsSigning(windowsSigning);
+  validateMacosSigning(macosSigning);
   const targets = selectedTargets(selection);
   const statuses = [];
-  if (targets.some((target) => target.platform === 'darwin')) statuses.push('- macOS: Developer ID-signed and notarized application; confirm the publisher on the downloaded app.');
+  if (targets.some((target) => target.platform === 'darwin')) statuses.push(macosSigning === 'unsigned-beta'
+    ? '- **macOS: UNSIGNED BETA — no Apple Developer ID signature or notarization.** The app has an ad-hoc signature for integrity on Apple silicon. See the macOS installation guide for Gatekeeper instructions.'
+    : '- macOS: Developer ID-signed and notarized application; confirm the publisher on the downloaded app.');
   if (targets.some((target) => target.platform === 'win32')) statuses.push(windowsSigning === 'unsigned-beta'
     ? '- **Windows: UNSIGNED BETA — no verified publisher.** Windows may warn or block launch. Download only from this official repository; do not disable antivirus or OS security protections to run it. Signing is planned for a later release.'
     : '- Windows: timestamped Authenticode signatures checked against the configured publisher.');
@@ -146,7 +150,7 @@ async function main() {
     validateBetaTag(tag, version);
     const commit = process.env.BETA_COMMIT;
     if (!/^[0-9a-f]{40}$/.test(commit ?? '')) throw new Error('Missing checked-out release commit');
-    const outputs = { tag, version, commit, platforms: selection, windows_signing: windowsSigning, matrix: JSON.stringify({ include: selectedTargets(selection) }) };
+    const outputs = { tag, version, commit, platforms: selection, windows_signing: windowsSigning, macos_signing: macosSigning, matrix: JSON.stringify({ include: selectedTargets(selection) }) };
     if (!process.env.GITHUB_OUTPUT) throw new Error('plan requires the GitHub Actions output file');
     await fs.appendFile(process.env.GITHUB_OUTPUT, Object.entries(outputs).map(([key, value]) => `${key}=${value}\n`).join(''));
     console.log(`Planned ${outputs.tag}: ${selectedTargets(selection).map(({ id }) => id).join(', ')}`);
@@ -160,12 +164,12 @@ async function main() {
     const repository = process.env.GITHUB_REPOSITORY;
     if (!/^[a-zA-Z0-9_.-]+\/[a-zA-Z0-9_.-]+$/.test(repository ?? '')) throw new Error('Invalid GitHub repository');
     const directory = path.join(root, 'release', 'beta-downloads');
-    const assets = await validateAssets(directory, version, selection, windowsSigning);
+    const assets = await validateAssets(directory, version, selection, windowsSigning, macosSigning);
     const remoteCommit = execFileSync('gh', ['api', `repos/${repository}/commits/${tag}`, '--jq', '.sha'], { encoding: 'utf8', timeout: 30_000 }).trim();
     const notes = path.join(root, 'release', 'beta-release-notes.md');
-    const args = draftReleaseArguments({ repository, tag, version, commit: process.env.BETA_COMMIT, remoteCommit, directory, notes, assets, windowsSigning });
+    const args = draftReleaseArguments({ repository, tag, version, commit: process.env.BETA_COMMIT, remoteCommit, directory, notes, assets, windowsSigning, macosSigning });
     const template = await fs.readFile(path.join(root, 'docs', 'EARLY_BETA_RELEASE_NOTES.md'), 'utf8');
-    await fs.writeFile(notes, renderBetaReleaseNotes(template, assets, selection, windowsSigning), { flag: 'wx' });
+    await fs.writeFile(notes, renderBetaReleaseNotes(template, assets, selection, windowsSigning, macosSigning), { flag: 'wx' });
     // Existing releases are not edited, clobbered, or automatically published.
     execFileSync('gh', args, { stdio: 'inherit', timeout: 300_000 });
   } else {

@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: Existing tag matching package.json (v1.0.0-rc.2 or v1.0.0-beta.1)
+        description: Existing tag matching package.json (v0.1.0 or a beta/RC tag)
         required: true
         type: string
       platforms:
@@ -15,6 +15,12 @@ on:
         options: [all, macos, windows, linux]
       windows_signing:
         description: Windows only; unsigned-beta explicitly labels downloads and does not change Mac signing
+        required: true
+        default: signed
+        type: choice
+        options: [signed, unsigned-beta]
+      macos_signing:
+        description: macOS only; unsigned-beta explicitly omits Developer ID and notarization
         required: true
         default: signed
         type: choice
@@ -43,15 +49,17 @@ jobs:
       commit: ${{ steps.plan.outputs.commit }}
       platforms: ${{ steps.plan.outputs.platforms }}
       windows_signing: ${{ steps.plan.outputs.windows_signing }}
+      macos_signing: ${{ steps.plan.outputs.macos_signing }}
       matrix: ${{ steps.plan.outputs.matrix }}
     env:
       BETA_TAG: ${{ inputs.tag || github.ref_name }}
       BETA_PLATFORMS: ${{ inputs.platforms || 'all' }}
       BETA_WINDOWS_SIGNING: ${{ inputs.windows_signing || 'signed' }}
+      BETA_MACOS_SIGNING: ${{ inputs.macos_signing || 'signed' }}
     steps:
       - name: Reject unsafe or non-beta refs before checkout
         run: |
-          node -e 'const tag = process.env.BETA_TAG || ""; if (tag !== tag.trim() || !/^v(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)-(?:beta|rc)\.(?:0|[1-9]\d*)$/.test(tag)) { console.error("An existing beta or RC tag is required"); process.exit(1); }'
+          node -e 'const tag = process.env.BETA_TAG || ""; if (tag !== tag.trim() || (tag !== "v0.1.0" && !/^v(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)-(?:beta|rc)\.(?:0|[1-9]\d*)$/.test(tag))) { console.error("An existing beta or RC tag is required"); process.exit(1); }'
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         id: source
         with:
@@ -137,7 +145,7 @@ jobs:
         env:
           SATOSHI_BROWSER_EXPECTED_WINDOWS_PUBLISHER: ${{ vars.BETA_WINDOWS_PUBLISHER }}
       - name: Build signed and notarized macOS distribution
-        if: runner.os == 'macOS'
+        if: runner.os == 'macOS' && needs.plan.outputs.macos_signing == 'signed'
         run: npm run dist:mac -- --${{ matrix.arch }}
         env:
           CSC_LINK: ${{ secrets.CSC_LINK }}
@@ -146,11 +154,17 @@ jobs:
           APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           SATOSHI_BROWSER_EXPECTED_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+      - name: Build explicitly unsigned macOS beta
+        if: runner.os == 'macOS' && needs.plan.outputs.macos_signing == 'unsigned-beta'
+        run: npm run dist:mac -- --${{ matrix.arch }} --unsigned-macos-beta
+      - name: Run explicitly unsigned macOS distribution smoke
+        if: runner.os == 'macOS' && needs.plan.outputs.macos_signing == 'unsigned-beta'
+        run: npm run smoke:packaged -- --distribution --unsigned-macos-beta --report=packaged-smoke-beta-${{ matrix.id }}.json
       - name: Run distribution smoke (Linux, sandbox enabled)
         if: runner.os == 'Linux'
         run: dbus-run-session -- xvfb-run -a npm run smoke:packaged -- --distribution --report=packaged-smoke-beta-${{ matrix.id }}.json
       - name: Run distribution smoke
-        if: runner.os == 'macOS' || (runner.os == 'Windows' && needs.plan.outputs.windows_signing == 'signed')
+        if: (runner.os == 'macOS' && needs.plan.outputs.macos_signing == 'signed') || (runner.os == 'Windows' && needs.plan.outputs.windows_signing == 'signed')
         run: npm run smoke:packaged -- --distribution --report=packaged-smoke-beta-${{ matrix.id }}.json
       - name: Run explicitly unsigned Windows distribution smoke
         if: runner.os == 'Windows' && needs.plan.outputs.windows_signing == 'unsigned-beta'
@@ -159,6 +173,7 @@ jobs:
         run: node scripts/beta-release.mjs stage ${{ matrix.id }}
         env:
           BETA_WINDOWS_SIGNING: ${{ needs.plan.outputs.windows_signing }}
+          BETA_MACOS_SIGNING: ${{ needs.plan.outputs.macos_signing }}
       - name: Retain release assets only after all gates pass
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
@@ -206,3 +221,4 @@ jobs:
           BETA_COMMIT: ${{ needs.plan.outputs.commit }}
           BETA_PLATFORMS: ${{ needs.plan.outputs.platforms }}
           BETA_WINDOWS_SIGNING: ${{ needs.plan.outputs.windows_signing }}
+          BETA_MACOS_SIGNING: ${{ needs.plan.outputs.macos_signing }}

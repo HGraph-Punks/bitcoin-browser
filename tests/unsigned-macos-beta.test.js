@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import path from 'node:path';
 import { createPackagingPlan, inspectPackagingArguments } from '../scripts/release-policy.mjs';
-import { BETA_TARGETS, expectedAssets, validateBetaTag } from '../scripts/beta-release.mjs';
+import { BETA_TARGETS, expectedAssets, validateBetaTag, renderBetaReleaseNotes } from '../scripts/beta-release.mjs';
 import { packagedArtifactDirectory } from '../scripts/packaged-executable.mjs';
 
 test('the explicitly approved v0.1.0 beta is accepted without authorizing arbitrary stable releases', () => {
@@ -45,4 +45,12 @@ test('all eighteen beta downloads are unique and every unsigned Mac and Windows 
   assert.equal(packagedArtifactDirectory('/release', { platform: 'darwin', distribution: true, unsignedMacosBeta: true }), path.join('/release', 'unsigned-macos-beta'));
   assert.throws(() => packagedArtifactDirectory('/release', { platform: 'darwin', unsignedMacosBeta: true }), /requires --distribution/);
   assert.throws(() => packagedArtifactDirectory('/release', { platform: 'win32', distribution: true, unsignedMacosBeta: true }), /native macOS/);
+});
+
+test('release notes identify unsigned macOS independently of Windows signing', () => {
+  const assets = expectedAssets('0.1.0', BETA_TARGETS, 'unsigned-beta', 'unsigned-beta');
+  const notes = renderBetaReleaseNotes('Beta overview', assets, 'all', 'unsigned-beta', 'unsigned-beta');
+  assert.match(notes, /macOS: UNSIGNED BETA/);
+  assert.match(notes, /Windows: UNSIGNED BETA/);
+  assert.doesNotMatch(notes, /Developer ID-signed and notarized application/);
 });

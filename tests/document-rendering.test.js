@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import vm from 'node:vm';
+import { fileURLToPath } from 'node:url';
 import { createCanvas, ImageData } from '@napi-rs/canvas';
 import { pdfFixture, JXL_CHECKER, STL_TRIANGLE } from './fixtures/document-formats.js';
 import { fontSignature, pdfRenderSize } from '../src/shared/document-preview.js';
@@ -38,7 +39,9 @@ test('Markdown complexity is capped before creating unbounded DOM trees', async 
 });
 test('actual bundled PDF engine parses two pages, respects rotation, extracts text and paints real pixels without running OpenAction', async () => {
   const pdfjs = await import('pdfjs-dist/legacy/build/pdf.mjs');
-  const task = pdfjs.getDocument({ data: pdfFixture(), verbosity: pdfjs.VerbosityLevel.ERRORS, enableXfa: false, disableAutoFetch: true, standardFontDataUrl: new URL('../node_modules/pdfjs-dist/standard_fonts/', import.meta.url).href });
+  // The Node binary-data factory reads filesystem paths, not file: URL strings.
+  // Use the bundled fonts so this pixel test does not depend on host fonts.
+  const task = pdfjs.getDocument({ data: pdfFixture(), verbosity: pdfjs.VerbosityLevel.ERRORS, enableXfa: false, disableAutoFetch: true, standardFontDataUrl: fileURLToPath(new URL('../node_modules/pdfjs-dist/standard_fonts/', import.meta.url)) });
   try {
     const pdf = await task.promise; assert.equal(pdf.numPages, 2);
     for (const number of [1, 2]) {

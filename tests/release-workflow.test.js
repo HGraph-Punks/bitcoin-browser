@@ -69,7 +69,7 @@ test('every release job checks out the planned commit and build gates precede in
   const stageIndex = build.findIndex((step) => step.run?.includes('beta-release.mjs stage'));
   const uploadIndex = build.findIndex((step) => step.with?.name === 'beta-installers-${{ matrix.id }}');
   const smokeIndexes = build.flatMap((step, index) => step.run?.includes('smoke:packaged -- --distribution') ? [index] : []);
-  assert.equal(smokeIndexes.length, 3);
+  assert.equal(smokeIndexes.length, 4);
   assert.ok(smokeIndexes.every((index) => index < stageIndex && stageIndex < uploadIndex));
   assert.equal(build[uploadIndex].if, undefined, 'installers upload only on success');
   assert.ok(build.some((step) => step.run === 'npm run verify'));
@@ -82,7 +82,7 @@ test('signing credentials are protected and scoped only to their platform build 
   assert.equal(release.jobs.publish.environment, 'beta');
   const privileged = steps(release.jobs.build).filter((step) => JSON.stringify(step).includes('secrets.'));
   assert.equal(privileged.length, 2);
-  const mac = privileged.find((step) => step.if === "runner.os == 'macOS'");
+  const mac = privileged.find((step) => step.if === "runner.os == 'macOS' && needs.plan.outputs.macos_signing == 'signed'");
   const windows = privileged.find((step) => step.if === "runner.os == 'Windows' && needs.plan.outputs.windows_signing == 'signed'");
   assert.equal(mac.env.CSC_LINK, '${{ secrets.CSC_LINK }}');
   assert.equal(mac.env.APPLE_TEAM_ID, '${{ secrets.APPLE_TEAM_ID }}');
@@ -191,7 +191,7 @@ test('unsigned Windows is selected explicitly, receives no signing secrets, and 
   const stage = build.find((step) => step.run?.includes('beta-release.mjs stage'));
   assert.equal(stage.env.BETA_WINDOWS_SIGNING, '${{ needs.plan.outputs.windows_signing }}');
   assert.equal(steps(release.jobs.publish).at(-1).env.BETA_WINDOWS_SIGNING, '${{ needs.plan.outputs.windows_signing }}');
-  assert.equal(build.find((step) => step.run?.startsWith('npm run dist:mac')).if, "runner.os == 'macOS'", 'Windows choice must never skip Mac signing');
+  assert.equal(build.find((step) => step.run?.startsWith('npm run dist:mac')).if, "runner.os == 'macOS' && needs.plan.outputs.macos_signing == 'signed'", 'Windows choice must never control Mac signing');
 });
 
 test('unsigned Windows filenames match the pinned builder macros without colliding with signed downloads', () => {

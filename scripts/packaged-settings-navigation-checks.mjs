@@ -51,12 +51,15 @@ export async function runPackagedSettingsNavigationChecks({ cdp, poll, assert })
       const targets = evidence.length === 10 ? ['developer'] : sections;
       for (const section of targets) {
         const id = `settings-${section}`;
-        const prepared = await cdp.evaluate(`(() => { /*settings-nav:prepare*/
+        const prepared = await cdp.evaluate(`(async () => { /*settings-nav:prepare*/
           const id = ${JSON.stringify(id)};
           const button = [...document.querySelectorAll('.settings-nav button')].find((node) => node.getAttribute('aria-controls') === id);
           if (!button) return null;
           document.querySelector('#main-stage').scrollTo({ top: 0, behavior: 'instant' });
           button.focus({ preventScroll: true });
+          // Flush the compositor after canceling the previous smooth scroll.
+          // Otherwise a native pointer event can hit the old screen position.
+          await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
           const rect = button.getBoundingClientRect();
           return { focused: document.activeElement === button, reduced: matchMedia('(prefers-reduced-motion: reduce)').matches,
             x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 };

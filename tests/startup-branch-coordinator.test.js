@@ -358,7 +358,9 @@ test('synthetic: normal quit must confirm both owned fixture and renderer exit',
 
 test('synthetic: timed-out quit remains reported as an unsettled admitted operation', async () => {
   const h = synthetic(); h.fixture.quit = () => { h.calls.push('quit'); return new Promise(() => {}); };
-  const result = await h.run({ cleanupTimeoutMs: 10 }); failed(result, 'BRANCH_CLEANUP_TIMEOUT');
+  // Allow cleanup to reach the intentionally stuck quit on a loaded CI host.
+  const result = await h.run({ cleanupTimeoutMs: 500 }); failed(result, 'BRANCH_CLEANUP_TIMEOUT');
+  assert.ok(h.calls.includes('quit'));
   assert.equal(result.cleanup.quitConfirmed, false);
   assert.equal(result.cleanup.operationsSettled, false);
 });

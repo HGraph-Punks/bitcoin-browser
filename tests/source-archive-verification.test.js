@@ -5,7 +5,7 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { gzipSync } from 'node:zlib';
-import { parseTar, validateManifest, verifySourceArchive } from '../scripts/source-archive-verification.mjs';
+import { parseTar, validateManifest, verifySourceArchive, walkEligible } from '../scripts/source-archive-verification.mjs';
 
 function header(name, size, type = '0') {
   const block = Buffer.alloc(512);
@@ -32,6 +32,16 @@ function updateChecksum(buffer) {
   buffer.write(`${sum.toString(8).padStart(6, '0')}\0 `, 148, 8);
   return buffer;
 }
+
+test('source inventory excludes local profiles and credentials while retaining source and example configuration', async (t) => {
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), 'source-exclusions-'));
+  t.after(() => fs.rm(root, { recursive: true, force: true }));
+  for (const name of ['local-data/profile/state.json', 'dist/app.js', 'release/app.zip', 'nested/.env.local', 'nested/signing.p12', 'debug.log', '.env', 'src/main.js', '.env.example']) {
+    await fs.mkdir(path.dirname(path.join(root, name)), { recursive: true });
+    await fs.writeFile(path.join(root, name), 'fixture');
+  }
+  assert.deepEqual((await walkEligible(root)).map(file => path.relative(root, file).split(path.sep).join('/')), ['.env.example', 'src/main.js']);
+});
 
 test('parseTar reads a bounded regular ustar entry', () => {
   const entries = parseTar(tar([['project/file.txt', Buffer.from('hello')]]));
