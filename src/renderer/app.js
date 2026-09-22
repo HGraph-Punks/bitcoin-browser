@@ -320,6 +320,9 @@ async function navigate(input, options = {}) {
   }, { page: isActive });
   if (isActive) {
     closeSuggestions();
+    // A committed navigation replaces the editing draft, including when it
+    // came from an external deep link while the address field had focus.
+    elements.omnibox.value = target.kind === 'home' ? '' : target.canonical;
     elements.omnibox.blur();
   }
   if (isActive && options.focusOmnibox) setTimeout(() => {

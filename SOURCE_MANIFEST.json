@@ -576,8 +576,8 @@
     },
     {
       "path": "scripts/packaged-smoke.mjs",
-      "bytes": 113579,
-      "sha256": "3be4ab054c926582a91b076d514651cd29ca1708e8552355f8eff01906ca9d56"
+      "bytes": 113743,
+      "sha256": "2ded0204520bf9f68979a731da04dfbe61a3fbf062d82607de0161090b2ed4bd"
     },
     {
       "path": "scripts/packaged-startup-readiness.mjs",
@@ -1031,8 +1031,8 @@
     },
     {
       "path": "src/renderer/app.js",
-      "bytes": 115889,
-      "sha256": "e18da934f4b988cc74664e7cce193393f4dbb0789682f3020878dcdb7cdec1f7"
+      "bytes": 116116,
+      "sha256": "a3813ef3598b594a341ad9588d79de60607827b78b94a2c56ac7ed3c7c32a294"
     },
     {
       "path": "src/renderer/assets/bitcoin-browser-logo.png",
@@ -2111,8 +2111,8 @@
     },
     {
       "path": "tests/renderer-bootstrap-ui.test.js",
-      "bytes": 11054,
-      "sha256": "e42b6a4d189df2be7e3d905464118c91aa2ef3e88576eb70d96d83dcfa7013cf"
+      "bytes": 12040,
+      "sha256": "3ec4a1f61f45c8354613c57cb628e012350aa1c189aab0888a8508e4f6b1cb69"
     },
     {
       "path": "tests/renderer-diagnostics.test.js",

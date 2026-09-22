@@ -188,6 +188,24 @@ test('ordinary restoration runs exactly once when no deep link is pending', asyn
   assert.deepEqual(f.toasts, []);
 });
 
+test('committed deep links replace the address draft only after parsing succeeds', async () => {
+  const f = fixture();
+  f.data.state.tabs[0] = { id: 'saved', target: 'satnav://history', history: ['satnav://history'], historyIndex: 0 };
+  const boot = f.bootstrap();
+  f.bootstraps[0].resolve(f.data); await tick();
+  f.parses[0].resolve(internal('history')); await boot;
+  f.elements.omnibox.value = 'unfinished user draft';
+  const navigation = f.handleShellDeepLink('satnav://about');
+  assert.equal(f.elements.omnibox.value, 'unfinished user draft');
+  f.parses.at(-1).resolve(internal('about')); await navigation;
+  assert.equal(f.model.get().tabs[0].target, 'satnav://about');
+  assert.equal(f.elements.omnibox.value, 'satnav://about');
+  f.elements.omnibox.value = 'keep this invalid draft';
+  const invalid = f.navigate('invalid');
+  f.parses.at(-1).reject(new Error('invalid fixture')); await invalid;
+  assert.equal(f.elements.omnibox.value, 'keep this invalid draft');
+});
+
 test('early native commands, keyboard, buttons and navigation cannot overwrite the uninitialized saved session', async () => {
   const f = fixture();
   const pending = f.bootstrap();

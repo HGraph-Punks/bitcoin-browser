@@ -951,6 +951,10 @@ try {
   });
 
   await check('a second packaged instance delivers a deep link to the existing trusted window', async () => {
+    await cdp.evaluate(`(() => {
+      const field = document.querySelector('#omnibox');
+      field.focus(); field.value = 'unfinished fixture draft';
+    })()`);
     const second = spawn(executable, [`--user-data-dir=${profile}`, 'satnav://about'], { cwd: root, stdio: 'ignore' });
     let lastObserved;
     try {
