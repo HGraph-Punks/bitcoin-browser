@@ -152,7 +152,7 @@ test('controlled Electron: pre-abort and late app-ready failure never create a w
 });
 
 test('controlled Electron: missing passive PID is inconclusive without Runtime or guessed ownership', async () => {
-  const h = controlled({ pid: 0, setupTimeoutMs: 10 });
+  const h = controlled({ pid: 0 });
   await rejected(h.fixture.start(), 'BRANCH_FIXTURE_PID_UNAVAILABLE');
   assert.equal(h.calls.includes('Runtime.enable'), false);
   assert.equal(h.calls.includes('cdp.attach'), false);

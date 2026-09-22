@@ -406,8 +406,8 @@
     },
     {
       "path": "package.json",
-      "bytes": 3631,
-      "sha256": "e4244113bcd2386c3976bee0be9269fbc25dcec08aed63fcdef1ebbf17d7396d"
+      "bytes": 3674,
+      "sha256": "1861473b973ab0ee460254038cc734706fdfdbf61de84bd738791b07c940ab8a"
     },
     {
       "path": "scripts/after-pack.cjs",
@@ -2216,8 +2216,8 @@
     },
     {
       "path": "tests/startup-branch-coordinator.test.js",
-      "bytes": 23288,
-      "sha256": "3f52d3da2f6d12c679e7cca6277f393dccd688284ab3cbe48738a8e56ff1ddd0"
+      "bytes": 23348,
+      "sha256": "ee776afbf0270ebe4c067c1af114d8c8ce62389c889fdd7beaec539fc909eee7"
     },
     {
       "path": "tests/startup-branch-evidence.test.js",
@@ -2226,8 +2226,8 @@
     },
     {
       "path": "tests/startup-branch-fixture.test.js",
-      "bytes": 34788,
-      "sha256": "e59e1b7988906ebb245f68c60cb337cd0658a00f4fbad36d8c7c9e9b4ed3b405"
+      "bytes": 34768,
+      "sha256": "127b973e334265741a28e6e64b0297fc50cb7e5b3eb5ab5542527a80194db757"
     },
     {
       "path": "tests/startup-compatibility-runner-lifecycle.test.js",

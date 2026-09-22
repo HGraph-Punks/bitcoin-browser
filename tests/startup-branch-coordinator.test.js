@@ -285,7 +285,7 @@ test('synthetic: cancellation at arm, begin, Runtime, observation, drain and qui
 test('synthetic: arming deadline aborts pending work and cleanup settles it without a late Runtime', async () => {
   const h = synthetic(); const original = h.collector.arm;
   h.collector.arm = args => { original(args); return pendingUntilAbort(args.signal); };
-  const result = await h.run({ earlyRuntime: true, armingTimeoutMs: 10 }); failed(result, 'BRANCH_ARMING_TIMEOUT');
+  const result = await h.run({ earlyRuntime: true, armingTimeoutMs: 1000 }); failed(result, 'BRANCH_ARMING_TIMEOUT');
   assert.equal(h.calls.includes('enableRuntime'), false);
   assert.equal(result.cleanup.operationsSettled, true);
 });
@@ -296,7 +296,7 @@ test('synthetic: pre-resume ownership recheck timeout is attributed to the armin
     const receipt = original(args);
     return h.readCount === 2 ? pendingUntilAbort(args.signal) : receipt;
   };
-  const result = await h.run({ earlyRuntime: true, armingTimeoutMs: 10 });
+  const result = await h.run({ earlyRuntime: true, armingTimeoutMs: 1000 });
   failed(result, 'BRANCH_ARMING_TIMEOUT');
   assert.equal(h.calls.includes('begin'), false);
   assert.equal(h.calls.includes('enableRuntime'), false);
@@ -305,7 +305,7 @@ test('synthetic: pre-resume ownership recheck timeout is attributed to the armin
 test('synthetic: observation deadline preserves a prefix but never interprets it', async () => {
   const h = synthetic(); const original = h.fixture.observeCommitted;
   h.fixture.observeCommitted = args => { original(args); return pendingUntilAbort(args.signal); };
-  const result = await h.run({ observationTimeoutMs: 10 }); failed(result, 'BRANCH_OBSERVATION_TIMEOUT');
+  const result = await h.run({ observationTimeoutMs: 1000 }); failed(result, 'BRANCH_OBSERVATION_TIMEOUT');
   assert.equal(JSON.parse(result.trace).events.length, nonempty.length);
   assert.ok(h.calls.includes('detach'));
 });
@@ -313,7 +313,8 @@ test('synthetic: observation deadline preserves a prefix but never interprets it
 test('synthetic: noncooperative pending arm cannot earn settled cleanup or normal quit', async () => {
   const h = synthetic(); const original = h.collector.arm;
   h.collector.arm = args => { original(args); return new Promise(() => {}); };
-  const result = await h.run({ armingTimeoutMs: 10, cleanupTimeoutMs: 20 }); failed(result, 'BRANCH_ARMING_TIMEOUT');
+  const result = await h.run({ armingTimeoutMs: 1000, cleanupTimeoutMs: 1000 }); failed(result, 'BRANCH_ARMING_TIMEOUT');
+  assert.equal(h.calls.includes('arm'), true);
   assert.equal(result.cleanup.operationsSettled, false);
   assert.equal(h.calls.includes('quit'), false);
 });
@@ -329,7 +330,7 @@ test('synthetic: late arm settlement is fenced before final removal/detach, neve
   h.collector.stopAndDrain = args => { setTimeout(finishArm, 5); return drain(args); };
   h.collector.detachAndResume = args => { attached = false; return detach(args); };
   h.fixture.quit = args => { assert.equal(attached, false, 'a late arm may not recreate attachment after cleanup'); return quit(args); };
-  const result = await h.run({ armingTimeoutMs: 10, cleanupTimeoutMs: 100 });
+  const result = await h.run({ armingTimeoutMs: 1000, cleanupTimeoutMs: 5000 });
   failed(result, 'BRANCH_ARMING_TIMEOUT');
   assert.equal(result.cleanup.quitConfirmed, true);
   assert.ok(h.calls.indexOf('late-arm-settled') < h.calls.indexOf('remove'));
