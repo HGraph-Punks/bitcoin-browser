@@ -181,8 +181,8 @@
     },
     {
       "path": "docs/FEATURE_REFERENCE.md",
-      "bytes": 21914,
-      "sha256": "18d21f594cc3d534041c1bc51175c44f824b3f0e5368c0477da11aa4b4973899"
+      "bytes": 21917,
+      "sha256": "7b49ddfa8dd2923a58ce51da79d57728f20d25063c3dff98e65ff27c329b4b1b"
     },
     {
       "path": "docs/GETTING_STARTED.md",
@@ -576,8 +576,8 @@
     },
     {
       "path": "scripts/packaged-smoke.mjs",
-      "bytes": 113188,
-      "sha256": "3f4f39c21254466edaa657a8fe538120539babf93bec1aa8c0ffd03b7a1f11d8"
+      "bytes": 113382,
+      "sha256": "c98ee8e5ec0de3793d1c55bd81ddb1caa00bc29a6359a597a73800b36c5497a6"
     },
     {
       "path": "scripts/packaged-startup-readiness.mjs",

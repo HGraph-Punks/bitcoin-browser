@@ -1490,7 +1490,11 @@ try {
     const requestCount = providerFixture.requests.length;
     instance = await launch(executable, profile, await reservePort());
     cdp = instance.cdp;
-    const recovered = await cdp.evaluate(`(async () => ({ data: await window.satBrowser.app.bootstrap(), text: document.body.innerText }))()`);
+    const recovered = await cdp.evaluate(`(async () => ({ data: await window.satBrowser.app.bootstrap() }))()`);
+    // The IPC bootstrap can resolve before the renderer finishes its own
+    // bootstrap continuation. Observe the real announcement after it renders.
+    await poll(() => cdp.evaluate(`document.body.innerText.includes('State recovered from backup')`),
+      (visible) => visible === true, stepTimeoutMs, 'backup recovery announcement');
     assert(recovered.data.stateRecovery?.source === 'backup' && recovered.data.stateRecovery.reason === 'invalid', 'packaged startup did not identify backup recovery');
     assert(recovered.data.state.bookmarks.some((entry) => entry.title === 'Recovery sentinel'), 'backup recovery lost the persisted bookmark');
     assert(recovered.data.state.settings.offlineMode === true && providerFixture.requests.length === requestCount, 'recovered offline state contacted providers');
@@ -1502,7 +1506,6 @@ try {
     await cdp.evaluate(`window.satBrowser.providers.remove(${JSON.stringify(retainedLegacyId)})`);
     assert((await cdp.evaluate('window.satBrowser.providers.list()')).every((item) => item.id !== retainedLegacyId), 'Repaired legacy provider cleanup did not persist');
     retainedLegacyProvider = null;
-    assert(recovered.text.includes('State recovered from backup'), 'backup recovery was not announced in the UI');
     assert(JSON.parse(await fs.readFile(path.join(profile, 'state', 'state.json'), 'utf8')).bookmarks.some((entry) => entry.title === 'Recovery sentinel'), 'recovery did not repair the primary state file');
     return { recovery: recovered.data.stateRecovery, bookmarkRestored: true, primaryRepaired: true, offlineRequestDelta: 0,
       legacyProviderRestartReadback: { enabled: true, capabilities: ['block'], cleaned: true } };

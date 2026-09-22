@@ -199,5 +199,5 @@ For older saved data without a recorded removal, expand **Review an older remove
 - no secret persistence when OS encryption is unavailable
 - Electron fuses disable RunAsNode, Node options, CLI inspect, and non-ASAR app loading
 
-Read [`SECURITY.md`](SECURITY.md) and [`docs/THREAT_MODEL.md`](THREAT_MODEL.md) before changing protocol handlers, session policy, IPC, wallet code, extension loading, or managed services.
+Read [`SECURITY.md`](../SECURITY.md) and [`docs/THREAT_MODEL.md`](THREAT_MODEL.md) before changing protocol handlers, session policy, IPC, wallet code, extension loading, or managed services.
 
