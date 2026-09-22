@@ -117,8 +117,13 @@ test('simultaneous stops share close completion and retain final output', async 
   assert.equal(manager.processes.size, 0);
   assert.equal(manager.hasActiveLifecycle(), false);
   const logs = manager.list()[0].logs;
-  assert.match(logs.filter((entry) => entry.stream === 'stdout').map((entry) => entry.text).join(''), /closing stdout/);
-  assert.match(logs.filter((entry) => entry.stream === 'stderr').map((entry) => entry.text).join(''), /closing stderr/);
+  if (process.platform === 'win32') {
+    // Node terminates Windows children directly; POSIX signal handlers cannot run.
+    assert.match(logs.filter((entry) => entry.stream === 'stdout').map((entry) => entry.text).join(''), /ready/);
+  } else {
+    assert.match(logs.filter((entry) => entry.stream === 'stdout').map((entry) => entry.text).join(''), /closing stdout/);
+    assert.match(logs.filter((entry) => entry.stream === 'stderr').map((entry) => entry.text).join(''), /closing stderr/);
+  }
   assert.match(logs.at(-1).text, /Process exited/);
 });
 

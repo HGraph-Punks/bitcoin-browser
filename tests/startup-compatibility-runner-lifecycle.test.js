@@ -1,13 +1,14 @@
 import test from 'node:test';
+import path from 'node:path';
 import assert from 'node:assert/strict';
 import { EventEmitter } from 'node:events';
 import * as diagnostic from '../scripts/diagnose-startup-compatibility.mjs';
 import { COMPATIBILITY_DOCUMENTS, validateCompatibilityReport } from '../scripts/startup-compatibility-support.mjs';
 
-const reportPath = '/tmp/startup-compatibility-lifecycle.json';
-const ownershipPath = '/tmp/startup-compatibility-lifecycle-ownership.json';
-const interruptedPath = '/tmp/startup-compatibility-lifecycle-interrupted.json';
-const profile = '/tmp/startup-compatibility-native-lifecycle-fixture';
+const reportPath = path.resolve('/tmp/startup-compatibility-lifecycle.json');
+const ownershipPath = path.resolve('/tmp/startup-compatibility-lifecycle-ownership.json');
+const interruptedPath = path.resolve('/tmp/startup-compatibility-lifecycle-interrupted.json');
+const profile = path.resolve('/tmp/startup-compatibility-native-lifecycle-fixture');
 const turns = async () => { for (let i = 0; i < 12; i++) await Promise.resolve(); };
 const deferred = () => {
   let resolve;
@@ -82,9 +83,9 @@ function fixture({ abortAt = null, holdClose = false, closeOverride = {}, pid = 
     async readInput(filename, _maxBytes, collect) {
       state.inputReads++;
       if (abortAt === 'preflight') controller.abort();
-      const metadata = filename.endsWith('/electron/package.json') ? JSON.stringify({ version: '44.2.0' }) : '44.2.0';
+      const metadata = filename.split(path.sep).join('/').endsWith('/electron/package.json') ? JSON.stringify({ version: '44.2.0' }) : '44.2.0';
       return { path: filename, sha256: 'synthetic-unchanged',
-        ...(/\/(?:Electron|Electron Framework)$/.test(filename) ? { architecture: 'arm64' } : {}),
+        ...(/\/(?:Electron|Electron Framework)$/.test(filename.split(path.sep).join('/')) ? { architecture: 'arm64' } : {}),
         ...(collect ? { data: Buffer.from(metadata) } : {}) };
     },
     spawn(executable, args) {

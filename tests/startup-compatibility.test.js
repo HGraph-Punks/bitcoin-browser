@@ -1,4 +1,5 @@
 import test from 'node:test';
+import path from 'node:path';
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import vm from 'node:vm';
@@ -270,10 +271,10 @@ async function runnerFixture({ closeConfirmed = true, writeFailure = false, chan
       readInput: async (filename, _maxBytes, collect) => {
         const count = (reads.get(filename) ?? 0) + 1; reads.set(filename, count);
         let data;
-        if (collect && filename.endsWith('/electron/package.json')) data = Buffer.from(identity === 'malformed-package' ? '{}' : JSON.stringify({ version: '44.2.0' }));
-        if (collect && filename.endsWith('/electron/dist/version')) data = Buffer.from(identity === 'version-file' ? '43.0.0' : '44.2.0');
+        if (collect && filename.split(path.sep).join('/').endsWith('/electron/package.json')) data = Buffer.from(identity === 'malformed-package' ? '{}' : JSON.stringify({ version: '44.2.0' }));
+        if (collect && filename.split(path.sep).join('/').endsWith('/electron/dist/version')) data = Buffer.from(identity === 'version-file' ? '43.0.0' : '44.2.0');
         return { path: filename, sha256: changed && count > 1 ? 'changed' : 'original',
-          ...(/\/(?:Electron|Electron Framework)$/.test(filename) ? { architecture: identity === 'binary-architecture' && filename.endsWith('Electron Framework') ? 'x64' : 'arm64' } : {}),
+          ...(/\/(?:Electron|Electron Framework)$/.test(filename.split(path.sep).join('/')) ? { architecture: identity === 'binary-architecture' && filename.endsWith('Electron Framework') ? 'x64' : 'arm64' } : {}),
           ...(collect ? { data } : {}) };
       },
       reportFailure: value => { assert.equal(value.profile.removed, false); order.push('fallback'); },
@@ -312,7 +313,7 @@ test('provenance includes all local behavior dependencies and both installed ver
   const report = await (await runnerFixture()).run();
   for (const suffix of ['/scripts/startup-diagnostic-support.mjs', '/scripts/startup-barrier-support.mjs',
     '/scripts/packaged-smoke-child-lifecycle.mjs', '/node_modules/electron/package.json', '/node_modules/electron/dist/version']) {
-    assert.equal(report.provenance.before.some(input => input.path.endsWith(suffix)), true, suffix);
+    assert.equal(report.provenance.before.some(input => input.path.split(path.sep).join('/').endsWith(suffix)), true, suffix);
   }
 });
 

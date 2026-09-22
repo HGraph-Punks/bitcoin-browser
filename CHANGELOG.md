@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.1.0 — first public beta (2026-09-22)
+
+- Published Bitcoin Browser under `HGraph-Punks/bitcoin-browser`, starting from an exact import of the existing Satoshi Browser source tree.
+- Retained the Bitcoin/Ordinals/Runes browser, dedicated media viewers, source controls, local AI, optional node tooling and isolated wallet bridge. Packaged wallet signing remains disabled.
+- Added explicitly unsigned macOS DMG/ZIP and Windows Setup/Portable/ZIP beta builds, plus Linux AppImage/DEB/RPM/tar archives, for x64 and ARM64.
+- Added public download links, getting-started instructions and installation/recovery guides for every format.
+- Corrected Windows text-file checkout, bundled PDF font loading in native tests, and native Windows smoke-test shutdown.
+- Retained hardened Electron fuses and sandbox policies. Unsigned builds have no verified platform publisher; macOS is not notarized. Updates are manual.
+
+### Earlier private source history
+
+The entries below retain the former private version numbering. The first public release is v0.1.0.
+
 ## 1.0.0-rc.1
 
 - Added a hardened Electron desktop shell with separate browser and wallet sessions.

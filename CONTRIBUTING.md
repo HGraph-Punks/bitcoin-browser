@@ -2,11 +2,15 @@
 
 ## Development loop
 
-```bash
-npm install
+Use Node.js 22.23.2 and a native desktop session.
+
+```sh
+npm ci
 npm run verify
-npm run dev
+npm start
 ```
+
+`npm start` works on Windows PowerShell, macOS and Linux. On POSIX shells, `npm run dev` enables development logging; on PowerShell use `$env:SATOSHI_BROWSER_DEV="1"; npm start`. Use the [release guide](docs/RELEASING.md) for packages and native runtime checks.
 
 Keep commits focused. Add protocol fixtures and failure tests before changing navigation grammar, provider normalization, recursive resolution, transaction decoding, or wallet RPC mapping.
 

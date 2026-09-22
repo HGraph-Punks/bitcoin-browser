@@ -81,7 +81,7 @@ test('tar install verifies pinned archive, writes one private executable atomica
   const f = await fixture(t); const result = await f.manager.install('core');
   assert.deepEqual(result, { kind: 'core', version: '1.0', executable: path.join(f.directory, 'core', '1.0', 'bitcoind'), sha256: f.descriptor.sha256, integrity: 'pinned-sha256', publisherSignatureVerified: false, downloadProvenance: null });
   assert.deepEqual(await fs.readFile(result.executable), f.bytes);
-  assert.equal((await fs.stat(result.executable)).mode & 0o777, 0o755);
+  if (process.platform !== 'win32') assert.equal((await fs.stat(result.executable)).mode & 0o777, 0o755);
   const reused = await f.manager.install('core'); assert.deepEqual(reused, result); assert.equal(f.requests.length, 1);
   assert.deepEqual(await f.manager.discover(), { core: [result.executable], ord: [] });
   await fs.writeFile(result.executable, 'tampered owned binary');

@@ -11,7 +11,7 @@ function header(name, size, type = '0') {
   const block = Buffer.alloc(512);
   block.write(name, 0, 100);
   const octal = (offset, length, value) => block.write(value.toString(8).padStart(length - 1, '0') + '\0', offset, length);
-  octal(100, 8, 0o644); octal(108, 8, 0); octal(116, 8, 0); octal(124, 12, size); octal(136, 12, 0);
+  octal(100, 8, process.platform === 'win32' ? 0o666 : 0o644); octal(108, 8, 0); octal(116, 8, 0); octal(124, 12, size); octal(136, 12, 0);
   block.fill(0x20, 148, 156); block[156] = type.charCodeAt(0); block.write('ustar\0', 257, 6); block.write('00', 263, 2);
   block.write('root', 265, 32); block.write('root', 297, 32);
   const sum = block.reduce((total, byte) => total + byte, 0);

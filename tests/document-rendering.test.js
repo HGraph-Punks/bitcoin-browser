@@ -41,7 +41,7 @@ test('actual bundled PDF engine parses two pages, respects rotation, extracts te
   const pdfjs = await import('pdfjs-dist/legacy/build/pdf.mjs');
   // The Node binary-data factory reads filesystem paths, not file: URL strings.
   // Use the bundled fonts so this pixel test does not depend on host fonts.
-  const task = pdfjs.getDocument({ data: pdfFixture(), verbosity: pdfjs.VerbosityLevel.ERRORS, enableXfa: false, disableAutoFetch: true, standardFontDataUrl: fileURLToPath(new URL('../node_modules/pdfjs-dist/standard_fonts/', import.meta.url)) });
+  const task = pdfjs.getDocument({ data: pdfFixture(), verbosity: pdfjs.VerbosityLevel.ERRORS, enableXfa: false, disableAutoFetch: true, standardFontDataUrl: fileURLToPath(new URL('../node_modules/pdfjs-dist/standard_fonts/', import.meta.url)).replaceAll('\\', '/') });
   try {
     const pdf = await task.promise; assert.equal(pdf.numPages, 2);
     for (const number of [1, 2]) {

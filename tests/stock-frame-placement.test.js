@@ -89,7 +89,7 @@ async function executeMain() {
 
 test('generated main installs both protocols, application preload and product-compatible ord Response', async () => {
   const fixture = await executeMain(); assert.deepEqual(fixture.sessions, ['persist:satoshi-browser-app', 'persist:satoshi-browser-wallet']);
-  assert.equal(fixture.win.options.webPreferences.preload, '/fixture/preload.cjs');
+  assert.equal(fixture.win.options.webPreferences.preload, path.join('/fixture', 'preload.cjs'));
   const response = await fixture.persistent.handlers.ord(new Request(ORD_DOCUMENT_URL));
   assert.equal(await response.text(), 'child'); assert.equal(response.headers.get('referrer-policy'), 'no-referrer');
   assert.equal(response.headers.get('x-content-type-options'), 'nosniff'); assert.match(response.headers.get('content-security-policy'), /connect-src[^;]*https: wss:/);

@@ -40,7 +40,7 @@ test('after-sign verifies publisher, runtime, timestamp, ticket, and Gatekeeper 
   assert.deepEqual(calls[2].args.slice(0, -1), ['stapler', 'staple']);
   assert.deepEqual(calls[3].args.slice(0, -1), ['stapler', 'validate']);
   for (const call of calls) {
-    assert.equal(call.args.at(-1), '/tmp/release with spaces/Bitcoin Browser.app');
+    assert.equal(call.args.at(-1), path.join(context.appOutDir, 'Bitcoin Browser.app'));
     assert.ok(call.options.timeout > 0 && call.options.timeout <= 60_000);
   }
 });

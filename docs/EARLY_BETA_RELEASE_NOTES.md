@@ -1,30 +1,23 @@
-# Bitcoin Browser — early beta candidate
+# Bitcoin Browser v0.1.0 beta
 
-**Maintainer: review this draft before publication.** A green workflow is not confirmation that every real wallet, installation format or native beta blocker has been qualified. Keep this release a draft until applicable blockers and the checklist below are resolved.
+The first public Bitcoin Browser release brings the existing Satoshi Browser codebase to **HGraph-Punks/bitcoin-browser**. Explore Bitcoin blocks, transactions, addresses and sats; browse inscriptions and Runes; inspect media and recursive content; and choose public or local sources. Light, dark and system appearance are available.
 
-This beta supports browsing Bitcoin, inscriptions and Runes, configurable data sources, guided local-node setup, and an isolated connection-only Wallet Bridge. No node is required to start browsing. Data availability and privacy depend on the configured providers. Some managed Core/Ord downloads and local-service tests are not available on every architecture.
+## Install and start
 
-## Wallet precautions
+Use the [README download table](https://github.com/HGraph-Punks/bitcoin-browser#download-v010-beta) for your OS and processor, then follow the [macOS](https://github.com/HGraph-Punks/bitcoin-browser/blob/v0.1.0/docs/install/macos.md), [Windows](https://github.com/HGraph-Punks/bitcoin-browser/blob/v0.1.0/docs/install/windows.md) or [Linux](https://github.com/HGraph-Punks/bitcoin-browser/blob/v0.1.0/docs/install/linux.md) guide. Every available format has a runbook. Start with `block:840000` after opening the app; no wallet, account or full node is needed.
 
-- Use an empty test wallet and no valuable funds. Install extensions only from verified wallet publishers.
-- Bitcoin Browser never asks you to import a seed phrase or private key. Do not enter either into the application.
-- Wallet discovery, public-account connection and disconnect are the beta scope. PSBT and message signing are disabled in packaged builds.
-- Automated fixture tests do not certify arbitrary wallet extensions. List only exact wallet versions that have completed manual acceptance; otherwise state that real-wallet compatibility is not yet qualified.
+**macOS and Windows are unsigned beta builds.** macOS has an ad-hoc integrity signature, with no Developer ID or notarization. Windows executables have no Authenticode publisher signature. OS security policy may warn or block launch. Linux packages are not repository-signed. Keep system-wide protections enabled; consult the installation guides for supported first-launch steps.
 
-## Maintainer publication checklist
+## Verification
 
-- [ ] Every attached OS/architecture passed the source, dependency, signing where applicable, native packaged smoke and shutdown gates for this exact tag.
-- [ ] The opening signing disclosure matches every attached download. Record the exact expected certificate publisher for signed Mac/Windows apps. Keep the **UNSIGNED BETA — no verified publisher** warning and `-unsigned` filenames if the Windows exception was selected; never imply those files are signed by Turtle Moon Command Center.
-- [ ] Each advertised installer/archive passed clean-user install, launch, quit/reopen, deep-link and uninstall/data-preservation checks.
-- [ ] Advertised real-wallet versions passed the connection-only manual matrix without funded wallets or credential inspection.
-- [ ] Existing native startup/shutdown and other applicable beta blockers in the repository's requirements matrix are resolved or the release remains a draft.
-- [ ] Record tested operating systems and wallet versions, remaining limitations, rollback/recovery advice, and the finalized support/security-reporting destination below. Do not publish placeholder contact details.
-- [ ] Final release ownership and trusted-distribution requirements have been reviewed. Legal entity: Turtle Moon Command Center; public brand: Turtle Moon. Checksum generation remains deferred; About details were added separately.
+Download **SHA256SUMS** and compare your file using the [verification guide](https://github.com/HGraph-Punks/bitcoin-browser/blob/v0.1.0/docs/install/verify-download.md). **release-manifest.json** records exact files, hashes, source commits and native build evidence. The release also contains a dependency inventory, audit report and verified source archive.
 
-## Compatibility and known issues
+## Beta scope
 
-Maintainer must replace this paragraph with the actual tested OS/wallet version matrix and current known issues. Do not infer that buildable targets, synthetic fixture passes, or a successful unpacked smoke run prove installer, full-node, or real-wallet compatibility.
+- Manual updates; back up the profile and quit before installing another version.
+- Packaged wallet signing is disabled. The browser is not a wallet or seed store.
+- Public sources receive your requested queries unless your settings restrict them. Offline browsing is limited to cached content.
+- Curated asset cards are examples, not prices, verified collections or live rankings. Global inscription keyword search and holder indexes are not provided.
+- Native automated smoke does not qualify every desktop distribution, third-party wallet or real-node configuration. See the manifest and [tester guide](https://github.com/HGraph-Punks/bitcoin-browser/blob/v0.1.0/docs/BETA_TESTER_GUIDE.md).
 
-## Feedback and recovery
-
-Maintainer must add the finalized feedback/security-reporting destination and previous-version recovery instructions. Bug reports should contain app/OS version, reproduction steps and redacted diagnostics—not seeds, keys, wallet files, authentication cookies or provider credentials. Back up your application profile before switching beta versions; do not delete node data as a troubleshooting shortcut.
+Report bugs at [GitHub Issues](https://github.com/HGraph-Punks/bitcoin-browser/issues); send support or private security reports to [patches@turtlemoon.io](mailto:patches@turtlemoon.io). Do not share credentials or full browsing profiles.

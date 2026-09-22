@@ -12,8 +12,8 @@ import {
   validateFusePair
 } from '../scripts/diagnose-cookie-fuse-pair.mjs';
 
-const ROOT = '/private/tmp/satoshi-cookie-fuse-pair-test';
-const OUTPUT = '/private/tmp/cookie-pair-report.json';
+const ROOT = path.resolve('/private/tmp/satoshi-cookie-fuse-pair-test');
+const OUTPUT = path.resolve('/private/tmp/cookie-pair-report.json');
 
 test('pair CLI requires exclusive absolute roots, unique flags, reviewed modes and bounded repeats', () => {
   assert.deepEqual(parseCookieFusePairArgs([`--pair-root=${ROOT}`, `--output=${OUTPUT}`]), {
@@ -50,7 +50,7 @@ async function pairFixture(t) {
   return { root, output, inspectBundle, sink };
 }
 
-test('injected workflow verifies preparation before launch and preserves alternating run identities', async (t) => {
+test('injected workflow verifies preparation before launch and preserves alternating run identities', { skip: process.platform === 'win32' ? 'macOS-only runner requires POSIX ownership and 0700 modes' : false }, async (t) => {
   const fixture = await pairFixture(t);
   const called = [];
   const report = await runCookieFusePair({ pairRoot: fixture.root, output: fixture.output, modes: ['https'], repeat: 2 }, {
@@ -72,7 +72,7 @@ test('injected workflow verifies preparation before launch and preserves alterna
   assert.equal((await fs.stat(path.join(fixture.root, 'profiles'))).mode & 0o777, 0o700);
 });
 
-test('fuse and signature preflight failures never launch a child', async (t) => {
+test('fuse and signature preflight failures never launch a child', { skip: process.platform === 'win32' ? 'macOS-only runner requires POSIX ownership and 0700 modes' : false }, async (t) => {
   const fuseFixture = await pairFixture(t);
   let launched = 0;
   const badInspections = [wire(FuseState.DISABLE), wire(FuseState.DISABLE), wire(FuseState.DISABLE)];
@@ -92,7 +92,7 @@ test('fuse and signature preflight failures never launch a child', async (t) => 
   assert.equal(launched, 0);
 });
 
-test('unconfirmed close and runner failure stop the remaining schedule with normalized attempt evidence', async (t) => {
+test('unconfirmed close and runner failure stop the remaining schedule with normalized attempt evidence', { skip: process.platform === 'win32' ? 'macOS-only runner requires POSIX ownership and 0700 modes' : false }, async (t) => {
   const fixture = await pairFixture(t);
   let calls = 0;
   const report = await runCookieFusePair({ pairRoot: fixture.root, output: fixture.output, modes: ['https', 'wss'], repeat: 1 }, {

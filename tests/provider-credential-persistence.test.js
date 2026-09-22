@@ -6,7 +6,7 @@ import { ProviderManager } from '../src/main/provider-manager.js';
 import { SecureStore } from '../src/main/secure-store.js';
 import { StateStore } from '../src/main/state-store.js';
 
-const FIXTURE_ROOT = '/synthetic/provider-credential-persistence';
+const FIXTURE_ROOT = path.resolve('/synthetic/provider-credential-persistence');
 const OLD_CREDENTIALS = { username: 'fixture-old-user', password: 'fixture-old-password' };
 const NEW_CREDENTIALS = { username: 'fixture-new-user', password: 'fixture-new-password' };
 const OLD_PROVIDER = {
@@ -35,7 +35,7 @@ function memoryFilesystem(t) {
   const renameFailures = [];
   const checked = (file) => {
     assert.equal(typeof file, 'string');
-    assert.ok(file === FIXTURE_ROOT || file.startsWith(`${FIXTURE_ROOT}/`), `Unexpected filesystem target: ${file}`);
+    assert.ok(file === FIXTURE_ROOT || file.startsWith(`${FIXTURE_ROOT}${path.sep}`), `Unexpected filesystem target: ${file}`);
     return file;
   };
   const read = (file) => {
@@ -82,8 +82,8 @@ async function fixture(t, { legacyPrimary = false } = {}) {
   const disk = memoryFilesystem(t);
   const loaded = [];
   const reopen = async () => {
-    const stateStore = new StateStore(`${FIXTURE_ROOT}/state`, null);
-    const secureStore = new SecureStore(`${FIXTURE_ROOT}/secure`, {
+    const stateStore = new StateStore(path.join(FIXTURE_ROOT, 'state'), null);
+    const secureStore = new SecureStore(path.join(FIXTURE_ROOT, 'secure'), {
       isEncryptionAvailable: () => true,
       encryptString: (value) => Buffer.from(`fixture-protected:${value}`),
       decryptString: (value) => value.toString().replace(/^fixture-protected:/, '')
@@ -101,7 +101,7 @@ async function fixture(t, { legacyPrimary = false } = {}) {
   if (legacyPrimary) {
     // A real old-release primary lacks recovery provenance. Overriding the
     // transient recoveryStatus on a defaults-created store is not equivalent.
-    await fs.writeFile(`${FIXTURE_ROOT}/state/state.json`, JSON.stringify({
+    await fs.writeFile(path.join(FIXTURE_ROOT, 'state/state.json'), JSON.stringify({
       schemaVersion: 3, settings: { localOnly: false }, providers: [FALLBACK]
     }));
   }

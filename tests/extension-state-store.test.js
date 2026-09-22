@@ -51,7 +51,7 @@ async function fixture(t) {
 function assertRenameFailure(error, target) {
   assert.equal(error.syscall, 'rename');
   assert.equal(error.dest, target);
-  assert.ok(['EISDIR', 'ENOTDIR', 'EEXIST', 'ENOTEMPTY'].includes(error.code), error.code);
+  assert.ok(['EISDIR', 'ENOTDIR', 'EEXIST', 'ENOTEMPTY', 'EPERM'].includes(error.code), error.code);
   assert.equal(typeof error.path, 'string');
   assert.equal(error.path.startsWith(`${target}.`), true);
   return true;

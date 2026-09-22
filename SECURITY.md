@@ -2,11 +2,11 @@
 
 ## Supported release
 
-Security fixes target the latest tagged release candidate or stable release on the default branch. A distributor should publish its own support window and signed-advisory process.
+Security fixes target the latest public beta, currently **v0.1.0**, on this repository's `main` branch. This beta has no guaranteed long-term support window. macOS and Windows downloads are explicitly unsigned; macOS is not notarized. See the [installation guides](README.md#download-v010-beta) and release notes for platform status.
 
 ## Reporting a vulnerability
 
-Do not publish a working exploit or sensitive user data in a public issue. Contact the repository security owner through the private security-advisory channel configured for the deployed repository. Include:
+Do not publish a working exploit or sensitive user data in a public issue. Email **[patches@turtlemoon.io](mailto:patches@turtlemoon.io)** or use this repository's **Security → Report a vulnerability** private reporting channel. Include:
 
 - affected version and operating system;
 - preconditions and threat actor capability;
@@ -15,7 +15,7 @@ Do not publish a working exploit or sensitive user data in a public issue. Conta
 - whether the issue crosses the inscription, wallet, IPC, protocol, provider, or managed-process boundary; and
 - suggested mitigations when available.
 
-A production fork must replace this generic policy with a monitored security contact before distribution.
+We will assess reports and coordinate a fix and disclosure with the reporter. Do not attach private credentials, full profiles, seed phrases or wallet files.
 
 ## Non-negotiable invariants
 
@@ -64,8 +64,9 @@ On-chain availability is not a safety signal. Inscriptions can contain phishing 
 - Use exact dependency versions and review lockfile changes.
 - Build from a clean, protected branch with least-privilege CI tokens.
 - Generate an SBOM and dependency audit report.
-- Sign installers and publish SHA-256 checksums through an authenticated channel.
-- Notarize macOS builds and verify Windows signatures on a clean machine.
+- Publish SHA-256 checksums and an exact build manifest through the official GitHub release.
+- Label unsigned beta downloads explicitly. Signed distribution mode requires verified platform credentials; it must never silently fall back to an unsigned build.
+- For signed releases, notarize the macOS application and verify Windows publisher signatures.
 - Test the packaged application, not only `npm start`.
 - Treat Electron upgrades as security releases when Chromium/Node fixes are included.
 - Do not embed RPC passwords, signing keys, analytics secrets, or private update keys in the application.

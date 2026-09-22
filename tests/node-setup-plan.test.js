@@ -1,6 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { buildNodeSetupPlan, defaultNodeSetupDraft } from '../src/main/node-setup-plan.js';
+import { buildNodeSetupPlan as nativeNodeSetupPlan, defaultNodeSetupDraft } from '../src/main/node-setup-plan.js';
+
+// POSIX fixtures are explicit; the Windows-path case overrides this below.
+const buildNodeSetupPlan = (draft, options = {}) => nativeNodeSetupPlan(draft, { platform: 'darwin', ...options });
 
 function draft(network = 'mainnet') {
   const value = defaultNodeSetupDraft({ rootDirectory: '/owned/node setup', network });

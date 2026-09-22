@@ -446,8 +446,8 @@ test('directory monitor counts sizes without reading content and rejects changed
   await fs.writeFile(path.join(root, 'nested', 'fixture.txt'), 'synthetic private text is not read');
   const result = await measureRegtestDirectory(canonical, identity);
   assert.deepEqual(result, { entries: 2, bytes: 34 });
-  await assert.rejects(measureRegtestDirectory(canonical, { ...identity, ino: identity.ino + 1 }), { code: 'REGTEST_ROOT_CHANGED' });
+  await assert.rejects(measureRegtestDirectory(canonical, { ...identity, ino: identity.ino === 0 ? 1 : 0 }), { code: 'REGTEST_ROOT_CHANGED' });
   await assert.rejects(measureRegtestDirectory(canonical, identity, 1), { code: 'REGTEST_STORAGE_ENTRY_LIMIT' });
-  await fs.symlink(path.join(root, 'nested'), path.join(root, 'redirect'));
+  await fs.symlink(path.join(root, 'nested'), path.join(root, 'redirect'), process.platform === 'win32' ? 'junction' : 'dir');
   await assert.rejects(measureRegtestDirectory(canonical, identity), { code: 'REGTEST_STORAGE_SYMLINK' });
 });

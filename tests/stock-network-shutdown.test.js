@@ -1,4 +1,5 @@
 import test from 'node:test';
+import path from 'node:path';
 import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import { EventEmitter } from 'node:events';
@@ -49,7 +50,7 @@ test('CLI accepts only bounded reviewed modes, repeats, and optional absolute ou
   }
 });
 
-function pathIsAbsolute(value) { return typeof value === 'string' && value.startsWith('/'); }
+function pathIsAbsolute(value) { return typeof value === 'string' && path.isAbsolute(value); }
 
 test('raw TLS observation bounds reject invalid limits before opening a listener', async () => {
   for (const maxConnections of [0, 31, 129, 32.5, NaN, '32']) {

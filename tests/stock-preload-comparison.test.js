@@ -99,7 +99,7 @@ test('generated main configures preload only for application arm and forwards on
   }
   const marker = 'STOCK_PRELOAD_READY:{"facadePresent":true}';
   const executed = await executeGeneratedMain('application');
-  assert.equal(executed.win.options.webPreferences.preload, '/fixture/preload.cjs');
+  assert.equal(executed.win.options.webPreferences.preload, path.join('/fixture', 'preload.cjs'));
   executed.win.webContents.emit('console-message', { message: marker });
   executed.win.webContents.emit('console-message', { message: `STOCK_PRELOAD_READY:${'x'.repeat(5000)}` });
   assert.equal(executed.stdout.filter((line) => line === `${marker}\n`).length, 1);
