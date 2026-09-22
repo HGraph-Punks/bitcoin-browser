@@ -51,8 +51,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 8805,
-      "sha256": "2549e6e00cff9bfae24d3cb34dd997feecdf7a2f4e317223a83d32e1ff2c608e"
+      "bytes": 9079,
+      "sha256": "b441884db4900d62c255603cc6e1f14f1713b79cc08ac705bf5a98876b89fd6b"
     },
     {
       "path": "SECURITY.md",
@@ -141,8 +141,8 @@
     },
     {
       "path": "docs/BETA_TESTER_GUIDE.md",
-      "bytes": 2400,
-      "sha256": "69cc8c059793d3820a0c4838fd50ef4a1d72f927ee7288142ed26490bea1c54d"
+      "bytes": 2908,
+      "sha256": "92cbaace74f5c543d27b5582bb6389a788f6062ab58259aee29576a0d9f85388"
     },
     {
       "path": "docs/BETA_TEST_PLAN.md",
@@ -171,8 +171,8 @@
     },
     {
       "path": "docs/EARLY_BETA_RELEASE_NOTES.md",
-      "bytes": 2658,
-      "sha256": "91d5a256227f0cda0475746b851edeaae90997f8901770bda9ab72185787afc1"
+      "bytes": 3033,
+      "sha256": "3f11fa78dfd1994b5963f5ba391ccbc4930523d3baf7be1d0b478d9126044e65"
     },
     {
       "path": "docs/EASY_NODE_SETUP.md",
@@ -341,8 +341,8 @@
     },
     {
       "path": "docs/install/macos.md",
-      "bytes": 2726,
-      "sha256": "8ad2d36b138be4fa9a8daafa475e4942e220888f1c6edb0649ecc6f497e1f73d"
+      "bytes": 3388,
+      "sha256": "c44f2f975756ce9b2a8ca43511c08952074d20e1bba13b94262f94b1ba6847ec"
     },
     {
       "path": "docs/install/verify-download.md",
@@ -2226,8 +2226,8 @@
     },
     {
       "path": "tests/startup-branch-fixture.test.js",
-      "bytes": 34787,
-      "sha256": "f71d16bfd8aada5ee7565f10d822a44aac273dcb3c0a12f75bf6cc5f71f9ca21"
+      "bytes": 34788,
+      "sha256": "e59e1b7988906ebb245f68c60cb337cd0658a00f4fbad36d8c7c9e9b4ed3b405"
     },
     {
       "path": "tests/startup-compatibility-runner-lifecycle.test.js",

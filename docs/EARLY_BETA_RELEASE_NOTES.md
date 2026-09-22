@@ -15,6 +15,7 @@ Download **SHA256SUMS** and compare your file using the [verification guide](htt
 ## Beta scope
 
 - Manual updates; back up the profile and quit before installing another version.
+- Known macOS issue: quitting can intermittently stall after network-content use. One local macOS 26.6.2 DMG run needed a forced exit after application persistence completed; a repeat passed all 34 checks. Native macOS 15 checks passed. This does not establish a root cause or guarantee that every shutdown saves successfully. See the macOS guide for recovery and reporting.
 - Packaged wallet signing is disabled. The browser is not a wallet or seed store.
 - Public sources receive your requested queries unless your settings restrict them. Offline browsing is limited to cached content.
 - Curated asset cards are examples, not prices, verified collections or live rankings. Global inscription keyword search and holder indexes are not provided.

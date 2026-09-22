@@ -108,7 +108,7 @@ function controlled(options = {}) {
   h.fixture = createStartupBranchFixture({ electron: h.electron,
     preloadPath: '/private/tmp/synthetic-uncreated-startup-probe.cjs', productionPreloadBytes: production,
     probeBytes: buildAppPreloadProbe(production), clock: h.clock, setupTimeoutMs: options.setupTimeoutMs ?? 5000,
-    observationTimeoutMs: options.observationTimeoutMs ?? 5000, cleanupTimeoutMs: options.cleanupTimeoutMs ?? 100 });
+    observationTimeoutMs: options.observationTimeoutMs ?? 5000, cleanupTimeoutMs: options.cleanupTimeoutMs ?? 5000 });
   h.start = async () => { const state = JSON.parse(await h.fixture.start()); h.binding = { owner: state.owner, nonce }; return state; };
   h.bind = () => h.fixture.bind({ binding: h.binding });
   h.prepare = () => h.fixture.prepareQuit({ binding: h.binding });

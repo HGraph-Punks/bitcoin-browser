@@ -51,6 +51,8 @@ See [getting started](docs/GETTING_STARTED.md) for a short walkthrough and optio
 
 This is an early beta with manual updates. It is not a general-purpose web browser, wallet, key store or exchange. Packaged releases disable wallet signing. The optional Wallet Bridge remains isolated from inscription content; do not import a seed phrase or private key into Bitcoin Browser.
 
+**Known macOS issue:** quitting can occasionally stall after network-content use. One local macOS 26.6.2 DMG test required a forced exit; the repeat passed. See the [macOS troubleshooting steps](docs/install/macos.md#troubleshooting) if the app remains running after Quit.
+
 Live results depend on your selected source and network. Curated discovery cards are examples, not live rankings or verified collections. Global inscription keyword search, market prices and holder indexes are not promised. Some advanced provider, node and wallet combinations need further testing. See [beta testing](docs/BETA_TESTER_GUIDE.md) and the release's recorded build checks for the tested scope.
 
 ## Run from source

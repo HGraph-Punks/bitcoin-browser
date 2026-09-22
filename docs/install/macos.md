@@ -24,6 +24,12 @@ If macOS says it cannot verify the developer or cannot check the app, first conf
 
 Do not disable Gatekeeper globally. A malware alert or damaged-file warning is not the same as the expected unsigned-publisher prompt: stop, compare the checksum and report the exact message. Re-download a mismatched archive.
 
+## Troubleshooting
+
+This beta can occasionally remain running during Quit after network-content use. During preparation, one macOS 26.6.2 DMG run needed a forced exit; a repeat passed. The cause remains unresolved.
+
+If Quit does not finish, open Activity Monitor, select **Bitcoin Browser**, and try **Quit** from its stop control. Use **Force Quit** only if it still will not exit; unsaved work may be lost. Reopen the app and confirm your settings and bookmarks. Report the OS version and preceding steps through [GitHub Issues](https://github.com/HGraph-Punks/bitcoin-browser/issues) or patches@turtlemoon.io. Do not attach your full profile or credentials.
+
 ## Updates and removal
 
 Quit Bitcoin Browser before replacing the app with a newer release. Installation does not intentionally remove the profile. Back it up first using the [profile guide](../GETTING_STARTED.md#update-recover-and-report-problems).
