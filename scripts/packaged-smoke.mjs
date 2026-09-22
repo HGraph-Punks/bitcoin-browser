@@ -952,15 +952,19 @@ try {
 
   await check('a second packaged instance delivers a deep link to the existing trusted window', async () => {
     const second = spawn(executable, [`--user-data-dir=${profile}`, 'satnav://about'], { cwd: root, stdio: 'ignore' });
+    let lastObserved;
     try {
       const value = await poll(
-        () => cdp.evaluate(`({ heading: document.querySelector('#page h1')?.textContent, target: document.querySelector('#omnibox')?.value, shellUrl: location.href })`),
+        async () => lastObserved = await cdp.evaluate(`({ heading: document.querySelector('#page h1')?.textContent, target: document.querySelector('#omnibox')?.value, shellUrl: location.href })`),
         (result) => result.heading === 'Bitcoin Browser' && result.target === 'satnav://about',
         stepTimeoutMs,
         'second-instance deep link'
       );
       assert(value.shellUrl === 'app://app/renderer/index.html', 'deep link changed the trusted shell origin');
       return value;
+    } catch (error) {
+      error.evidence = { lastObserved, secondExitCode: second.exitCode, secondSignal: second.signalCode };
+      throw error;
     } finally {
       if (second.exitCode === null && second.signalCode === null) second.kill('SIGTERM');
     }

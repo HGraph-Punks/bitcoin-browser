@@ -51,7 +51,10 @@ function validDeepLink(value) {
     && /^satnav:\/\/[^\s\u0000-\u001f\u007f]*$/i.test(value);
 }
 
-export function extractDeepLinkArgument(argv) {
+export function extractDeepLinkArgument(argv, additionalData) {
+  // Electron/Chromium can rewrite second-instance argv on Windows. Preserve
+  // the validated original URL through the lock's explicit JSON payload.
+  if (validDeepLink(additionalData?.deepLink)) return additionalData.deepLink;
   if (!Array.isArray(argv)) return null;
   return argv.find((argument) => validDeepLink(argument)) ?? null;
 }

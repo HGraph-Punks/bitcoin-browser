@@ -576,8 +576,8 @@
     },
     {
       "path": "scripts/packaged-smoke.mjs",
-      "bytes": 113382,
-      "sha256": "c98ee8e5ec0de3793d1c55bd81ddb1caa00bc29a6359a597a73800b36c5497a6"
+      "bytes": 113579,
+      "sha256": "3be4ab054c926582a91b076d514651cd29ca1708e8552355f8eff01906ca9d56"
     },
     {
       "path": "scripts/packaged-startup-readiness.mjs",
@@ -816,8 +816,8 @@
     },
     {
       "path": "src/main/index.js",
-      "bytes": 12407,
-      "sha256": "c922c75b37aeb54c17444e0e71d982704f7539088130130b122e2957a097cd67"
+      "bytes": 12509,
+      "sha256": "b2b56adfbc1769af54dd20a2bcb48bddc8b4d2d5347d8b8f89327836f5bfe3cd"
     },
     {
       "path": "src/main/ipc.js",
@@ -976,8 +976,8 @@
     },
     {
       "path": "src/main/window.js",
-      "bytes": 9450,
-      "sha256": "d57e7ad1ae805342d5bf17d0ac2d3b8ae3d46c2224e0042a695c0ef365397e5e"
+      "bytes": 9696,
+      "sha256": "7e70b01babbf66d101d8a43aa771680864762391a64c9b661512bd7f615ba2ca"
     },
     {
       "path": "src/model-viewer/index.html",
@@ -2186,8 +2186,8 @@
     },
     {
       "path": "tests/shell-window-lifecycle.test.js",
-      "bytes": 10831,
-      "sha256": "b93f7d9270e592bd56d83e1b13f126830fe6d2c4420b84b40d7d409011e106e7"
+      "bytes": 11306,
+      "sha256": "02eba346fdc43a147675d945b112b9ec874810b66304255eb9a1cbb0c8fa68b8"
     },
     {
       "path": "tests/shutdown.test.js",

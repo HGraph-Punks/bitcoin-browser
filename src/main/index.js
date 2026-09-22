@@ -44,7 +44,7 @@ protocol.registerSchemesAsPrivileged([
 app.enableSandbox();
 app.commandLine.appendSwitch('force-color-profile', 'srgb');
 
-const singleInstance = app.requestSingleInstanceLock();
+const singleInstance = app.requestSingleInstanceLock({ deepLink: extractDeepLinkArgument(process.argv) });
 if (!singleInstance) app.quit();
 
 let mainWindow = null;
@@ -102,8 +102,8 @@ app.on('open-url', (event, url) => {
   sendDeepLink(url);
 });
 
-app.on('second-instance', (_event, argv) => {
-  const deepLink = extractDeepLinkArgument(argv);
+app.on('second-instance', (_event, argv, _workingDirectory, additionalData) => {
+  const deepLink = extractDeepLinkArgument(argv, additionalData);
   if (deepLink) sendDeepLink(deepLink);
   else shellWindows.focusOrCreate();
 });

@@ -239,4 +239,10 @@ test('argv deep-link extraction is case-insensitive and type-safe', () => {
   assert.equal(extract(['app', 'satnav://bad\nvalue']), null);
   assert.equal(extract(['app', `satnav://${'a'.repeat(4088)}`]), null);
   assert.equal(extract(null), null);
+  assert.equal(extract(['app', '--original-process-start-time=123'], { deepLink: 'satnav://about' }), 'satnav://about');
+  assert.equal(extract(['app', 'satnav://home'], { deepLink: 'satnav://about' }), 'satnav://about');
+  for (const deepLink of ['https://example.test', 'satnav://bad\nvalue', `satnav://${'a'.repeat(4088)}`, 42]) {
+    assert.equal(extract(['app', 'satnav://home'], { deepLink }), 'satnav://home');
+    assert.equal(extract(null, { deepLink }), null);
+  }
 });
