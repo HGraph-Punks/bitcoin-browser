@@ -1,17 +1,17 @@
 {
   "name": "satoshi-browser",
-  "version": "1.0.0-rc.2",
+  "version": "0.1.0",
   "description": "A sovereign Bitcoin and Ordinals desktop browser",
-  "homepage": "https://github.com/HGraphPunks/satoshi-browser-1.0.0-rc.1",
+  "homepage": "https://github.com/HGraph-Punks/bitcoin-browser",
   "repository": {
     "type": "git",
-    "url": "https://github.com/HGraphPunks/satoshi-browser-1.0.0-rc.1.git"
+    "url": "https://github.com/HGraph-Punks/bitcoin-browser.git"
   },
   "type": "module",
   "main": "src/main/index.js",
   "author": {
     "name": "Turtle Moon Command Center",
-    "email": "hgraphpunks@gmail.com"
+    "email": "patches@turtlemoon.io"
   },
   "license": "MIT",
   "private": true,
@@ -103,7 +103,7 @@
     },
     "linux": {
       "artifactName": "bitcoin-browser-${version}-linux-${arch}.${ext}",
-      "maintainer": "Turtle Moon Command Center <hgraphpunks@gmail.com>",
+      "maintainer": "Turtle Moon Command Center <patches@turtlemoon.io>",
       "executableName": "bitcoin-browser",
       "category": "Network;Utility",
       "target": [

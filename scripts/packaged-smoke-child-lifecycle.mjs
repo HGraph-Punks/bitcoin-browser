@@ -1,4 +1,17 @@
 import { waitForStartupChildClose } from './startup-diagnostic-support.mjs';
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
+
+const execute = promisify(execFile);
+
+// Node's SIGTERM uses TerminateProcess on Windows; it cannot exercise Electron's
+// before-quit cleanup. WM_CLOSE requests the normal close path for this owned PID.
+export async function requestWindowsWindowClose(child) {
+  if (!Number.isSafeInteger(child.pid) || child.pid < 1) throw new Error('Invalid owned application PID');
+  const command = `$ErrorActionPreference = 'Stop'; $application = Get-Process -Id ${child.pid}; if (-not $application.CloseMainWindow()) { throw 'Application did not accept WM_CLOSE' }`;
+  await execute('powershell.exe', ['-NoLogo', '-NoProfile', '-NonInteractive', '-Command', command], { timeout: 5_000, maxBuffer: 64 * 1024 });
+  return true;
+}
 
 export function observePackagedChild(child) {
   const state = { closeConfirmed: false, code: null, signal: null, spawnError: null };
@@ -7,12 +20,12 @@ export function observePackagedChild(child) {
   return state;
 }
 
-export async function shutdownPackagedChild(child, observation, { timeoutMs = 15_000, postKillMs = 3_000 } = {}) {
+export async function shutdownPackagedChild(child, observation, { timeoutMs = 15_000, postKillMs = 3_000, requestClose = () => child.kill('SIGTERM') } = {}) {
   if (observation.closeConfirmed) return { closeConfirmed: true, code: observation.code, signal: observation.signal, forced: false, timedOut: false, spawnError: observation.spawnError, killError: null, initialSignalError: null };
   const closing = waitForStartupChildClose(child, timeoutMs, postKillMs);
   let initialSignalError = null;
   if (child.exitCode === null && child.signalCode === null) {
-    try { if (!child.kill('SIGTERM')) initialSignalError = 'KILL_NOT_SENT'; }
+    try { if (!await requestClose()) initialSignalError = 'KILL_NOT_SENT'; }
     catch (error) { initialSignalError = error?.code ?? 'KILL_FAILED'; }
   }
   const result = await closing;

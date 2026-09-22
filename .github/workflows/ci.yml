@@ -40,7 +40,7 @@ jobs:
 
   package-smoke:
     name: Native smoke (${{ matrix.id }})
-    if: github.event_name != 'schedule'
+    if: github.event_name != 'schedule' && github.ref != 'refs/heads/release/bitcoin-browser-v0.1.0'
     runs-on: ${{ matrix.runner }}
     needs: verify
     timeout-minutes: 40

@@ -153,10 +153,10 @@ test('packager artifact templates match all staged filenames and preserve existi
 });
 
 test('Linux release defaults use the owner-confirmed repository and public maintainer contact', () => {
-  assert.equal(pkg.homepage, 'https://github.com/HGraphPunks/satoshi-browser-1.0.0-rc.1');
+  assert.equal(pkg.homepage, 'https://github.com/HGraph-Punks/bitcoin-browser');
   assert.deepEqual(pkg.repository, { type: 'git', url: `${pkg.homepage}.git` });
-  assert.equal(pkg.build.linux.maintainer, 'Turtle Moon Command Center <hgraphpunks@gmail.com>');
-  assert.deepEqual(pkg.author, { name: 'Turtle Moon Command Center', email: 'hgraphpunks@gmail.com' });
+  assert.equal(pkg.build.linux.maintainer, 'Turtle Moon Command Center <patches@turtlemoon.io>');
+  assert.deepEqual(pkg.author, { name: 'Turtle Moon Command Center', email: 'patches@turtlemoon.io' });
   const linux = steps(release.jobs.build).find((step) => step.run?.startsWith('npm run dist:linux'));
   assert.equal(linux.env.SATOSHI_BROWSER_RELEASE_HOMEPAGE, '${{ github.server_url }}/${{ github.repository }}');
   assert.equal(linux.env.SATOSHI_BROWSER_LINUX_MAINTAINER,

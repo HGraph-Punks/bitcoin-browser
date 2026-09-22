@@ -63,6 +63,20 @@ test('shutdown after exit waits for close without sending a spurious signal', as
   assert.equal(kills, 0); assert.equal(result.closeConfirmed, true); assert.equal(result.initialSignalError, null);
 });
 
+test('native window-close requests preserve clean exit and still wait for pipe closure', async () => {
+  const child = childFixture(() => { throw new Error('Must not force-terminate a normal window close'); });
+  const observation = observePackagedChild(child);
+  const result = await shutdownPackagedChild(child, observation, { timeoutMs: 100, postKillMs: 5,
+    requestClose: async () => {
+      child.exitCode = 0; child.emit('exit', 0, null);
+      setTimeout(() => child.emit('close', 0, null), 2);
+      return true;
+    } });
+  assert.equal(result.code, 0); assert.equal(result.signal, null);
+  assert.equal(result.closeConfirmed, true); assert.equal(result.forced, false);
+  assert.equal(result.initialSignalError, null);
+});
+
 test('denied signals leave closure unconfirmed and block replacement work', async () => {
   const child = childFixture(() => { const error = new Error('denied'); error.code = 'EPERM'; throw error; });
   const result = await shutdownPackagedChild(child, observePackagedChild(child), { timeoutMs: 2, postKillMs: 3 });

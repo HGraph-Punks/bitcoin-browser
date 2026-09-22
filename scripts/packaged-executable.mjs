@@ -1,12 +1,17 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { UNSIGNED_WINDOWS_DIRECTORY } from './beta-release.mjs';
+import { UNSIGNED_WINDOWS_DIRECTORY, UNSIGNED_MACOS_DIRECTORY } from './beta-release.mjs';
 
-export function packagedArtifactDirectory(directory, { distribution = false, unsignedWindowsBeta = false, platform = process.platform } = {}) {
+export function packagedArtifactDirectory(directory, { distribution = false, unsignedWindowsBeta = false, unsignedMacosBeta = false, platform = process.platform } = {}) {
+  if (unsignedWindowsBeta && unsignedMacosBeta) throw new Error('Choose only one unsigned native distribution mode');
   if (unsignedWindowsBeta && (!distribution || platform !== 'win32')) {
     throw new Error('Unsigned Windows beta smoke requires --distribution on native Windows');
   }
   if (unsignedWindowsBeta) return path.join(directory, UNSIGNED_WINDOWS_DIRECTORY);
+  if (unsignedMacosBeta && (!distribution || platform !== 'darwin')) {
+    throw new Error('Unsigned macOS beta smoke requires --distribution on native macOS');
+  }
+  if (unsignedMacosBeta) return path.join(directory, UNSIGNED_MACOS_DIRECTORY);
   return distribution ? directory : path.join(directory, 'developer');
 }
 

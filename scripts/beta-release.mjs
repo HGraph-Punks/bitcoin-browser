@@ -5,6 +5,17 @@ import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
 export const UNSIGNED_WINDOWS_DIRECTORY = 'unsigned-windows-beta';
+export const UNSIGNED_MACOS_DIRECTORY = 'unsigned-macos-beta';
+
+export function validateMacosSigning(mode = 'signed') {
+  if (!['signed', 'unsigned-beta'].includes(mode)) throw new Error('macOS signing must be signed or unsigned-beta');
+  return mode;
+}
+
+export function macosArtifactTemplate(mode = 'signed') {
+  validateMacosSigning(mode);
+  return 'bitcoin-browser-${version}-macos-${arch}' + (mode === 'unsigned-beta' ? '-unsigned' : '') + '.${ext}';
+}
 
 export function validateWindowsSigning(mode = 'signed') {
   if (!['signed', 'unsigned-beta'].includes(mode)) throw new Error('Windows signing must be signed or unsigned-beta');
@@ -27,8 +38,8 @@ export const BETA_TARGETS = Object.freeze([
 ].map(Object.freeze));
 
 export function validateBetaTag(tag, version) {
-  if (typeof tag !== 'string' || tag !== tag.trim() || !/^v(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)-(?:beta|rc)\.(?:0|[1-9]\d*)$/.test(tag)) {
-    throw new Error('Choose an existing early-beta tag: vMAJOR.MINOR.PATCH-beta.N or vMAJOR.MINOR.PATCH-rc.N');
+  if (typeof tag !== 'string' || tag !== tag.trim() || !(tag === 'v0.1.0' || /^v(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)-(?:beta|rc)\.(?:0|[1-9]\d*)$/.test(tag))) {
+    throw new Error('Choose an existing early-beta tag: v0.1.0, vMAJOR.MINOR.PATCH-beta.N or vMAJOR.MINOR.PATCH-rc.N');
   }
   if (version !== undefined && tag !== `v${version}`) throw new Error(`Version mismatch: expected v${version}, received ${tag}`);
   return tag;
@@ -45,9 +56,10 @@ export function requireNativeTarget(id, platform = process.platform, arch = proc
   return target;
 }
 
-export function expectedAssets(version, targets = BETA_TARGETS, windowsSigning = 'signed') {
+export function expectedAssets(version, targets = BETA_TARGETS, windowsSigning = 'signed', macosSigning = 'signed') {
   validateBetaTag(`v${version}`, version);
   validateWindowsSigning(windowsSigning);
+  validateMacosSigning(macosSigning);
   return targets.flatMap(({ id, platform, arch }) => {
     const suffixes = platform === 'darwin' ? ['.dmg', '.zip']
       : platform === 'win32' ? ['-setup.exe', '-portable.exe', '.zip']
@@ -62,7 +74,7 @@ export function expectedAssets(version, targets = BETA_TARGETS, windowsSigning =
         else if (suffix === '.rpm' || suffix === '.AppImage') artifactArch = 'x86_64';
       } else if (platform === 'linux' && arch === 'arm64' && suffix === '.rpm') artifactArch = 'aarch64';
       const artifactTarget = `${id.slice(0, -arch.length)}${artifactArch}`;
-      const qualifier = platform === 'win32' && windowsSigning === 'unsigned-beta' ? '-unsigned' : '';
+      const qualifier = (platform === 'win32' && windowsSigning === 'unsigned-beta') || (platform === 'darwin' && macosSigning === 'unsigned-beta') ? '-unsigned' : '';
       return `bitcoin-browser-${version}-${artifactTarget}${qualifier}${suffix}`;
     });
   }).sort();
@@ -73,12 +85,13 @@ async function requireRegularAsset(file) {
   if (!stat.isFile() || stat.isSymbolicLink() || stat.size === 0) throw new Error(`Release asset must be a nonempty regular file: ${path.basename(file)}`);
 }
 
-export async function stageAssets(directory, version, targetId, windowsSigning = 'signed') {
+export async function stageAssets(directory, version, targetId, windowsSigning = 'signed', macosSigning = 'signed') {
   const target = BETA_TARGETS.find((item) => item.id === targetId);
   if (!target) throw new Error(`Unknown beta target: ${targetId}`);
-  const assets = expectedAssets(version, [target], windowsSigning);
+  const assets = expectedAssets(version, [target], windowsSigning, macosSigning);
   const source = target.platform === 'win32' && windowsSigning === 'unsigned-beta'
-    ? path.join(directory, UNSIGNED_WINDOWS_DIRECTORY) : directory;
+    ? path.join(directory, UNSIGNED_WINDOWS_DIRECTORY)
+    : target.platform === 'darwin' && macosSigning === 'unsigned-beta' ? path.join(directory, UNSIGNED_MACOS_DIRECTORY) : directory;
   for (const name of assets) await requireRegularAsset(path.join(source, name));
   const destination = path.join(directory, 'beta-assets', targetId);
   await fs.mkdir(path.dirname(destination), { recursive: true });
@@ -87,8 +100,8 @@ export async function stageAssets(directory, version, targetId, windowsSigning =
   return assets;
 }
 
-export async function validateAssets(directory, version, selection = 'all', windowsSigning = 'signed') {
-  const expected = expectedAssets(version, selectedTargets(selection), windowsSigning);
+export async function validateAssets(directory, version, selection = 'all', windowsSigning = 'signed', macosSigning = 'signed') {
+  const expected = expectedAssets(version, selectedTargets(selection), windowsSigning, macosSigning);
   const actual = (await fs.readdir(directory)).sort();
   if (JSON.stringify(actual) !== JSON.stringify(expected)) {
     const missing = expected.filter((name) => !actual.includes(name));
@@ -127,6 +140,7 @@ async function main() {
   const tag = process.env.BETA_TAG;
   const selection = process.env.BETA_PLATFORMS || 'all';
   const windowsSigning = validateWindowsSigning(process.env.BETA_WINDOWS_SIGNING || 'signed');
+  const macosSigning = validateMacosSigning(process.env.BETA_MACOS_SIGNING || 'signed');
   const version = JSON.parse(await fs.readFile(path.join(root, 'package.json'), 'utf8')).version;
   if (command === 'plan') {
     validateBetaTag(tag, version);
@@ -140,7 +154,7 @@ async function main() {
     console.log(`Native runner confirmed: ${requireNativeTarget(process.argv[3]).id}`);
   } else if (command === 'stage') {
     requireNativeTarget(process.argv[3]);
-    console.log((await stageAssets(path.join(root, 'release'), version, process.argv[3], windowsSigning)).join('\n'));
+    console.log((await stageAssets(path.join(root, 'release'), version, process.argv[3], windowsSigning, macosSigning)).join('\n'));
   } else if (command === 'draft') {
     validateBetaTag(tag, version);
     const repository = process.env.GITHUB_REPOSITORY;

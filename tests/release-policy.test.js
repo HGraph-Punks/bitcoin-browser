@@ -134,7 +134,7 @@ test('packaging arguments cannot replace hooks, bypass signing, repackage, or pu
     ['--projectDir=/tmp/other'], ['--publish=always'], ['--mac', 'mas'], ['--mac=']
   ]) assert.throws(() => inspectPackagingArguments(input), /Unsupported packaging/, input.join(' '));
   assert.deepEqual(inspectPackagingArguments(['--mac', 'dmg', 'zip', '--arm64']), {
-    unsigned: false, unsignedWindowsBeta: false, args: ['--mac', 'dmg', 'zip', '--arm64']
+    unsigned: false, unsignedWindowsBeta: false, unsignedMacosBeta: false, args: ['--mac', 'dmg', 'zip', '--arm64']
   });
 });
 

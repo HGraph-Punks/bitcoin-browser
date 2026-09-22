@@ -9,8 +9,8 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const input = process.argv.slice(2);
 let plan;
 try {
-  const { unsigned, args } = inspectPackagingArguments(input);
-  const identities = !unsigned && targetsMacDistribution(args) && !process.env.CSC_LINK && !process.env.CSC_NAME
+  const { unsigned, unsignedMacosBeta, args } = inspectPackagingArguments(input);
+  const identities = !unsigned && !unsignedMacosBeta && targetsMacDistribution(args) && !process.env.CSC_LINK && !process.env.CSC_NAME
     ? spawnSync('/usr/bin/security', ['find-identity', '-v', '-p', 'codesigning'], { encoding: 'utf8', timeout: 15_000 })
     : null;
   const packageMetadata = JSON.parse(readFileSync(path.join(root, 'package.json'), 'utf8'));

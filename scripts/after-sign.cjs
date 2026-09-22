@@ -3,7 +3,7 @@ const path = require('node:path');
 const { spawnSync } = require('node:child_process');
 
 module.exports = async function afterSign(context) {
-  if (context.electronPlatformName !== 'darwin' || process.env.SATOSHI_BROWSER_UNSIGNED_BUILD === '1') return;
+  if (context.electronPlatformName !== 'darwin' || process.env.SATOSHI_BROWSER_UNSIGNED_BUILD === '1' || process.env.SATOSHI_BROWSER_UNSIGNED_MACOS_BETA === '1') return;
   if (process.env.SATOSHI_BROWSER_REQUIRE_NOTARIZATION !== '1') {
     throw new Error('Distributable macOS signing must run through scripts/package.mjs with notarization required');
   }

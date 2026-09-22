@@ -119,7 +119,7 @@ jobs:
         run: npm run dist:linux -- --${{ matrix.arch }}
         env:
           SATOSHI_BROWSER_RELEASE_HOMEPAGE: ${{ github.server_url }}/${{ github.repository }}
-          SATOSHI_BROWSER_LINUX_MAINTAINER: ${{ vars.BETA_LINUX_MAINTAINER || 'Turtle Moon Command Center <hgraphpunks@gmail.com>' }}
+          SATOSHI_BROWSER_LINUX_MAINTAINER: ${{ vars.BETA_LINUX_MAINTAINER || 'Turtle Moon Command Center <patches@turtlemoon.io>' }}
       - name: Build signed Windows distribution
         if: runner.os == 'Windows' && needs.plan.outputs.windows_signing == 'signed'
         run: npm run dist:win -- --${{ matrix.arch }}

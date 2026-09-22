@@ -9,7 +9,7 @@ import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { startHostileNetworkFixture } from '../tests/fixtures/hostile-network.mjs';
 import { readShellDocumentLoaded } from './packaged-startup-readiness.mjs';
-import { finalizePackagedEvidence, observePackagedChild, requireConfirmedChildClose, shutdownPackagedChild } from './packaged-smoke-child-lifecycle.mjs';
+import { finalizePackagedEvidence, observePackagedChild, requestWindowsWindowClose, requireConfirmedChildClose, shutdownPackagedChild } from './packaged-smoke-child-lifecycle.mjs';
 import { createPackagedOutput } from './packaged-smoke-output.mjs';
 import { sampleOwnedProcess } from './packaged-smoke-sampler.mjs';
 import { findPackagedExecutable, packagedArtifactDirectory } from './packaged-executable.mjs';
@@ -24,7 +24,8 @@ const keepProfile = process.argv.includes('--keep-profile');
 const sampleSlowShutdown = process.argv.includes('--sample-slow-shutdown');
 const distributionBuild = process.argv.includes('--distribution');
 const unsignedWindowsBeta = process.argv.includes('--unsigned-windows-beta');
-const artifactDirectory = packagedArtifactDirectory(releaseDirectory, { distribution: distributionBuild, unsignedWindowsBeta });
+const unsignedMacosBeta = process.argv.includes('--unsigned-macos-beta');
+const artifactDirectory = packagedArtifactDirectory(releaseDirectory, { distribution: distributionBuild, unsignedWindowsBeta, unsignedMacosBeta });
 const executableArgument = process.argv.find((argument) => argument.startsWith('--executable='))?.slice('--executable='.length);
 const reportArgument = process.argv.find((argument) => argument.startsWith('--report='))?.slice('--report='.length);
 if (reportArgument && !/^packaged-smoke-[a-zA-Z0-9-]+\.json$/.test(reportArgument)) throw new Error('Invalid packaged smoke report basename');
@@ -396,7 +397,8 @@ async function stop(instance, { expectClean = true, fatalOnUnconfirmed = true } 
   if (sampleSlowShutdown && !instance.childObservation?.closeConfirmed) sampleTimer = setTimeout(() => {
     sampleResult = sampleOwnedShutdown(instance).catch((error) => ({ error: error.message }));
   }, 2000);
-  const closure = await shutdownPackagedChild(child, instance.childObservation ?? observePackagedChild(child));
+  const closure = await shutdownPackagedChild(child, instance.childObservation ?? observePackagedChild(child),
+    process.platform === 'win32' ? { requestClose: () => requestWindowsWindowClose(child) } : {});
   if (!closure.closeConfirmed) unconfirmedChildren.add(child);
   clearTimeout(sampleTimer);
   instance.stopRecorded = true;
@@ -825,13 +827,22 @@ try {
     const stops = await cdp.evaluate("Promise.all(Array.from({ length: 8 }, () => window.satBrowser.services.stop('beta-service-output')))");
     assert(stops.every((item) => item.status === 'stopped') && !processExists(starts[0].pid), 'stop resolved before child termination');
     const stopped = (await cdp.evaluate('window.satBrowser.services.list()')).find((item) => item.id === 'beta-service-output');
-    assert(stopped.logs.some((entry) => entry.text.includes('fixture graceful shutdown')), 'stop did not drain final stdout');
+    if (process.platform === 'win32') {
+      // Windows does not deliver POSIX signal handlers. Verify its actual
+      // termination status and preserved output, rather than inventing a
+      // graceful-shutdown message that this platform cannot produce.
+      assert(stopped.signal === 'SIGTERM' && stopped.exitCode === null, 'Windows service termination status was lost');
+      assert(stopped.logs.some((entry) => entry.text.includes('fixture stdout wait')), 'Windows stop lost previously emitted stdout');
+    } else {
+      assert(stopped.logs.some((entry) => entry.text.includes('fixture graceful shutdown')), 'stop did not drain final stdout');
+    }
     const restarted = await cdp.evaluate("window.satBrowser.services.start('beta-service-output')");
     const removed = await cdp.evaluate("window.satBrowser.services.remove('beta-service-output')");
     const removedAgain = await cdp.evaluate("window.satBrowser.services.remove('beta-service-output')");
     assert(!processExists(restarted.pid), 'removing a running service left its child alive');
     assert([...removed, ...removedAgain].every((item) => item.id !== 'beta-service-output'), 'removed service remains visible');
-    return { observations, concurrentStartCount: starts.length, sharedPid: starts[0].pid, concurrentStopCount: stops.length, finalOutputDrained: true, liveRemovalTerminatedChild: true };
+    return { observations, concurrentStartCount: starts.length, sharedPid: starts[0].pid, concurrentStopCount: stops.length,
+      finalOutputDrained: true, stopMechanism: process.platform === 'win32' ? 'windows-process-termination' : 'posix-sigterm', liveRemovalTerminatedChild: true };
   });
 
   await check('modal and command palette enforce focus isolation and restoration', async () => {
@@ -1631,7 +1642,7 @@ try {
     generatedAt: new Date().toISOString(),
     executable,
     // Selection records the requested input, not proof of signature validity.
-    artifactSelection: executableArgument ? 'explicit-executable' : unsignedWindowsBeta ? 'unsigned-windows-beta' : distributionBuild ? 'distribution' : 'developer',
+    artifactSelection: executableArgument ? 'explicit-executable' : unsignedWindowsBeta ? 'unsigned-windows-beta' : unsignedMacosBeta ? 'unsigned-macos-beta' : distributionBuild ? 'distribution' : 'developer',
     asarSha256,
     platform: process.platform,
     arch: process.arch,

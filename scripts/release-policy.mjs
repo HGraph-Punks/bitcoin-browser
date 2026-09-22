@@ -1,4 +1,4 @@
-import { UNSIGNED_WINDOWS_DIRECTORY, validateBetaTag, windowsArtifactTemplates } from './beta-release.mjs';
+import { UNSIGNED_WINDOWS_DIRECTORY, UNSIGNED_MACOS_DIRECTORY, macosArtifactTemplate, validateBetaTag, windowsArtifactTemplates } from './beta-release.mjs';
 
 const APPLE_ID_KEYS = ['APPLE_ID', 'APPLE_APP_SPECIFIC_PASSWORD', 'APPLE_TEAM_ID'];
 const API_KEY_KEYS = ['APPLE_API_KEY', 'APPLE_API_KEY_ID', 'APPLE_API_ISSUER'];
@@ -122,7 +122,8 @@ export function assertMacDistributionEnvironment(environment, identityResult) {
 export function inspectPackagingArguments(input) {
   const unsigned = input.includes('--unsigned');
   const unsignedWindowsBeta = input.includes('--unsigned-windows-beta');
-  const args = input.filter((argument) => !['--unsigned', '--unsigned-windows-beta'].includes(argument));
+  const unsignedMacosBeta = input.includes('--unsigned-macos-beta');
+  const args = input.filter((argument) => !['--unsigned', '--unsigned-windows-beta', '--unsigned-macos-beta'].includes(argument));
   const targets = new Set(['dmg', 'zip', 'nsis', 'portable', 'AppImage', 'deb', 'rpm', 'tar.gz']);
   const targetValues = [];
   let acceptingTargets = false;
@@ -145,13 +146,19 @@ export function inspectPackagingArguments(input) {
   if (unsigned && (!args.includes('--dir') || targetValues.length > 0)) {
     throw new Error('Unsigned developer builds require --dir and cannot produce installers or archives; use npm run pack');
   }
-  if (unsignedWindowsBeta && (unsigned || args.includes('--dir')
+  if (unsignedWindowsBeta && (unsigned || unsignedMacosBeta || args.includes('--dir')
       || !targetsWindowsDistribution(args, 'explicit-only') || targetsMacDistribution(args, 'explicit-only') || targetsPlatform(args, 'linux', 'explicit-only')
       || args.some((argument) => ['--universal', '--ia32', '--armv7l'].includes(argument))
       || targetValues.some((target) => !['nsis', 'portable', 'zip'].includes(target)))) {
     throw new Error('Unsigned Windows beta requires an explicit Windows-only x64/arm64 distribution; it cannot be combined with developer, macOS, Linux, or directory-only builds');
   }
-  return { unsigned, unsignedWindowsBeta, args };
+  if (unsignedMacosBeta && (unsigned || unsignedWindowsBeta || args.includes('--dir')
+      || !targetsMacDistribution(args, 'explicit-only') || targetsWindowsDistribution(args, 'explicit-only') || targetsPlatform(args, 'linux', 'explicit-only')
+      || args.some((argument) => ['--universal', '--ia32', '--armv7l'].includes(argument))
+      || targetValues.some((target) => !['dmg', 'zip'].includes(target)))) {
+    throw new Error('Unsigned macOS beta requires an explicit macOS-only x64/arm64 distribution');
+  }
+  return { unsigned, unsignedWindowsBeta, unsignedMacosBeta, args };
 }
 
 function withoutSigningCredentials(environment) {
@@ -162,11 +169,12 @@ function withoutSigningCredentials(environment) {
 }
 
 export function createPackagingPlan(input, environment, { platform = process.platform, identityResult, packageMetadata } = {}) {
-  const { unsigned, unsignedWindowsBeta, args } = inspectPackagingArguments(input);
+  const { unsigned, unsignedWindowsBeta, unsignedMacosBeta, args } = inspectPackagingArguments(input);
   const env = {
     ...environment,
     SATOSHI_BROWSER_UNSIGNED_BUILD: unsigned ? '1' : '0',
     SATOSHI_BROWSER_UNSIGNED_WINDOWS_BETA: unsignedWindowsBeta ? '1' : '0',
+    SATOSHI_BROWSER_UNSIGNED_MACOS_BETA: unsignedMacosBeta ? '1' : '0',
     SATOSHI_BROWSER_REQUIRE_NOTARIZATION: '0'
   };
   const builderArgs = [...args, '--publish=never'];
@@ -183,6 +191,18 @@ export function createPackagingPlan(input, environment, { platform = process.pla
     builderArgs.push(`--config.directories.output=release/${UNSIGNED_WINDOWS_DIRECTORY}`, '--config.forceCodeSigning=false',
       '--config.win.signAndEditExecutable=true', '--config.win.signExecutable=false', '--config.extraMetadata.betaWindowsSigning=unsigned-beta',
       `--config.win.artifactName=${templates.win}`, `--config.nsis.artifactName=${templates.nsis}`, `--config.portable.artifactName=${templates.portable}`);
+  } else if (unsignedMacosBeta) {
+    validateBetaTag(`v${packageMetadata?.version}`, packageMetadata?.version);
+    const mac = packageMetadata?.build?.mac;
+    if (packageMetadata?.build?.extends != null || packageMetadata?.build?.cscLink != null || mac?.cscLink != null
+        || mac?.identity != null || mac?.notarize != null) {
+      throw new Error('Unsigned macOS beta cannot consume embedded signing configuration; review package.json before continuing');
+    }
+    withoutSigningCredentials(env);
+    delete env.SATOSHI_BROWSER_EXPECTED_TEAM_ID;
+    builderArgs.push(`--config.directories.output=release/${UNSIGNED_MACOS_DIRECTORY}`, '--config.forceCodeSigning=false',
+      '--config.mac.identity=null', '--config.mac.notarize=false', '--config.extraMetadata.betaMacosSigning=unsigned-beta',
+      `--config.mac.artifactName=${macosArtifactTemplate('unsigned-beta')}`);
   } else if (unsigned) {
     // A CI signing/notary environment must not turn local packaging into a
     // credential-consuming build. Only the explicit distribution path signs.

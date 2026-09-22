@@ -84,7 +84,7 @@ module.exports = async function afterPack(context) {
     // distribution signature. An explicitly unsigned developer package has no
     // later electron-builder signing phase, so repair its invalidated Electron
     // signatures with an ad-hoc identity to keep the local artifact launchable.
-    if (process.env.SATOSHI_BROWSER_UNSIGNED_BUILD === '1') {
+    if (process.env.SATOSHI_BROWSER_UNSIGNED_BUILD === '1' || process.env.SATOSHI_BROWSER_UNSIGNED_MACOS_BETA === '1') {
       runChecked('/usr/bin/codesign', ['--force', '--deep', '--sign', '-', bundle], 'Could not ad-hoc sign unsigned macOS package');
       runChecked('/usr/bin/codesign', ['--verify', '--deep', '--strict', '--verbose=2', bundle], 'Unsigned macOS package failed ad-hoc verification');
     }
