@@ -46,7 +46,7 @@ export class NativeDraftPreview {
           if(this.settings().network!=='mainnet')throw new AppError('LIBRARY_NETWORK','This library catalog contains mainnet inscriptions. Select mainnet sources in Browse settings to preview these libraries. Regtest publication still uses its own explicit connection.');
           const resource=await this.resolver.resolve(`/content/${library.id}`,{maxBytes:8_000_000,signal:request.signal});
           if(resource.status!==200||createHash('sha256').update(resource.data).digest('hex')!==library.sha256)throw new AppError('INTEGRITY_MISMATCH','The selected browser source returned unexpected library bytes.');
-          body=resource.data;mime=library.mime;this.record({type:'resource',message:`${library.name} ${library.version} · native browser source · content hash matches`,url:url.pathname});
+          body=resource.data;mime=library.key.startsWith('research-')?(library.format==='stylesheet'?'text/css':library.format==='classic'||library.format==='esm'?'text/javascript':library.mime):library.mime;this.record({type:'resource',message:`${library.name} ${library.version} · native browser source · content hash matches`,url:url.pathname});
         }else if(['/r/blockheight','/r/blockhash','/r/blocktime'].includes(url.pathname)){
           const resource=await this.resolver.resolve(url.pathname,{maxBytes:256,signal:request.signal});if(resource.status!==200)throw new AppError('CHAIN_DATA_UNAVAILABLE','The selected browser source could not return chain data.');
           const value=JSON.parse(resource.data.toString());if(url.pathname==='/r/blockhash'?!/^[0-9a-f]{64}$/.test(value):!Number.isSafeInteger(value))throw new AppError('CHAIN_DATA_INVALID','The selected browser source returned invalid chain data.');

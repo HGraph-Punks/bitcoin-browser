@@ -4,7 +4,9 @@ import notices from './license-notices.json';
 import qualification from './runtime-qualification.json';
 import expansion from '../../docs/research/library-expansion-verification.json';
 import expansionQualification from './expansion-qualification.json';
-import type { Library } from '../shared/types';
+import {AppError} from '../core/errors';
+import {acknowledgedLibrary,researchLibrary,libraryAcceptancesSchema} from './library-acceptance';
+import type { LibraryAcceptance, Library } from '../shared/types';
 
 const descriptions: Record<string, [string, string, string?]> = {
   'three-r178': ['3D scenes', 'Interactive objects, materials, lighting, and WebGL scenes.'],
@@ -48,11 +50,13 @@ const extraLibraries:Library[]=expansion.entries.flatMap(record=>{
 });
 export const libraries:Library[]=[...originalLibraries,...extraLibraries];
 export function libraryByKey(key: string) { return libraries.find(l => l.key === key); }
-export function resolveLibraries(keys: string[]): Library[] {
+export function resolveLibraries(keys: string[],acceptances:LibraryAcceptance[]=[]): Library[] {
+  libraryAcceptancesSchema.parse(acceptances);
   const result = new Map<string, Library>();
   const visit = (key: string) => {
-    const entry = libraryByKey(key);
-    if (!entry) throw new Error(`Unknown library ${key}`);
+    const pin=acceptances.find(a=>a.key===key),catalog=libraryByKey(key);
+    const entry=catalog?acknowledgedLibrary(catalog,pin):pin?researchLibrary(pin):undefined;
+    if (!entry) throw new AppError('UNKNOWN_LIBRARY','Choose an available catalog library and accept its warning if needed.');
     if (result.has(key)) return;
     result.set(key, entry);
     entry.dependencies.forEach(visit);

@@ -14,6 +14,7 @@ export type ProjectSnapshot = {
   updatedAt: string;
   settings: SiteSettings;
   libraries: string[];
+  libraryAcceptances?: LibraryAcceptance[];
   files: Record<string, string>;
   assets: Record<string,SourceAsset>;
   canUndo: boolean;
@@ -22,10 +23,12 @@ export type ProjectSnapshot = {
 };
 export type ProjectSummary = Pick<ProjectSnapshot, 'id' | 'title' | 'template' | 'revision' | 'updatedAt'>;
 export type Mutation = { projectId: string; expectedRevision: number; idempotencyKey: string };
+export type LibraryAcceptance = {key:string;id:string;sha256:string;mime:string;bytes:number;format:'classic'|'esm'|'stylesheet'|'asset';acceptedAt:string;warningVersion:1};
 export type Library = {
+  userAcknowledgement?: LibraryAcceptance;
   key: string; name: string; version: string; purpose: string; description: string;
   network:Network; id: string; sha256: string; mime: string; bytes: number; storedBytes: number;
-  dependencies: string[]; format: 'esm' | 'classic'; global?: string;
+  dependencies: string[]; format: 'esm' | 'classic' | 'stylesheet' | 'asset'; global?: string;
   upstream: string; upstreamComparison: string; runtimeTested: boolean; licenseReviewed: boolean;
   catalogVersion:string;packageName:string;contentCheckedAt:string;chainIndependentlyVerified:false;
   license:{identifier:string;reviewStatus:'reviewed'|'pending';scope:string;sourceCode:string;sources:{name:string;url:string;sha256:string;text:string}[]};

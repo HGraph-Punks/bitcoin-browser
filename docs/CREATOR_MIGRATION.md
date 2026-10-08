@@ -2,7 +2,7 @@
 
 The migration brings the Website Builder RC11 feature set into **Create**, a distinct mode of Bitcoin Browser. **Browse** retains the browser's existing tabs, navigation, providers, content viewers, wallet bridge and node manager. The creator does not launch another application or run a second browsing engine.
 
-Builder source checkpoint: `96141f4` (committed before migration). Candidate version: `0.2.0-rc.3`. Public release remains gated by Apple notarization, publication qualification and the existing library license restrictions.
+Builder source checkpoint: `96141f4` (committed before migration). Candidate version: `0.2.0-rc.4`. Public release remains gated by Apple notarization, publication qualification and the existing library license restrictions.
 
 ## Product design
 
@@ -67,7 +67,7 @@ Project identity, history, checkpoints, source, settings, libraries and assets s
 
 - The owner's mainnet node was unavailable during builder qualification; real-chain inscription validation remains pending. Keep the visible mainnet qualification notice and exact spending review.
 - Apple notarization credentials were not available. A locally signed or ad-hoc candidate is not an Apple-notarized public release. Existing public signing policy must continue to fail closed.
-- D3/JSZip bundled dependency license review and previous catalog license restrictions remain unchanged. Discovery records and restricted historical artifacts are not promoted into executable dependencies.
+- D3/JSZip bundled dependency license review and previous catalog license restrictions remain unchanged. Discovery records and restricted historical artifacts may be included for authoring and native preview only after explicit desktop warning acceptance. Their exact fetched bytes are pinned without marking them qualified. The publication license gate remains enforced.
 - Builder-provided runtime receipts establish the imported examples' earlier tests. The new native browser receipts establish the migrated execution scope separately. Neither proves a complete current security audit of every reported inscription library.
 - Initial delivery targets macOS arm64. Existing cross-platform browser code is retained, but this migration does not claim new Windows/Linux native package qualification.
 - Before public redistribution, confirm licensing of the imported application source as well as retained third-party notices. The original private builder had no application license declaration.

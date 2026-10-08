@@ -1,5 +1,6 @@
 import { app, BrowserWindow, clipboard, ipcMain, Menu, nativeTheme, protocol, session, shell, dialog } from 'electron';
 import researchCatalog from '../catalog/research-catalog.json';
+import {includeLibrary} from './library-inclusions';
 import {guideFor} from '../catalog/library-guides';
 import { readFile, mkdir } from 'node:fs/promises';
 import path from 'node:path';
@@ -62,6 +63,7 @@ async function command(name:string,payload:unknown){
     case 'draft.save':{const p=validate(draftSaveInput,payload),project=await store.read(p.projectId);if(p.baseRevision>project.revision)throw new AppError('INVALID_BASE','A recovery copy cannot begin at a future revision.');return drafts.save(p);}
     case 'draft.remove':{const p=validate(draftRemoveInput,payload);await store.read(p.projectId);return drafts.remove(p);}
     case 'app.bootstrap':themePreference=currentTheme();return {projects:await store.list(),templates,libraries:libraries.filter(l=>l.key!=='three-core-r178'),researchLibraries:researchCatalog.entries,platform:process.platform,theme:themePreference,version:app.getVersion(),lastProjectId,sourceCommit:'96141f4'};
+    case 'library.add':return includeLibrary(store,options.resolver,options.settings,payload);
     case 'library.copy':{
       const p=validate(z.object({key:z.string().max(80).optional(),id:z.string().regex(/^[a-f0-9]{64}i\d+$/).optional(),kind:z.enum(['example','id'])}).strict(),payload);
       const library=libraries.find(l=>l.key===p.key||l.id===p.id);

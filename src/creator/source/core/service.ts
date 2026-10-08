@@ -24,7 +24,7 @@ export interface PreviewHost {
 const projectInput=z.object({projectId}).strict();
 const revisionInput=z.object({projectId,expectedRevision:z.number().int().nonnegative().optional()}).strict();
 export function inspectProject(p:ProjectSnapshot){
-  return {id:p.id,revision:p.revision,title:p.title,template:p.template,settings:p.settings,libraries:p.libraries,assets:p.assets,createdAt:p.createdAt,updatedAt:p.updatedAt,canUndo:p.canUndo,canRedo:p.canRedo,change:p.change,
+  return {id:p.id,revision:p.revision,title:p.title,template:p.template,settings:p.settings,libraries:p.libraries,libraryAcceptances:p.libraryAcceptances,assets:p.assets,createdAt:p.createdAt,updatedAt:p.updatedAt,canUndo:p.canUndo,canRedo:p.canRedo,change:p.change,
     files:Object.entries(p.files).map(([name,text])=>({path:name,bytes:Buffer.byteLength(text),sha256:createHash('sha256').update(text).digest('hex'),uri:`btcsite://projects/${p.id}/files/${encodeURIComponent(name)}`}))};
 }
 export function inspectBuild(build:BuildArtifact){const {html,resources,...result}=build;return {...result,resources:resources.map(({source,text,references,containers,...resource})=>resource)};}

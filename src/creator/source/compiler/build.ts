@@ -9,7 +9,7 @@ import {safeRelativePath} from '../core/validation';
 import {scanSource,rewriteReferences,type ParsedReference,type SourceScan} from './references';
 import type { BuildArtifact,BuildResource,Finding,ProjectSnapshot,ResourceReference,Network } from '../shared/types';
 
-export const COMPILER_VERSION='2.0.0';
+export const COMPILER_VERSION='2.1.0';
 const sha=(value:string|Buffer)=>createHash('sha256').update(value).digest('hex');
 const compressed=(value:string)=>brotliCompressSync(Buffer.from(value),{params:{[constants.BROTLI_PARAM_QUALITY]:9}}).length;
 const inscriptionId=/^[a-f0-9]{64}i(?:0|[1-9][0-9]{0,9})$/;
@@ -18,11 +18,11 @@ export function buildProject(project: ProjectSnapshot): BuildArtifact {
   if(typeof project.files['index.html']!=='string')throw new AppError('ENTRY_REQUIRED','The project needs an index.html entry point.');
   validateAssets(project.assets,project.files);
   const findings:Finding[]=[];
-  const libs=resolveLibraries(project.libraries);
+  const libs=resolveLibraries(project.libraries,project.libraryAcceptances);
   const knownIds=new Set(libs.map(l=>l.id));
   const scans=new Map<string,SourceScan>(),nodes=new Map<string,BuildResource>(),seenContexts=new Set<string>();
   const paths=[...Object.keys(project.files),...Object.keys(project.assets)].sort();
-  const sourceIdentity=sha(JSON.stringify({compiler:COMPILER_VERSION,files:paths.map(p=>[p,mimeFor(p),project.assets[p]?.sha256??sha(project.files[p])]),libraries:libs.map(l=>[l.id,l.sha256])}));
+  const sourceIdentity=sha(JSON.stringify({compiler:COMPILER_VERSION,files:paths.map(p=>[p,mimeFor(p),project.assets[p]?.sha256??sha(project.files[p])]),libraries:libs.map(l=>[l.id,l.sha256,l.format,l.userAcknowledgement??null])}));
   const scan=(name:string)=>{if(!scans.has(name))scans.set(name,scanSource(name,project.files[name]));return scans.get(name)!;};
   const addFinding=(code:string,title:string,detail:string,file:string,severity:Finding['severity']='error')=>findings.push({code,title,detail,file,severity});
   function resolve(reference:ParsedReference,file:string,document:string):ResourceReference|undefined{
@@ -91,10 +91,11 @@ export function buildProject(project: ProjectSnapshot): BuildArtifact {
   const resources=[...nodes.values()].sort((a,b)=>a.stage-b.stage||a.path.localeCompare(b.path));
   const stages=[...new Set(resources.filter(r=>r.stage>=0&&!r.duplicateOf).map(r=>r.stage))].sort((a,b)=>a-b).map(index=>({index,paths:resources.filter(r=>r.stage===index&&!r.duplicateOf).map(r=>r.path).sort()}));
   const root=nodes.get('index.html')!,html=root.text!;
-  if(!hasLibraryNotices(project.files['index.html'],project.libraries))findings.push({code:'LIBRARY_NOTICES_REQUIRED',severity:'error',title:'Restore the library credits',detail:'Required upstream notices are missing or changed. Open Libraries and restore the credits before publication.',file:'index.html'});
+  if(!hasLibraryNotices(project.files['index.html'],project.libraries,project.libraryAcceptances))findings.push({code:'LIBRARY_NOTICES_REQUIRED',severity:'error',title:'Restore the library credits',detail:'Required upstream notices are missing or changed. Open Libraries and restore the credits before publication.',file:'index.html'});
   for(const lib of libs.filter(l=>!l.key.includes('core')&&(!l.runtimeTested||!l.licenseReviewed)))findings.push({code:'LIBRARY_QUALIFICATION',severity:'warning',title:`${lib.name} ${lib.version}: ${!lib.runtimeTested?'runtime qualification pending':'license review pending'}`,detail:lib.licenseReviewed?'Exact license notices are retained. The target runtime recipe still needs qualification.':lib.license.scope});
+  for(const lib of libs.filter(l=>l.userAcknowledgement))findings.push({code:'LIBRARY_WARNING_ACCEPTED',severity:'warning',title:`${lib.name}: unqualified use accepted`,detail:'You accepted the warning for these pinned bytes. This does not establish security, compatibility or permission to redistribute. Verify required dependencies and notices before inscription.'});
   findings.push({code:'STATIC_SCAN_LIMIT',severity:'info',title:'Run the website to complete the check',detail:'HTML, CSS, JavaScript imports and common literal requests are parsed. Calculated URLs, custom loaders and unused execution paths still need runtime inspection.'});
-  return {id:sha(JSON.stringify({compiler:COMPILER_VERSION,resources:resources.map(r=>[r.path,r.sha256,r.dependencies]),libraries:libs.map(l=>[l.id,l.sha256])})),projectId:project.id,revision:project.revision,html,sha256:root.sha256,bytes:root.bytes,compressedBytes:root.compressedBytes,libraries:libs,findings,previewId:root.previewId,createdAt:new Date().toISOString(),compilerVersion:COMPILER_VERSION,resources,stages,unpublishedFiles:paths.filter(p=>!nodes.has(p)),totalNewBytes:resources.filter(r=>!r.duplicateOf).reduce((n,r)=>n+r.bytes,0),hasUnresolvedDependencies:root.dependencies.length>0};
+  return {id:sha(JSON.stringify({compiler:COMPILER_VERSION,resources:resources.map(r=>[r.path,r.sha256,r.dependencies]),libraries:libs.map(l=>[l.id,l.sha256,l.format,l.userAcknowledgement??null])})),projectId:project.id,revision:project.revision,html,sha256:root.sha256,bytes:root.bytes,compressedBytes:root.compressedBytes,libraries:libs,findings,previewId:root.previewId,createdAt:new Date().toISOString(),compilerVersion:COMPILER_VERSION,resources,stages,unpublishedFiles:paths.filter(p=>!nodes.has(p)),totalNewBytes:resources.filter(r=>!r.duplicateOf).reduce((n,r)=>n+r.bytes,0),hasUnresolvedDependencies:root.dependencies.length>0};
 }
 
 export type PublishedBinding={network:Network;id:string;sha256:string;mime:string};

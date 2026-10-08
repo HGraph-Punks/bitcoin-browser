@@ -10,7 +10,8 @@ import { AppError } from './errors';
 import { mutationSchema, projectId, safeRelativePath, settingsSchema, templateSchema, validate } from './validation';
 import {withLibraryNotices} from '../catalog/notices';
 import { createTemplate, initialSettings, templates, updateTemplateFields,readTemplateSettings } from './templates';
-import { libraryByKey } from '../catalog/libraries';
+import {libraryAcceptancesSchema,needsLibraryWarning} from '../catalog/library-acceptance';
+import { resolveLibraries } from '../catalog/libraries';
 import {assetSchema,describeAsset,isTextFile,decodeText,validateAssets,mimeFor} from './assets';
 import {changeFile} from '../compiler/file-change';
 import type { Mutation, ProjectSnapshot, ProjectSummary, SiteSettings, TemplateId,SourceAsset,BuildArtifact } from '../shared/types';
@@ -30,7 +31,7 @@ type RevisionRecord=ProjectRevision&{schemaVersion:1;projectId:string;version:st
 const MAX_REVISION_RECORD_BYTES=1_000_000;
 const identitySchema=z.object({kind:z.enum(['text','asset']),sha256:z.string().regex(/^[a-f0-9]{64}$/),bytes:z.number().int().nonnegative(),mime:z.string().max(100)}).strict();
 const recordSchema=z.object({schemaVersion:z.literal(1),projectId:uuid,version:uuid,revision:revisionNumber,previousRevision:revisionNumber.optional(),at:z.string().datetime(),actor:actorSchema,summary:z.string().max(400),checkpointId:checkpointIdSchema,changes:z.object({files:z.array(z.object({path:z.string().max(240),status:z.enum(['added','modified','removed']),before:identitySchema.optional(),after:identitySchema.optional()}).strict()).max(512),settings:z.array(z.string().max(40)).max(16),librariesAdded:z.array(z.string().max(80)).max(32),librariesRemoved:z.array(z.string().max(80)).max(32)}).strict()}).strict();
-const contentSchema = z.object({ schemaVersion: z.union([z.literal(1),z.literal(2)]), id: projectId, title: z.string().min(1).max(80), template: templateSchema, createdAt: z.string(), updatedAt: z.string(), settings: settingsSchema, libraries: z.array(z.string()).max(32), files: z.array(z.string()).max(256),assets:z.record(z.string(),assetSchema).default({}) });
+const contentSchema = z.object({ schemaVersion: z.union([z.literal(1),z.literal(2)]), id: projectId, title: z.string().min(1).max(80), template: templateSchema, createdAt: z.string(), updatedAt: z.string(), settings: settingsSchema, libraries: z.array(z.string()).max(32), libraryAcceptances:libraryAcceptancesSchema.optional(), files: z.array(z.string()).max(256),assets:z.record(z.string(),assetSchema).default({}) });
 const digest = (value: unknown) => createHash('sha256').update(JSON.stringify(value)).digest('hex');
 const creationsSchema = z.record(z.string().regex(/^[a-f0-9]{64}$/), z.object({id:uuid,hash:z.string().length(64)}));
 
@@ -199,6 +200,7 @@ export class ProjectStore {
       files[relative] = await readFile(file, 'utf8');
     }
     validateAssets(meta.assets,files);
+    resolveLibraries(meta.libraries,meta.libraryAcceptances);
     return { ...meta,schemaVersion:2,files };
   }
   private async saveVersion(content: Content) {
@@ -230,7 +232,7 @@ export class ProjectStore {
     }
     return items.sort((a,b)=>b.updatedAt.localeCompare(a.updatedAt));
   }
-  async create(input: { title: string; template: TemplateId }, request?: {scope:string;idempotencyKey:string},initial?:{entries:ImportedFile[];libraries:string[];settings?:SiteSettings}): Promise<ProjectSnapshot> {
+  async create(input: { title: string; template: TemplateId }, request?: {scope:string;idempotencyKey:string},initial?:{entries:ImportedFile[];libraries:string[];settings?:SiteSettings;libraryAcceptances?:import('../shared/types').LibraryAcceptance[]}): Promise<ProjectSnapshot> {
     validate(z.object({ title: z.string().trim().min(1).max(80), template: templateSchema }).strict(), input);
     if (this.closed) throw new AppError('STORE_CLOSED', 'The application is closing.');
     const task=(this.queues.get('create')??Promise.resolve()).catch(()=>{}).then(async()=>{
@@ -240,7 +242,7 @@ export class ProjectStore {
       const registryFile=path.join(this.root,'.creations.json');
       let registry:z.infer<typeof creationsSchema>={};
       try{registry=validate(creationsSchema,JSON.parse(await readFile(registryFile,'utf8')));}catch(error){if((error as NodeJS.ErrnoException).code!=='ENOENT')throw error;}
-      const key=digest(request),hash=digest({input,initial:initial?{entries:initial.entries.map(f=>({path:f.path,sha256:createHash('sha256').update(f.bytes).digest('hex')})),libraries:initial.libraries,settings:initial.settings}:null}),prior=registry[key];
+      const key=digest(request),hash=digest({input,initial:initial?{entries:initial.entries.map(f=>({path:f.path,sha256:createHash('sha256').update(f.bytes).digest('hex')})),libraries:initial.libraries,libraryAcceptances:initial.libraryAcceptances,settings:initial.settings}:null}),prior=registry[key];
       if(prior){
         if(prior.hash!==hash)throw new AppError('IDEMPOTENCY_CONFLICT','This creation key was already used for a different project.');
         id=prior.id;
@@ -256,8 +258,8 @@ export class ProjectStore {
     let content: Content = { schemaVersion:2,id,title:settings.name,template:input.template,createdAt:now,updatedAt:now,settings,libraries:templates.find(t=>t.id===input.template)!.libraries,files:{'index.html':createTemplate(input.template,settings)},assets:{} };
     if(initial){
       if(!initial.entries.some(f=>f.path==='index.html'))throw new AppError('ENTRY_REQUIRED','The imported website needs an index.html at its root.');
-      for(const key of initial.libraries)if(!libraryByKey(key))throw new AppError('UNKNOWN_LIBRARY','The archive contains an unavailable catalog library.');
-      content=await this.mergeImports({...content,files:{},libraries:[...new Set(initial.libraries)],settings:initial.settings?validate(settingsSchema,initial.settings):settings},initial.entries);
+      resolveLibraries(initial.libraries,initial.libraryAcceptances);
+      content=await this.mergeImports({...content,files:{},libraries:[...new Set(initial.libraries)],libraryAcceptances:initial.libraryAcceptances,settings:initial.settings?validate(settingsSchema,initial.settings):settings},initial.entries);
     }
     const version = await this.saveVersion(content);
     await this.saveRecord(id,{schemaVersion:1,projectId:id,version,revision:0,at:now,actor:this.actor(),summary:initial?'Imported project':'Created project',checkpointId:'revision:0',changes:summarizeChanges({files:{},assets:{},settings:content.settings,libraries:[]},content)});
@@ -383,14 +385,20 @@ export class ProjectStore {
   history(context: Mutation, direction: 'undo'|'redo') {
     return this.change(context,{type:direction},async (content,p)=>{const target=p[direction].at(-1);if(!target)throw new AppError('NO_HISTORY',`There is nothing to ${direction}.`);return {content:await this.content(content.id,target),history:direction};});
   }
-  addLibrary(context: Mutation, key: string) {
-    const library=libraryByKey(key);if(!library || key==='three-core-r178')throw new AppError('UNKNOWN_LIBRARY','Choose a supported library from the catalog.');
-    return this.change(context,{type:'library-add',key},async content=>{
-      if(content.libraries.includes(key))return {content:{...content,files:{...content.files,'index.html':withLibraryNotices(content.files['index.html'],content.libraries)}}};
-      if(library.name==='p5.js' && content.libraries.some(k=>k.startsWith('p5-')))throw new AppError('LIBRARY_CONFLICT','This site already has a p5.js version. Keep one version per page.');
-      const tag=library.format==='classic'?`<script data-btcsite-library="${key}" src="/content/${library.id}"></script>`:`<script type="importmap" data-btcsite-library="${key}">${JSON.stringify({imports:{[library.packageName]:`/content/${library.id}`}})}</script>`;
+  addLibrary(context: Mutation,key:string,acceptance?:import('../shared/types').LibraryAcceptance) {
+    return this.change(context,{type:'library-add',key,acceptance},async content=>{
+      const acceptances=acceptance?libraryAcceptancesSchema.parse([...(content.libraryAcceptances??[]).filter(a=>a.key!==key),acceptance]):content.libraryAcceptances??[];
+      if(acceptance?.key!==undefined&&acceptance.key!==key)throw new AppError('LIBRARY_ACCEPTANCE_MISMATCH','Accept the warning for this exact library.');
+      const library=resolveLibraries([key],acceptances)[0];
+      if(key==='three-core-r178')throw new AppError('UNKNOWN_LIBRARY','Add Three.js to include its core dependency.');
+      if(!content.libraries.includes(key)&&library.name==='p5.js'&&content.libraries.some(k=>k.startsWith('p5-')))throw new AppError('LIBRARY_CONFLICT','This site already has a p5.js version. Keep one version per page.');
+      if(!content.libraries.includes(key)&&needsLibraryWarning(library)&&!acceptance)throw new AppError('LIBRARY_WARNING_REQUIRED','Click Add in the library browser and accept the warning before including this unqualified library.');
+      if(content.libraries.includes(key))return {content:{...content,libraryAcceptances:acceptances,files:{...content.files,'index.html':withLibraryNotices(content.files['index.html'],content.libraries,acceptances)}}};
+      if(content.libraries.length>=32)throw new AppError('LIBRARY_LIMIT','A project supports up to 32 library includes.');
+      const attrs=`data-btcsite-library="${key}"`,url=`/content/${library.id}`;
+      const tag=library.format==='classic'?`<script ${attrs} src="${url}"></script>`:library.format==='esm'?library.key.startsWith('research-')?`<script type="module" ${attrs} src="${url}"></script>`:`<script type="importmap" ${attrs}>${JSON.stringify({imports:{[library.packageName]:url}})}</script>`:library.format==='stylesheet'?`<link rel="stylesheet" ${attrs} href="${url}">`:`<link rel="preload" as="fetch" crossorigin="anonymous" ${attrs} href="${url}">`;
       const html=content.files['index.html'];if(!/<\/head>/i.test(html))throw new AppError('HTML_HEAD_REQUIRED','Add a closing </head> element before inserting a library.');
-      return {content:{...content,libraries:[...content.libraries,key],files:{...content.files,'index.html':withLibraryNotices(html.replace(/<\/head>/i,`${tag}\n</head>`),[...content.libraries,key])}}};
+      return {content:{...content,libraries:[...content.libraries,key],libraryAcceptances:acceptances,files:{...content.files,'index.html':withLibraryNotices(html.replace(/<\/head>/i,`${tag}\n</head>`),[...content.libraries,key],acceptances)}}};
     });
   }
 }

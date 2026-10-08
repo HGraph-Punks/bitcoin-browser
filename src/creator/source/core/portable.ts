@@ -1,4 +1,5 @@
 import {z} from 'zod';
+import {libraryAcceptancesSchema} from '../catalog/library-acceptance';
 import {createHash} from 'node:crypto';
 import path from 'node:path';
 import {lstat,opendir,realpath,mkdir} from 'node:fs/promises';
@@ -11,14 +12,14 @@ import type {ProjectSnapshot,SourceAsset} from '../shared/types';
 
 export const MAX_ARCHIVE_BYTES=160_000_000;
 const encodedFile=z.object({path:z.string().min(1).max(240),encoding:z.enum(['utf8','base64']),content:z.string().max(11_000_000),sha256:z.string().regex(/^[a-f0-9]{64}$/)}).strict();
-const archiveSchema=z.object({format:z.literal('bitcoin-website-project'),version:z.literal(1),title:z.string().min(1).max(80),template:templateSchema,settings:settingsSchema,libraries:z.array(z.string().max(80)).max(32),files:z.array(encodedFile).min(1).max(256)}).strict();
+const archiveSchema=z.object({format:z.literal('bitcoin-website-project'),version:z.literal(1),title:z.string().min(1).max(80),template:templateSchema,settings:settingsSchema,libraries:z.array(z.string().max(80)).max(32),libraryAcceptances:libraryAcceptancesSchema.optional(),files:z.array(encodedFile).min(1).max(256)}).strict();
 const hash=(bytes:Buffer|string)=>createHash('sha256').update(bytes).digest('hex');
 
 export async function encodeProject(project:ProjectSnapshot,readAsset:(id:string,sha:string)=>Promise<Buffer>):Promise<Buffer>{
   const files:z.infer<typeof encodedFile>[]=[];
   for(const [relative,text] of Object.entries(project.files).sort(([a],[b])=>a.localeCompare(b)))files.push({path:relative,encoding:'utf8',content:text,sha256:hash(text)});
   for(const asset of Object.values(project.assets).sort((a,b)=>a.path.localeCompare(b.path))){const body=await readAsset(project.id,asset.sha256);files.push({path:asset.path,encoding:'base64',content:body.toString('base64'),sha256:asset.sha256});}
-  const archive=Buffer.from(JSON.stringify({format:'bitcoin-website-project',version:1,title:project.title,template:project.template,settings:project.settings,libraries:project.libraries,files},null,2));
+  const archive=Buffer.from(JSON.stringify({format:'bitcoin-website-project',version:1,title:project.title,template:project.template,settings:project.settings,libraries:project.libraries,libraryAcceptances:project.libraryAcceptances,files},null,2));
   if(archive.length>MAX_ARCHIVE_BYTES)throw new AppError('ARCHIVE_TOO_LARGE','The portable project exceeds the 160 MB archive limit.');return archive;
 }
 export function decodeProject(bytes:Buffer){
@@ -35,7 +36,7 @@ export function decodeProject(bytes:Buffer){
   }
   if(total>8_000_000)throw new AppError('PROJECT_TOO_LARGE','The archive contains more than 8 MB of source text.');validateAssets(assets,texts);
   if(!Object.hasOwn(texts,'index.html'))throw new AppError('ENTRY_REQUIRED','The archive must contain index.html.');
-  return {title:archive.title,template:archive.template,settings:archive.settings,libraries:archive.libraries,entries};
+  return {title:archive.title,template:archive.template,settings:archive.settings,libraries:archive.libraries,libraryAcceptances:archive.libraryAcceptances,entries};
 }
 
 /** Read only a native-dialog-granted tree, with bounded files and no escaping links. */
