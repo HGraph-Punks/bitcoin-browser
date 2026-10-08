@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "checkedAt": "2026-10-08T20:48:21.941Z",
-  "version": "0.2.0-rc.4",
-  "archiveSha256": "a75c809aa6bd459ea5a33df43a71d07f4ea3d26d17b0172427c729b7b2b5aafe",
+  "checkedAt": "2026-10-08T23:10:30.535Z",
+  "version": "0.2.0-rc.5",
+  "archiveSha256": "db25869b16b176e2502541eef2881bce8e22209f575306a53a0d667c02acaaf8",
   "checks": {
     "archiveHash": true,
     "sourceInputs": true,
@@ -15,7 +15,7 @@
     "noKnownSecrets": true,
     "noCreatorDevelopmentDependencies": true
   },
-  "sourceFiles": 239,
-  "payloadFiles": 28,
+  "sourceFiles": 244,
+  "payloadFiles": 29,
   "notarized": false
 }

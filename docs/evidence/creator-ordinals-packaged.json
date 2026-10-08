@@ -1,0 +1,78 @@
+{
+  "at": "2026-10-08T23:12:00.264Z",
+  "version": "0.2.0-rc.5",
+  "packaged": true,
+  "archiveSha256": "db25869b16b176e2502541eef2881bce8e22209f575306a53a0d667c02acaaf8",
+  "scope": "Owned disposable regtest wallet; real desktop approval and OS-protected transaction vault; no owner wallet or mainnet spending",
+  "checks": {
+    "nativeMultiImageChooser": false,
+    "nativeMetadataChooser": false,
+    "scopedMcp": true,
+    "realBatchOwnerReview": true,
+    "noBroadcastBeforeApproval": true,
+    "nativeRecursiveGallery": true,
+    "zeroPremineEtched": true,
+    "disabledEarlyRuneResume": true,
+    "sixConfirmationRuneReveal": true,
+    "nativeRuneNavigation": true
+  },
+  "collection": {
+    "rootId": "fc7776248f654e264b5ab725086385e821a6d68c186f0dafb28118ec9e830a31i0",
+    "network": "regtest",
+    "sourceRevision": 3,
+    "buildId": "f20c344d1349b9453cdca78673160262b335cd27cf213c3c94fa01ce500b1488",
+    "compilerVersion": "2.2.0",
+    "totalFeeSats": 1056,
+    "totalPostageSats": 30000,
+    "resources": [
+      {
+        "path": "assets/art.svg",
+        "id": "30a5e6727bac5d2fb5e88b502db08f61e3036da22411d98f813f1b8ca18e4a65i0",
+        "sha256": "2361adddfaa21c27fd9cb013c4d6ee691958f973c182e4fe8cd68d6fefbd3ebe",
+        "commit": "be03b1dfa07ea1a782177fbb3b59b4636ad0bcf89461fff5fba5d23e942b9aab",
+        "reveal": "30a5e6727bac5d2fb5e88b502db08f61e3036da22411d98f813f1b8ca18e4a65",
+        "blockHash": "33ec89beda908be82b5e1d6f8e76292bd186516737fa5c8345e69f1b6273117b"
+      },
+      {
+        "path": "assets/pixel.png",
+        "id": "30a5e6727bac5d2fb5e88b502db08f61e3036da22411d98f813f1b8ca18e4a65i1",
+        "sha256": "6b1048f8a6d40bac0b2954c18fefa40c4ea7a96120fc2e54b7317c0e43c2bbec",
+        "commit": "be03b1dfa07ea1a782177fbb3b59b4636ad0bcf89461fff5fba5d23e942b9aab",
+        "reveal": "30a5e6727bac5d2fb5e88b502db08f61e3036da22411d98f813f1b8ca18e4a65",
+        "blockHash": "33ec89beda908be82b5e1d6f8e76292bd186516737fa5c8345e69f1b6273117b"
+      },
+      {
+        "path": "index.html",
+        "id": "fc7776248f654e264b5ab725086385e821a6d68c186f0dafb28118ec9e830a31i0",
+        "sha256": "69e7d22b3a77054f9249e1f0107f7b4d3b7d03a8388b1f380e07bf09d7746a12",
+        "commit": "94f9a6e986f7886967f05536418890561cae0920ca1228147494551a6b852387",
+        "reveal": "fc7776248f654e264b5ab725086385e821a6d68c186f0dafb28118ec9e830a31",
+        "blockHash": "1743dbe8c6abac6b6e033762490e28de12d84c97d342c004637ef58521265fc3"
+      }
+    ]
+  },
+  "rune": {
+    "rootId": "9dd04e16eb12a931f2b02f6c6cbacf97c0b9d9ea8688e979c02e7e4a26c78d10i0",
+    "network": "regtest",
+    "sourceRevision": 1,
+    "buildId": "413e50285ea0ae1e2de792cd17c10611a0744078ddd5771d7c70f65d3f52a44e",
+    "compilerVersion": "2.2.0",
+    "totalFeeSats": 372,
+    "totalPostageSats": 10000,
+    "resources": [
+      {
+        "path": "rune.json",
+        "id": "9dd04e16eb12a931f2b02f6c6cbacf97c0b9d9ea8688e979c02e7e4a26c78d10i0",
+        "sha256": "10c68a41f473283ae1d16027950f60bddcabc72e17d5595c56e9cf5dd0476226",
+        "commit": "9f253f92ba0ffa660490901fd4180df3b4c1b955be562f700cb716108d67595e",
+        "reveal": "9dd04e16eb12a931f2b02f6c6cbacf97c0b9d9ea8688e979c02e7e4a26c78d10",
+        "blockHash": "12ba8f8262a5061e1d079b0f72a11471b3b10d02dc95107216238b7be1f066c1"
+      }
+    ],
+    "rune": {
+      "name": "NATIVE•BROWSER•RUNE",
+      "id": "111:1"
+    }
+  },
+  "localEvidence": "/private/tmp/btc-ordinal-native-McIj08"
+}
