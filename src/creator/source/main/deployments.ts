@@ -65,7 +65,7 @@ export class NativeDeployments {
     if(name==='deployment.open'){
       if(record.state!=='complete'||!record.receipt)throw new AppError('NOT_PUBLISHED','Verify the published root before opening it.');
       // Only a constructed URL on the selected loopback explorer may leave the shell.
-      this.browse(record.receipt.rootId,{network:this.engine.backend.config.network,ordUrl:this.engine.backend.ordUrl});return {opened:true};
+      this.browse(record.receipt.rune?'rune:'+record.receipt.rune.name:record.receipt.rootId,{network:this.engine.backend.config.network,ordUrl:this.engine.backend.ordUrl});return {opened:true};
     }
     if(name==='deployment.export-receipt'){
       const selection=await dialog.showSaveDialog(this.window,{title:'Export publication receipt',defaultPath:'bitcoin-website-receipt.json',filters:[{name:'JSON receipt',extensions:['json']}]});if(selection.canceled||!selection.filePath)return {canceled:true};

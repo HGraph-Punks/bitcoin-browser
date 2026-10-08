@@ -1,3 +1,5 @@
+import {parseExactJson,verifyMetadata,validateRunestone,runeCommitment} from './ordinal-validation';
+import {runePlan,type RuneSpec} from '../shared/ordinals';
 import {execFile} from 'node:child_process';
 import {promisify} from 'node:util';
 import {mkdir,mkdtemp,writeFile,rm} from 'node:fs/promises';
@@ -18,7 +20,8 @@ const ORD_SHA256='412e7763abd7325405f69d5e9693c8ce38e6fcabbea3373a08bf6f347f91b0
 export const localConfigSchema=z.object({network:z.enum(['mainnet','regtest']),rpcUrl:z.string().max(200),ordUrl:z.string().max(200),cookieFile:z.string().min(1).max(1000),ordBinary:z.string().min(1).max(1000).optional(),wallet:z.string().regex(/^[a-zA-Z0-9_-]{1,64}$/),protectedOutputs:z.array(z.string().regex(/^[a-f0-9]{64}:\d{1,10}$/)).max(1000).default([])}).strict();
 export type LocalOrdConfig=z.infer<typeof localConfigSchema>;
 const mimeExtensions:Record<string,string>={'text/html;charset=utf-8':'html','text/css':'css','text/javascript':'js','application/json':'json','image/png':'png','image/jpeg':'jpg','image/gif':'gif','image/webp':'webp','image/svg+xml':'svg','text/plain;charset=utf-8':'txt'};
-export type PrepareRequest={deploymentId:string;projectId:string;buildId:string;revision:number;path:string;resourceNumber:number;resourceCount:number;mime:string;bytes:Buffer;sha256:string;dependencies:{path:string;id:string;sha256:string}[];destination:string;feeRate:number;postageSats:number};
+export type BatchItem={path:string;mime:string;bytes:Buffer;sha256:string;metadata?:unknown};
+export type PrepareRequest={items?:BatchItem[];rune?:RuneSpec;deploymentId:string;projectId:string;buildId:string;revision:number;path:string;resourceNumber:number;resourceCount:number;mime:string;bytes:Buffer;sha256:string;dependencies:{path:string;id:string;sha256:string}[];destination:string;feeRate:number;postageSats:number};
 export type CompleteMaterial=PreparationMaterial&{unsignedCommit:string;reveal:string;recovery:NonNullable<PreparationMaterial['recovery']>};
 type DecodedTx={txid:string;weight:number;vsize:number;vin:{txid:string;vout:number;sequence:number;scriptSig:{hex:string};txinwitness?:string[]}[];vout:{n:number;value:number;scriptPubKey:{hex:string;type:string;address?:string}}[];locktime:number;version:number};
 function requireThat(condition:unknown,message:string):asserts condition{if(!condition)throw new AppError('INVALID_TRANSACTION',message);}
@@ -35,13 +38,13 @@ export class LocalOrdBackend {
   capabilities(available=true,reason?:string):BackendCapabilities{return {id:this.id,name:this.config.network==='mainnet'?'Local Ord · Bitcoin mainnet':'Local Ord · test coins',network:this.config.network,available,reason,qualification:'macOS arm64 · Core 31.1.0 / Ord 0.29.0 · confirmed cardinal Taproot inputs · exact owner review per resource. Mainnet execution requires separate real-chain qualification.',versions:{core:'31.1.0',ord:'0.29.0'},supports:{prepare:true,ownerReview:true,resume:true,compression:true,protectedInputs:true,mainnet:this.config.network==='mainnet'},limits:{maxDecodedBytes:2_000_000,minConfirmations:1,reviewPerResource:true,fundingScript:'native-taproot',supportedMime:Object.keys(mimeExtensions)}};}
   private async ordJson(args:string[],directory:string){
     const env=Object.fromEntries(Object.entries(process.env).filter(([key])=>!key.startsWith('ORD_')));
-    const {stdout}=await execute(this.binary,['--chain',this.config.network,'--bitcoin-data-dir',directory,'--config-dir',directory,'--data-dir',directory,...args],{timeout:90_000,maxBuffer:6_000_000,env});return JSON.parse(stdout);
+    const {stdout}=await execute(this.binary,['--chain',this.config.network,'--bitcoin-data-dir',directory,'--config-dir',directory,'--data-dir',directory,...args],{timeout:90_000,maxBuffer:6_000_000,env});return parseExactJson(stdout);
   }
   async json(route:string,options?:{body:unknown}){
-    if(!/^\/[a-z0-9/:_-]+$/.test(route))throw new AppError('INVALID_PROVIDER_REQUEST','Unsupported Ord path.');
+    if(!/^\/[a-z0-9/:_-]+$/.test(route)&&!/^\/rune\/[A-Z]{1,26}$/.test(route))throw new AppError('INVALID_PROVIDER_REQUEST','Unsupported Ord path.');
     let response:Response;try{response=await fetch(this.ordUrl+route,{method:options?'POST':'GET',headers:{accept:'application/json',...(options?{'content-type':'application/json'}:{})},body:options?JSON.stringify(options.body):undefined,redirect:'error',signal:AbortSignal.timeout(15_000)});}catch{throw new AppError('PROVIDER_UNAVAILABLE','The local Ord index did not respond.');}
     if(!response.ok){await response.body?.cancel();throw new AppError('INDEX_UNAVAILABLE',`The local Ord index could not supply ${route.split('/')[1]} (HTTP ${response.status}).`);}
-    try{return JSON.parse((await boundedResponse(response,4_000_000)).toString());}catch{throw new AppError('INDEX_UNAVAILABLE','The local Ord index returned an invalid response.');}
+    try{return parseExactJson((await boundedResponse(response,4_000_000)).toString());}catch{throw new AppError('INDEX_UNAVAILABLE','The local Ord index returned an invalid response.');}
   }
   async anchor():Promise<ChainAnchor>{
     const chain=await this.rpc.call('getblockchaininfo');checkChain(this.config.network,chain);
@@ -129,12 +132,18 @@ export class LocalOrdBackend {
     if(this.config.network==='mainnet')checkRelayFees(request.feeRate,await this.rpc.call('getmempoolinfo'));
     const extension=mimeExtensions[request.mime];if(!extension)throw new AppError('UNSUPPORTED_MIME','The local Ord adapter has not qualified this resource type: '+request.mime);
     if(request.bytes.length>2_000_000||sha256(request.bytes)!==request.sha256)throw new AppError('INVALID_ARTIFACT','The frozen resource is too large or its content hash changed.');
+    if(request.items){requireThat(request.items.length>=1&&request.items.length<=16,'Prepare between 1 and 16 collection members per batch.');for(const item of request.items)requireThat(!!mimeExtensions[item.mime]&&item.bytes.length<=2_000_000&&sha256(item.bytes)===item.sha256,'A frozen batch member changed or uses an unsupported MIME.');}
+    if(request.rune){runePlan(request.rune);await this.checkRuneName(request.rune);}
     const eligible=await this.eligible();await mkdir(this.workRoot,{recursive:true,mode:0o700});const work=await mkdtemp(path.join(this.workRoot,'prepare-'));
     const broker=new PreparationBroker(this.rpc,eligible,save,this.config.network);
     try{
-      const filename=path.join(work,'content.'+extension);await writeFile(filename,request.bytes,{mode:0o600});
+      const items=request.items??[{path:request.path,mime:request.mime,bytes:request.bytes,sha256:request.sha256}],entries=[];
+      for(const [index,item] of items.entries()){const file=path.join(work,`content-${index}.`+mimeExtensions[item.mime]);await writeFile(file,item.bytes,{mode:0o600});entries.push({file,destination:request.destination,...(item.metadata?{metadata:item.metadata}:{})});}
+      let args:string[];
+      if(request.items||request.rune){const batch=path.join(work,'batch.yaml'),body=JSON.stringify({mode:'separate-outputs',postage:request.postageSats,inscriptions:entries,...(request.rune?{etching:runePlan(request.rune).etching}:{})},null,2).replace(/"cap": "([0-9]+)"/g,'"cap": $1');await writeFile(batch,body,{mode:0o600});args=['batch','--batch',batch,'--fee-rate',String(request.feeRate),'--compress'];}
+      else args=['inscribe','--file',entries[0].file,'--fee-rate',String(request.feeRate),'--postage',String(request.postageSats)+'sat','--compress','--destination',request.destination];
       const cookie=await broker.start(work);
-      try{await this.ordJson(['--bitcoin-rpc-url',broker.url,'--cookie-file',cookie,'wallet','--name',this.config.wallet,'--server-url',this.ordUrl,'inscribe','--file',filename,'--fee-rate',String(request.feeRate),'--postage',String(request.postageSats)+'sat','--compress','--destination',request.destination],work);}catch{/* Completion is established only by the broker and independent verification below. */}
+      try{await this.ordJson(['--bitcoin-rpc-url',broker.url,'--cookie-file',cookie,'wallet','--name',this.config.wallet,'--server-url',this.ordUrl,...args],work);}catch{/* Completion is established only by the broker and independent verification below. */}
       broker.assertComplete();const material=broker.material as CompleteMaterial;
       const facts=await this.validateCandidate(request,material,work);return {material,facts};
     }finally{await broker.close();await rm(work,{recursive:true,force:true});}
@@ -144,23 +153,35 @@ export class LocalOrdBackend {
     requireThat(commit.vin.length>=1&&commit.vin.length<=100&&commit.vout.length>=1&&commit.vout.length<=3,'Unexpected commit transaction shape.');
     requireThat(commit.vin.every(input=>input.scriptSig.hex===''&&!input.txinwitness?.length),'The funding transaction was already signed during preparation.');
     requireThat(new Set(commit.vin.map(input=>`${input.txid}:${input.vout}`)).size===commit.vin.length,'The commit repeats a funding input.');
-    requireThat(reveal.vin.length===1&&reveal.vin[0].txid===commit.txid&&reveal.vin[0].scriptSig.hex===''&&reveal.vin[0].txinwitness?.length===3&&reveal.vout.length===1,'The reveal must spend only the prepared recovery output and create one inscription output.');
+    const items=request.items??[{path:request.path,mime:request.mime,bytes:request.bytes,sha256:request.sha256}],batch=!!request.items||!!request.rune,premine=request.rune&&BigInt(runePlan(request.rune).premineUnits)>0n?10000:0,outputCount=items.length+(request.rune?1:0)+(premine?1:0);
+    requireThat(reveal.vin.length===1&&reveal.vin[0].txid===commit.txid&&reveal.vin[0].scriptSig.hex===''&&reveal.vin[0].txinwitness?.length===3&&reveal.vout.length===outputCount,'The reveal must spend only the prepared recovery output and create one inscription output.');
     requireThat(commit.weight+2+66*commit.vin.length<400_000&&reveal.weight<400_000,'This resource exceeds the standard transaction weight limit. Reduce its stored size before publishing.');
     const inputs=await this.inspectInputs(commit.vin),destination=await this.destination(request.destination),recovery=commit.vout[reveal.vin[0].vout];
-    requireThat(recovery&&reveal.vout[0].scriptPubKey.hex===destination&&toSats(reveal.vout[0].value)===request.postageSats,'The reveal destination or postage differs from the requested publication.');
+    requireThat(recovery,'The commit recovery output is missing.');const revealOutputs:PlannedOutput[]=[];
+    for(let index=0;index<items.length;index++){const output=reveal.vout[index];requireThat(output.scriptPubKey.hex===destination&&toSats(output.value)===request.postageSats,'A reveal destination or postage differs from the requested publication.');revealOutputs.push({index,sats:request.postageSats,address:request.destination,script:destination,role:'inscription'});}
+    if(premine){const output=reveal.vout[items.length];requireThat(output.scriptPubKey.type==='witness_v1_taproot'&&typeof output.scriptPubKey.address==='string'&&toSats(output.value)===premine,'Unexpected Rune premine output.');const owner=await this.rpc.call('getaddressinfo',[output.scriptPubKey.address],true);requireThat(owner.ismine===true&&!owner.iswatchonly,'The premine must belong to the connected wallet.');revealOutputs.push({index:output.n,sats:premine,address:output.scriptPubKey.address,script:output.scriptPubKey.hex,role:'rune-premine'});}
+    if(request.rune){const output=reveal.vout.at(-1)!;requireThat(output.scriptPubKey.type==='nulldata'&&output.scriptPubKey.hex.startsWith('6a5d')&&toSats(output.value)===0&&reveal.vin[0].sequence===5,'Unexpected runestone output or commitment maturity sequence.');revealOutputs.push({index:output.n,sats:0,address:'OP_RETURN',script:output.scriptPubKey.hex,role:'runestone'});}
     const descriptor=await this.rpc.call('getdescriptorinfo',[material.recovery[0].desc]);requireThat(descriptor.hasprivatekeys===true&&descriptor.isrange===false,'The recovery descriptor is incomplete.');
     const addresses=await this.rpc.call<string[]>('deriveaddresses',[descriptor.descriptor]);requireThat(addresses.length===1&&addresses[0]===recovery.scriptPubKey.address,'The encrypted recovery key does not control the commit output.');
     const commitOutputs:PlannedOutput[]=[];
     for(const output of commit.vout){requireThat(output.scriptPubKey.type==='witness_v1_taproot'&&!!output.scriptPubKey.address,'Unexpected commit output type.');const role=output.n===reveal.vin[0].vout?'recovery':'change';if(role==='change'){const owner=await this.rpc.call('getaddressinfo',[output.scriptPubKey.address],true);requireThat(owner.ismine===true,'Commit change does not belong to the configured wallet.');}commitOutputs.push({index:output.n,sats:toSats(output.value),address:output.scriptPubKey.address,script:output.scriptPubKey.hex,role});}
-    const commitFeeSats=inputs.reduce((sum,input)=>sum+input.sats,0)-commitOutputs.reduce((sum,output)=>sum+output.sats,0),revealFeeSats=toSats(recovery.value)-request.postageSats;
+    const commitFeeSats=inputs.reduce((sum,input)=>sum+input.sats,0)-commitOutputs.reduce((sum,output)=>sum+output.sats,0),revealFeeSats=toSats(recovery.value)-items.length*request.postageSats-premine;
     requireThat(Number.isSafeInteger(commitFeeSats)&&commitFeeSats>0&&revealFeeSats>0&&commitFeeSats+revealFeeSats<=1_000_000,'The transaction fees exceed the local adapter limit.');
     const revealFile=path.join(work,'reveal.bin');await writeFile(revealFile,Buffer.from(material.reveal,'hex'),{mode:0o600});const decoded=await this.ordJson(['decode','--file',revealFile,'--compact'],work);
-    requireThat(decoded.runestone===null&&decoded.inscriptions?.length===1,'The transaction must contain one ordinary inscription and no runestone.');const inscription=decoded.inscriptions[0];
-    requireThat(!inscription.duplicate_field&&!inscription.incomplete_field&&!inscription.unrecognized_even_field&&!inscription.parents?.length&&inscription.pointer==null&&inscription.delegate==null&&inscription.metaprotocol==null,'Advanced or nonstandard inscription envelopes are outside this adapter.');
-    requireThat(inscription.content_type===request.mime&&[null,undefined,'br'].includes(inscription.content_encoding)&&typeof inscription.body==='string'&&inscription.body.length%2===0&&/^[0-9a-f]*$/.test(inscription.body),'The actual inscription MIME or encoding differs from the frozen artifact.');
-    const stored=Buffer.from(inscription.body,'hex'),body=inscription.content_encoding==='br'?brotliDecompressSync(stored,{maxOutputLength:2_000_000}):stored;
-    requireThat(body.equals(request.bytes)&&sha256(body)===request.sha256,'The transaction envelope differs from the frozen compiler bytes.');
-    return {inputs,commitOutputs,revealOutputs:[{index:0,sats:request.postageSats,address:request.destination,script:destination,role:'inscription' as const}],commitFeeSats,revealFeeSats,commitTxid:commit.txid,revealTxid:reveal.txid,inscriptionId:reveal.txid+'i0',unsignedCommitSha256:sha256(Buffer.from(material.unsignedCommit,'hex')),revealSha256:sha256(Buffer.from(material.reveal,'hex')),commitVsizeEstimate:Math.ceil((commit.weight+2+66*commit.vin.length)/4),revealVsize:reveal.vsize,storedBytes:stored.length,encoding:inscription.content_encoding==='br'?'br' as const:null,anchor:await this.anchor()};
+    const raw=await this.ordJson(['decode','--file',revealFile],work);requireThat(raw.inscriptions?.length===items.length&&raw.inscriptions.every((envelope:any,index:number)=>envelope.input===0&&!envelope.pushnum&&!envelope.stutter&&envelope.payload?.delegate==null&&envelope.payload.properties==null&&envelope.payload.property_encoding==null&&objectHash(envelope.payload.rune)===objectHash(request.rune&&index===0?runeCommitment(request.rune.name):null)),'The transaction has unreviewed delegation, properties, or a different Rune commitment.');
+    requireThat(decoded.inscriptions?.length===items.length,'The number of actual inscriptions differs from the review.');
+    if(request.rune)validateRunestone(decoded.runestone,request.rune,premine?items.length:null);else requireThat(decoded.runestone===null,'An unexpected runestone was added.');
+    const memberFacts=[];
+    for(const [index,item] of items.entries()){
+      const inscription=decoded.inscriptions[index];
+      requireThat(!inscription.duplicate_field&&!inscription.incomplete_field&&!inscription.unrecognized_even_field&&!inscription.parents?.length&&(batch?inscription.pointer===index*request.postageSats:inscription.pointer==null)&&inscription.metaprotocol==null,'The inscription envelope contains an unexpected field or pointer.');
+      requireThat(inscription.content_type===item.mime&&[null,undefined,'br'].includes(inscription.content_encoding)&&typeof inscription.body==='string'&&/^(?:[a-f0-9]{2})*$/.test(inscription.body),'An actual inscription MIME or encoding differs from the frozen artifact.');
+      const stored=Buffer.from(inscription.body,'hex'),body=inscription.content_encoding==='br'?brotliDecompressSync(stored,{maxOutputLength:2_000_000}):stored;
+      requireThat(body.equals(item.bytes)&&sha256(body)===item.sha256,'A transaction envelope differs from the frozen compiler bytes.');
+      if(item.metadata)verifyMetadata(inscription.metadata,item.metadata);else requireThat(inscription.metadata==null,'Unreviewed metadata was added.');
+      memberFacts.push({path:item.path,inscriptionId:reveal.txid+'i'+index,mime:item.mime,contentSha256:item.sha256,decodedBytes:body.length,storedBytes:stored.length,encoding:inscription.content_encoding==='br'?'br' as const:null,...(item.metadata?{metadata:item.metadata}:{})});
+    }
+    return {inputs,commitOutputs,revealOutputs,...(batch?{kind:request.rune?'rune' as const:'collection' as const,items:memberFacts,...(request.rune?{rune:request.rune}:{})}:{}),commitFeeSats,revealFeeSats,commitTxid:commit.txid,revealTxid:reveal.txid,inscriptionId:reveal.txid+'i0',unsignedCommitSha256:sha256(Buffer.from(material.unsignedCommit,'hex')),revealSha256:sha256(Buffer.from(material.reveal,'hex')),commitVsizeEstimate:Math.ceil((commit.weight+2+66*commit.vin.length)/4),revealVsize:reveal.vsize,storedBytes:memberFacts.reduce((sum,item)=>sum+item.storedBytes,0),encoding:memberFacts[0].encoding,anchor:await this.anchor()};
   }
   async revalidate(quote:InscriptionQuote,material:CompleteMaterial){
     await this.qualify();requireThat(quote.backendId===this.id&&quote.network===this.config.network,'The prepared backend changed.');
@@ -179,17 +200,29 @@ export class LocalOrdBackend {
     const signed=await this.rpc.call('signrawtransactionwithwallet',[material.unsignedCommit],true);requireThat(signed.complete===true&&typeof signed.hex==='string','The wallet did not fully sign the prepared commit.');
     const transaction=await this.rpc.call<DecodedTx>('decoderawtransaction',[signed.hex]);requireThat(transaction.txid===quote.commitTxid,'Wallet signing changed the reviewed transaction identity.');
     requireThat(transaction.vsize<=quote.commitVsizeEstimate+1&&transaction.vin.every(input=>input.txinwitness?.length===1),'The signed funding transaction exceeds its reviewed size assumption.');
-    const accepted=await this.rpc.call<any[]>('testmempoolaccept',[[signed.hex,material.reveal]]);requireThat(accepted.length===2&&accepted.every(result=>result.allowed===true),'The node rejected the prepared commit/reveal package. Preserve this plan and inspect the node before retrying.');
+    const candidate=quote.rune?[signed.hex]:[signed.hex,material.reveal];const accepted=await this.rpc.call<any[]>('testmempoolaccept',[candidate]);requireThat(accepted.length===candidate.length&&accepted.every(result=>result.allowed===true),'The node rejected the prepared commit/reveal package. Preserve this plan and inspect the node before retrying.');
     return signed.hex as string;
   }
   async transaction(txid:string):Promise<{txid:string;confirmations:number;blockhash?:string}|null>{try{const tx=await this.rpc.call('getrawtransaction',[txid,true]);requireThat(tx.txid===txid,'The node returned the wrong transaction.');return {txid,confirmations:tx.confirmations??0,blockhash:tx.blockhash};}catch(error){if(error instanceof RpcError&&error.rpcCode===-5)return null;throw error;}}
+  private async checkRuneName(spec:RuneSpec,existingTxid?:string){
+    const response=await fetch(this.ordUrl+'/rune/'+spec.name.replace(/[•.]/g,''),{headers:{accept:'application/json'},redirect:'error',signal:AbortSignal.timeout(15000)});
+    if(response.status===404){await response.body?.cancel();return;}
+    if(!response.ok){await response.body?.cancel();throw new AppError('INDEX_UNAVAILABLE','The Rune name could not be checked against the connected node.');}
+    const rune=parseExactJson((await boundedResponse(response,32000)).toString());if(!existingTxid||rune.entry?.etching!==existingTxid)throw new AppError('RUNE_NAME_TAKEN','This Rune name is already etched. Choose a different name. If a commit was submitted, its exact transaction remains preserved.');
+  }
+  async validateRuneReveal(quote:InscriptionQuote,hex:string){
+    if(!quote.rune)return;await this.qualify();const commit=await this.transaction(quote.commitTxid);requireThat(commit&&commit.confirmations>=6,'The Rune commit needs six confirmations before reveal.');
+    await this.checkRuneName(quote.rune,quote.revealTxid);
+    const result=await this.rpc.call<any[]>('testmempoolaccept',[[hex]]);requireThat(result.length===1&&result[0].allowed===true,'The node rejected the matured Rune reveal. Its exact bytes are preserved.');
+  }
   async broadcast(hex:string,expected:string){await this.qualify();const txid=await this.rpc.call<string>('sendrawtransaction',[hex]);requireThat(txid===expected,'The node returned an unexpected transaction ID.');return txid;}
   async verifyContent(quote:InscriptionQuote){
     const tx=await this.transaction(quote.revealTxid);if(!tx||tx.confirmations<1||!tx.blockhash)throw new AppError('NOT_CONFIRMED','Wait for the reveal transaction to confirm.');const anchor=await this.anchor();
-    const response=await fetch(this.ordUrl+'/content/'+quote.inscriptionId,{headers:{'accept-encoding':'br, gzip, deflate'},redirect:'error',signal:AbortSignal.timeout(15_000)});
-    if(!response.ok){await response.body?.cancel();throw new AppError('NOT_INDEXED','The confirmed inscription is waiting for Ord indexing.');}
-    requireThat(response.headers.get('content-type')===quote.mime,'Published content has an unexpected MIME type.');const bytes=await boundedResponse(response,quote.decodedBytes+1);
-    requireThat(bytes.length===quote.decodedBytes&&sha256(bytes)===quote.contentSha256,'Published inscription bytes differ from the frozen artifact.');
+    const items=quote.items??[{inscriptionId:quote.inscriptionId,mime:quote.mime,decodedBytes:quote.decodedBytes,contentSha256:quote.contentSha256}];
+    for(const item of items){const response=await fetch(this.ordUrl+'/content/'+item.inscriptionId,{headers:{'accept-encoding':'br, gzip, deflate'},redirect:'error',signal:AbortSignal.timeout(15_000)});
+      if(!response.ok){await response.body?.cancel();throw new AppError('NOT_INDEXED','The confirmed inscription is waiting for Ord indexing.');}
+      requireThat(response.headers.get('content-type')===item.mime,'Published content has an unexpected MIME type.');const bytes=await boundedResponse(response,item.decodedBytes+1);requireThat(bytes.length===item.decodedBytes&&sha256(bytes)===item.contentSha256,'Published inscription bytes differ from the frozen artifact.');}
+    if(quote.rune){const rune=await this.json('/rune/'+quote.rune.name.replace(/[•.]/g,''));requireThat(rune.entry?.etching===quote.revealTxid,'The index did not establish the reviewed Rune etching.');const entry=rune.entry,plan=runePlan(quote.rune);requireThat(entry.spaced_rune===plan.spec.name&&String(entry.premine)===plan.premineUnits&&entry.divisibility===plan.spec.divisibility&&entry.symbol===plan.spec.symbol&&entry.turbo===plan.spec.turbo,'The indexed Rune differs from the reviewed etching.');}
     const current=await this.transaction(quote.revealTxid);if(current?.blockhash!==tx.blockhash||current.confirmations<1||(await this.anchor()).hash!==anchor.hash)throw new AppError('CHAIN_CHANGED','The chain changed while checking published content.');
     return {at:new Date().toISOString(),blockHash:tx.blockhash,anchor,sha256:quote.contentSha256};
   }

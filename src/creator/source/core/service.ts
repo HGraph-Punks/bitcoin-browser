@@ -6,6 +6,7 @@ import {AppError} from './errors';
 import {decodeBase64} from './assets';
 import {validate,mutationSchema,projectId,settingsSchema,templateSchema,safeRelativePath} from './validation';
 import {templates} from './templates';
+import {collectionSchema,runeSchema} from '../shared/ordinals';
 import {libraries,libraryByKey} from '../catalog/libraries';
 import researchCatalog from '../catalog/research-catalog.json';
 import {guideFor,matchesLibrary} from '../catalog/library-guides';
@@ -101,6 +102,9 @@ export class WorkspaceService {
         return {projectId:p.projectId,revision:project.revision,path:p.path,sha256:createHash('sha256').update(content).digest('hex'),content:content.slice(p.offset,p.offset+p.limit),offset:p.offset,totalCharacters:content.length,nextOffset:p.offset+p.limit<content.length?p.offset+p.limit:null};
       }
       case 'template.list':validate(z.object({}).strict(),payload);return templates;
+      case 'collection.duplicate':{const p=validate(mutationSchema.extend({path:z.string().max(240)}).strict(),payload);return this.store.duplicateCollectionItem(p,p.path);}
+      case 'collection.configure':{const p=validate(mutationSchema.extend({collection:collectionSchema}).strict(),payload);return this.store.configureCollection(p,p.collection);}
+      case 'rune.configure':{const p=validate(mutationSchema.extend({rune:runeSchema}).strict(),payload);return this.store.configureRune(p,p.rune);}
       case 'library.search':{const p=validate(z.object({query:z.string().max(100).default('')}).strict(),payload);return libraries.filter(l=>matchesLibrary(l,p.query)).map(l=>({...l,guide:guideFor(l)?{category:guideFor(l)!.category,useCases:guideFor(l)!.useCases,hint:guideFor(l)!.hint,example:guideFor(l)!.example(l)}:undefined,license:{...l.license,sources:l.license.sources.map(({text,...source})=>source)}}));}
       case 'library.research':{const p=validate(z.object({query:z.string().max(100).default('')}).strict(),payload);return {scope:researchCatalog.scope,sourceSha256:researchCatalog.sourceSha256,entries:researchCatalog.entries.filter(r=>`${r.name} ${r.notes} ${r.aliases.join(' ')} ${r.id}`.toLowerCase().includes(p.query.toLowerCase()))};}
       case 'library.inspect':{const p=validate(z.object({key:z.string().max(80)}).strict(),payload),library=libraryByKey(p.key);if(!library)throw new AppError('UNKNOWN_LIBRARY','This catalog entry is not available.');return library;}

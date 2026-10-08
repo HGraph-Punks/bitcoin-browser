@@ -6,7 +6,7 @@ export const settingsSchema = z.object({
   name: z.string().min(1).max(80), eyebrow: z.string().max(120), headline: z.string().min(1).max(240),
   description: z.string().max(1600), accent: z.string().regex(/^#[a-fA-F0-9]{6}$/),heroImage:z.string().max(240).optional(),imageAlt:z.string().max(300).optional()
 }).strict();
-export const templateSchema = z.enum(['website', 'gallery', 'three', 'sketch', 'sketch2', 'game', 'audio', 'webgl', 'blocks', 'blank', 'physics', 'motion', 'chart']);
+export const templateSchema = z.enum(['website', 'gallery', 'three', 'sketch', 'sketch2', 'game', 'audio', 'webgl', 'blocks', 'blank', 'physics', 'motion', 'chart', 'collection', 'runes', 'image', 'pixel', 'generative', 'recursive', 'story', 'artifact']);
 export function validate<T>(schema: z.ZodType<T>, value: unknown): T {
   const result = schema.safeParse(value);
   if (!result.success) throw new AppError('INVALID_INPUT', result.error.issues.map(i => `${i.path.join('.') || 'Request'}: ${i.message}`).join('; ').slice(0, 700));

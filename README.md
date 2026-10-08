@@ -86,3 +86,7 @@ Open a [GitHub issue](https://github.com/HGraph-Punks/bitcoin-browser/issues) wi
 The initial commit is an exact source-tree import of Satoshi Browser commit `b3e8fe95030cf4cfdafc9479c576d7a231ee007f`. Subsequent commits prepare this public beta. The internal package name `satoshi-browser` and app ID `org.satoshibrowser.desktop` are retained for profile compatibility; the application and public project are **Bitcoin Browser**. The public version starts at **0.1.0**, independently of the earlier private RC numbering.
 
 [MIT license](LICENSE). Bundled third-party assets retain their own notices and attribution.
+
+### Ordinals creation candidate
+
+The local RC5 Create candidate adds image collections with separate inscription outputs, trait metadata, recursive galleries, targeted art/experience starters and a dedicated Rune etching workflow. Drafting works without a node; inscription and Rune publication use a connected Core 31.1.0 / Ord 0.29.0 wallet with exact owner review. See [the candidate guide](docs/CREATOR_BUILD.md) for limits, testing and local packaging. This candidate is not the notarized public release.

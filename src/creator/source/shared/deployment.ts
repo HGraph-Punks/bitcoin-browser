@@ -3,8 +3,9 @@ import type {Network,PublicationStage} from './types';
 export type DeploymentState = 'preparing'|'quoted'|'awaiting-review'|'awaiting-signature'|'signed'|'broadcast-unknown'|'commit-broadcast'|'reveal-broadcast'|'confirming'|'indexing'|'ready-for-next'|'complete'|'expired'|'conflict'|'recovery-required'|'provider-unavailable'|'canceled'|'reorg';
 export type ChainAnchor={height:number;hash:string};
 export type FundingInput={txid:string;vout:number;sats:number;script:string};
-export type PlannedOutput={index:number;sats:number;address:string;script:string;role:'recovery'|'change'|'inscription'};
+export type PlannedOutput={index:number;sats:number;address:string;script:string;role:'recovery'|'change'|'inscription'|'rune-premine'|'runestone'};
 export type InscriptionQuote={
+  kind?:'collection'|'rune';rune?:import('./ordinals').RuneSpec;items?:{path:string;inscriptionId:string;mime:string;contentSha256:string;decodedBytes:number;storedBytes:number;encoding:'br'|null;metadata?:unknown}[];
   schemaVersion:1;id:string;deploymentId:string;projectId:string;buildId:string;revision:number;backendId:string;network:Network;
   path:string;resourceNumber:number;resourceCount:number;contentSha256:string;mime:string;decodedBytes:number;storedBytes:number;encoding:'br'|null;
   dependencies:{path:string;id:string;sha256:string}[];createdAt:string;expiresAt:string;source:'Local Bitcoin Core / Ord';
@@ -14,14 +15,14 @@ export type InscriptionQuote={
 };
 export type DeploymentStep={
   quote:InscriptionQuote;reviewId?:string;authorizedAt?:string;signedAt?:string;commitSubmittedAt?:string;revealSubmittedAt?:string;
-  commitAttempts:number;revealAttempts:number;confirmations:number;verified?:{at:string;blockHash:string;anchor:ChainAnchor;sha256:string};
+  commitAttempts:number;revealAttempts:number;confirmations:number;commitConfirmations?:number;verified?:{at:string;blockHash:string;anchor:ChainAnchor;sha256:string};
   invalidatedAt?:string;
 };
 export type DeploymentView={
   schemaVersion:1;id:string;projectId:string;title:string;revision:number;buildId:string;backendId:string;network:Network;destination:string;
   createdAt:string;updatedAt:string;state:DeploymentState;cancelRequested:boolean;operationId:string;stages:PublicationStage[];paths:string[];
   steps:DeploymentStep[];currentStep:number;error?:{code:string;message:string};events:{at:string;state:DeploymentState;message:string}[];
-  receipt?:{rootId:string;network:Network;sourceRevision:number;buildId:string;compilerVersion:string;totalFeeSats:number;totalPostageSats:number;resources:{path:string;id:string;sha256:string;commit:string;reveal:string;blockHash:string}[]};
+  receipt?:{rune?:{name:string;id:string};rootId:string;network:Network;sourceRevision:number;buildId:string;compilerVersion:string;totalFeeSats:number;totalPostageSats:number;resources:{path:string;id:string;sha256:string;commit:string;reveal:string;blockHash:string}[]};
 };
 export type DeploymentSummary=Pick<DeploymentView,'id'|'projectId'|'title'|'revision'|'buildId'|'network'|'createdAt'|'updatedAt'|'state'|'cancelRequested'|'currentStep'>;
 export type BackendCapabilities={

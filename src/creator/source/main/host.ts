@@ -43,7 +43,7 @@ async function initialize(){
     window=options.getWindow();if(!window||window.isDestroyed())throw new AppError('CREATOR_WINDOW','Open Bitcoin Browser to create a project.');
     themePreference=currentTheme();
     preview=new NativeDraftPreview(options.getWindow,options.resolver,options.settings,()=>changed('preview'),(id,sha)=>store.readAsset(id,sha));preview.attach(window);
-    deployments=new NativeDeployments(window,path.join(root,'deployments'),id=>changed('deployment',id),(id,connection)=>requestBrowse('satnav://inscription/'+id,connection));
+    deployments=new NativeDeployments(window,path.join(root,'deployments'),id=>changed('deployment',id),(id,connection)=>requestBrowse(id.startsWith('rune:')?'satnav://rune/'+encodeURIComponent(id.slice(5)):'satnav://inscription/'+id,connection));
     service=new WorkspaceService(store,preview,p=>compiler.build(p),()=>deployments.engine,new SourceMergeService(store,input=>mergeEngine.prepare(input)));
     projectFiles=new NativeProjectFiles(window,store,p=>compiler.build(p));
     agents=new AgentBridge(path.join(root,'agent-connections'),service,()=>changed('agents'),(id,deploymentId)=>changed(deploymentId?'agent-review':'agent-open',id,deploymentId));await agents.initialize();
@@ -79,6 +79,8 @@ async function command(name:string,payload:unknown){
     case 'project.export-draft':return projectFiles.exportDraft(payload);
     case 'project.open-dialog':return projectFiles.openArchive(payload);
     case 'project.import-folder':return projectFiles.importFolder(payload);
+    case 'collection.import-images':return projectFiles.importAssets(payload,true);
+    case 'collection.import-metadata':return projectFiles.importCollectionMetadata(payload);
     case 'asset.import-dialog':return projectFiles.importAssets(payload);
     case 'file.copy-path':{const p=validate(z.object({projectId,path:z.string().max(240)}).strict(),payload);safeRelativePath(p.path);const project=await store.read(p.projectId);if(!Object.hasOwn(project.files,p.path)&&!Object.hasOwn(project.assets,p.path))throw new AppError('FILE_NOT_FOUND','This file is no longer in the project.');clipboard.writeText(p.path);return {copied:true};}
     case 'preview.bounds':{const p=validate(z.object({rect:z.object({x:z.number().finite(),y:z.number().finite(),width:z.number().min(0).max(10000),height:z.number().min(0).max(10000)}).nullable()}).strict(),payload);preview.setBounds(p.rect);return null;}

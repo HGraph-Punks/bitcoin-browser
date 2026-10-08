@@ -1,0 +1,77 @@
+{
+  "at": "2026-10-08T22:58:30.241Z",
+  "version": "0.2.0-rc.5",
+  "packaged": false,
+  "scope": "Owned disposable regtest wallet; real desktop approval and OS-protected transaction vault; no owner wallet or mainnet spending",
+  "checks": {
+    "nativeMultiImageChooser": true,
+    "nativeMetadataChooser": true,
+    "scopedMcp": true,
+    "realBatchOwnerReview": true,
+    "noBroadcastBeforeApproval": true,
+    "nativeRecursiveGallery": true,
+    "zeroPremineEtched": true,
+    "disabledEarlyRuneResume": true,
+    "sixConfirmationRuneReveal": true,
+    "nativeRuneNavigation": true
+  },
+  "collection": {
+    "rootId": "d7b65412e0605538d88071550cc6210ccf7f3700362b31aed0d4a1479d99f519i0",
+    "network": "regtest",
+    "sourceRevision": 2,
+    "buildId": "0dad6d175b021223c2ae02863787d4f39e269e75c82f78c3862f8424a8ed0466",
+    "compilerVersion": "2.2.0",
+    "totalFeeSats": 1061,
+    "totalPostageSats": 30000,
+    "resources": [
+      {
+        "path": "assets/art.svg",
+        "id": "e1738b939294f58de7c24b234f0abfc0583e3e89907094549844704ad1341bb9i0",
+        "sha256": "2361adddfaa21c27fd9cb013c4d6ee691958f973c182e4fe8cd68d6fefbd3ebe",
+        "commit": "114282d080c1e3cde5718aeb52dff6ece4d12bd7b99618de725b65b7cc2ad90e",
+        "reveal": "e1738b939294f58de7c24b234f0abfc0583e3e89907094549844704ad1341bb9",
+        "blockHash": "1e04796145edbc05b43584f9bed5c48522937ad1abdcb9a6c89d17b0e38ced5f"
+      },
+      {
+        "path": "assets/pixel.png",
+        "id": "e1738b939294f58de7c24b234f0abfc0583e3e89907094549844704ad1341bb9i1",
+        "sha256": "6b1048f8a6d40bac0b2954c18fefa40c4ea7a96120fc2e54b7317c0e43c2bbec",
+        "commit": "114282d080c1e3cde5718aeb52dff6ece4d12bd7b99618de725b65b7cc2ad90e",
+        "reveal": "e1738b939294f58de7c24b234f0abfc0583e3e89907094549844704ad1341bb9",
+        "blockHash": "1e04796145edbc05b43584f9bed5c48522937ad1abdcb9a6c89d17b0e38ced5f"
+      },
+      {
+        "path": "index.html",
+        "id": "d7b65412e0605538d88071550cc6210ccf7f3700362b31aed0d4a1479d99f519i0",
+        "sha256": "2584293e2dd15d8be369e8717c5b32916ba9109a04e3ca7f4dcb6b9bb5da409e",
+        "commit": "cfe2bcc796689393a56647dbdeae23c6cb34204ac5a2c620f53a7ff99a3a608e",
+        "reveal": "d7b65412e0605538d88071550cc6210ccf7f3700362b31aed0d4a1479d99f519",
+        "blockHash": "09c9f5bbba2215c58a7ae8d3ba86bc8ad3f3a96feaf11ffc13a4047be5574d2e"
+      }
+    ]
+  },
+  "rune": {
+    "rootId": "36f7339c186a25e7b4fcae1ad1d8a37848445e6669bc35034feff07ac09cac21i0",
+    "network": "regtest",
+    "sourceRevision": 1,
+    "buildId": "413e50285ea0ae1e2de792cd17c10611a0744078ddd5771d7c70f65d3f52a44e",
+    "compilerVersion": "2.2.0",
+    "totalFeeSats": 372,
+    "totalPostageSats": 10000,
+    "resources": [
+      {
+        "path": "rune.json",
+        "id": "36f7339c186a25e7b4fcae1ad1d8a37848445e6669bc35034feff07ac09cac21i0",
+        "sha256": "10c68a41f473283ae1d16027950f60bddcabc72e17d5595c56e9cf5dd0476226",
+        "commit": "50d08223695d293db9895bac53112f4fac39886f032b3b7da7b4d306764998fb",
+        "reveal": "36f7339c186a25e7b4fcae1ad1d8a37848445e6669bc35034feff07ac09cac21",
+        "blockHash": "7ad6bfde61a4dc7a4ea356ce2ec354ce0d49969d7dc1cfeb11a3956a4d6fe21d"
+      }
+    ],
+    "rune": {
+      "name": "NATIVE•BROWSER•RUNE",
+      "id": "111:1"
+    }
+  },
+  "localEvidence": "/private/tmp/btc-ordinal-native-pmvFxC"
+}

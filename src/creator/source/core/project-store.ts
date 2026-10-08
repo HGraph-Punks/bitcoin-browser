@@ -10,6 +10,8 @@ import { AppError } from './errors';
 import { mutationSchema, projectId, safeRelativePath, settingsSchema, templateSchema, validate } from './validation';
 import {withLibraryNotices} from '../catalog/notices';
 import { createTemplate, initialSettings, templates, updateTemplateFields,readTemplateSettings } from './templates';
+import {collectionSchema,readCollection,defaultCollection,runePlan,defaultRune,type CollectionSpec,type RuneSpec} from '../shared/ordinals';
+import {collectionHTML,runeHTML} from './ordinal-templates';
 import {libraryAcceptancesSchema,needsLibraryWarning} from '../catalog/library-acceptance';
 import { resolveLibraries } from '../catalog/libraries';
 import {assetSchema,describeAsset,isTextFile,decodeText,validateAssets,mimeFor} from './assets';
@@ -256,6 +258,8 @@ export class ProjectStore {
     const now = new Date().toISOString(), settings = initialSettings(input.template, input.title.trim());
     await mkdir(this.directory(id), { mode: 0o700,recursive:true });await this.checkDirectory(this.directory(id));
     let content: Content = { schemaVersion:2,id,title:settings.name,template:input.template,createdAt:now,updatedAt:now,settings,libraries:templates.find(t=>t.id===input.template)!.libraries,files:{'index.html':createTemplate(input.template,settings)},assets:{} };
+    if(input.template==='runes')content.files['rune.json']=JSON.stringify(defaultRune,null,2)+'\n';
+    if(['collection','image','recursive'].includes(input.template))content.files['collection.json']=JSON.stringify({...defaultCollection(settings.name),layout:input.template==='image'?'showcase':'grid'},null,2)+'\n';
     if(initial){
       if(!initial.entries.some(f=>f.path==='index.html'))throw new AppError('ENTRY_REQUIRED','The imported website needs an index.html at its root.');
       resolveLibraries(initial.libraries,initial.libraryAcceptances);
@@ -324,7 +328,13 @@ export class ProjectStore {
     // Unsupported or deeply nested custom markup must remain editable even if
     // its visual-field interpretation is unavailable.
     if(relative==='index.html')try{settings=readTemplateSettings(text,settings);}catch{/* Preserve the exact source and the prior visual fallback. */}
-    return {...content,title:settings.name===content.settings.name?content.title:settings.name,settings,files:{...content.files,[relative]:text}};
+    let result={...content,title:settings.name===content.settings.name?content.title:settings.name,settings,files:{...content.files,[relative]:text}};
+    // Keep valid managed previews in sync with direct source edits. Malformed
+    // design files and custom markup remain editable; the compiler blocks an
+    // invalid publication, and the repair UI preserves the original source.
+    if(relative==='collection.json'&&['collection','image','recursive'].includes(content.template))try{result=this.withCollection(result,collectionSchema.parse(JSON.parse(text)));result.files[relative]=text;}catch{}
+    if(relative==='rune.json'&&content.template==='runes')try{const plan=runePlan(JSON.parse(text));result.files['index.html']=this.updateOrdinalDesign(result,runeHTML(result.settings,plan.spec,plan.supply),'rune',result.settings);}catch{}
+    return result;
   }
   mergeFile(context:Mutation,request:MergeCommit,resolve:(project:Content&{revision:number})=>string|null){
     safeRelativePath(request.path);if(!isTextFile(request.path))throw new AppError('TEXT_FILE_REQUIRED','Choose a supported source file.');
@@ -366,7 +376,12 @@ export class ProjectStore {
   }
   changeFile(context:Mutation,from:string,to?:string,graph?:BuildArtifact){
     safeRelativePath(from);if(to)safeRelativePath(to);
-    return this.change(context,{type:to?'file-rename':'file-remove',from,to},async(content,p)=>({content:{...content,...changeFile({...content,revision:p.revision,canUndo:p.undo.length>0,canRedo:p.redo.length>0},from,to,graph)}}));
+    return this.change(context,{type:to?'file-rename':'file-remove',from,to},async(content,p)=>{
+      if((['collection','image','recursive'].includes(content.template)&&from==='collection.json')||(content.template==='runes'&&from==='rune.json'))throw new AppError('CREATOR_SPEC_REQUIRED','Keep the project design file. Edit it in Code or restore a version in History.');
+      const spec=['collection','image','recursive'].includes(content.template)?readCollection(content.files):null;if(spec?.items.some(item=>item.path===from)&&!to)throw new AppError('COLLECTION_MEMBER_REFERENCED','Remove this member from the collection before deleting its source asset.');
+      const updated={...content,...changeFile({...content,revision:p.revision,canUndo:p.undo.length>0,canRedo:p.redo.length>0},from,to,graph)};
+      if(spec?.items.some(item=>item.path===from)&&to)updated.files['collection.json']=JSON.stringify({...spec,items:spec.items.map(item=>item.path===from?{...item,path:to}:item)},null,2)+'\n';return {content:updated};
+    });
   }
   patchFile(context:Mutation,relative:string,baseHash:string,edits:{search:string;replacement:string}[]){
     safeRelativePath(relative);validate(z.string().regex(/^[a-f0-9]{64}$/),baseHash);
@@ -385,6 +400,32 @@ export class ProjectStore {
   history(context: Mutation, direction: 'undo'|'redo') {
     return this.change(context,{type:direction},async (content,p)=>{const target=p[direction].at(-1);if(!target)throw new AppError('NO_HISTORY',`There is nothing to ${direction}.`);return {content:await this.content(content.id,target),history:direction};});
   }
+  private updateOrdinalDesign(content:Content,next:string,kind:'collection'|'rune',settings:SiteSettings){
+    const start=`<!-- btcsite-${kind}:start -->`,end=`<!-- btcsite-${kind}:end -->`,source=content.files['index.html'];
+    if(!source.includes(start)||!source.includes(end)||source.indexOf(start)!==source.lastIndexOf(start)||source.indexOf(end)!==source.lastIndexOf(end)||source.indexOf(end)<source.indexOf(start))throw new AppError('CUSTOM_DESIGN','The visual editor markers were removed. Restore an earlier version in History or edit the design in Code. Your custom source is preserved.');
+    const updated=source.slice(0,source.indexOf(start))+next.slice(next.indexOf(start),next.indexOf(end)+end.length)+source.slice(source.indexOf(end)+end.length);
+    return withLibraryNotices(updateTemplateFields(updated,Object.fromEntries(Object.entries(settings).filter(([key,value])=>value!==content.settings[key as keyof SiteSettings])),content.settings),content.libraries,content.libraryAcceptances);
+  }
+  configureCollection(context:Mutation,value:CollectionSpec){return this.change(context,{type:'file',relative:'collection.json',value},async content=>({content:this.withCollection(content,validate(collectionSchema,value))}));}
+  private withCollection(content:Content,spec:CollectionSpec):Content{
+    if(!['collection','image','recursive'].includes(content.template))throw new AppError('COLLECTION_PROJECT_REQUIRED','Create an image collection project to use this editor.');
+    for(const item of spec.items){safeRelativePath(item.path);const mime=content.assets[item.path]?.mime??(content.files[item.path]!==undefined?mimeFor(item.path):'');if(!/^image\/(png|jpeg|gif|webp|avif|svg\+xml)$/.test(mime))throw new AppError('COLLECTION_IMAGE_REQUIRED',`Import the image ${item.path} before adding it to this collection.`);}
+    if(content.template==='image'&&spec.items.length>1)throw new AppError('ONE_IMAGE_ONLY','Use an Image collection project to include multiple works.');
+    const settings={...content.settings,name:spec.name,headline:spec.name,description:spec.description};
+    return {...content,title:spec.name,settings,files:{...content.files,'collection.json':JSON.stringify(spec,null,2)+'\n','index.html':this.updateOrdinalDesign(content,collectionHTML(settings,spec),'collection',settings)}};
+  }
+  importCollection(context:Mutation,entries:ImportedFile[]){return this.change(context,{type:'import',files:entries.map(e=>({path:e.path,sha256:createHash('sha256').update(e.bytes).digest('hex')}))},async content=>{
+    const imported=await this.mergeImports(content,entries),prior=readCollection(content.files)??defaultCollection(content.title),items=[...prior.items];
+    for(const entry of entries)if(!items.some(i=>i.path===entry.path))items.push({path:entry.path,name:path.posix.basename(entry.path).replace(/\.[^.]+$/,''),description:'',attributes:[]});
+    return {content:this.withCollection(imported,validate(collectionSchema,{...prior,items}))};
+  });}
+  configureRune(context:Mutation,value:RuneSpec){let plan;try{plan=runePlan(value)}catch(error){throw new AppError('INVALID_RUNE',(error as Error).message)}return this.change(context,{type:'file',relative:'rune.json',value},async content=>{if(content.template!=='runes')throw new AppError('RUNE_PROJECT_REQUIRED','Create a Rune project to use this editor.');return {content:{...content,files:{...content.files,'rune.json':JSON.stringify(plan.spec,null,2)+'\n','index.html':this.updateOrdinalDesign(content,runeHTML(content.settings,plan.spec,plan.supply),'rune',content.settings)}}};});}
+  duplicateCollectionItem(context:Mutation,relative:string){safeRelativePath(relative);return this.change(context,{type:'collection-edition',relative},async content=>{
+    const spec=readCollection(content.files),original=spec?.items.find(item=>item.path===relative);if(!spec||!original)throw new AppError('ITEM_NOT_FOUND','Select a saved collection item.');
+    const extension=path.posix.extname(relative),stem=relative.slice(0,-extension.length);let next=stem+'-edition-2'+extension,n=3;while(Object.hasOwn(content.files,next)||Object.hasOwn(content.assets,next))next=stem+'-edition-'+n+++extension;
+    const copy={...content,files:{...content.files},assets:{...content.assets}};if(content.assets[relative])copy.assets[next]={...content.assets[relative],path:next};else copy.files[next]=content.files[relative];
+    const items=[...spec.items],index=items.indexOf(original);items.splice(index+1,0,{...original,path:next,name:(original.name+' · edition').slice(0,120)});return {content:this.withCollection(copy,validate(collectionSchema,{...spec,items}))};
+  });}
   addLibrary(context: Mutation,key:string,acceptance?:import('../shared/types').LibraryAcceptance) {
     return this.change(context,{type:'library-add',key,acceptance},async content=>{
       const acceptances=acceptance?libraryAcceptancesSchema.parse([...(content.libraryAcceptances??[]).filter(a=>a.key!==key),acceptance]):content.libraryAcceptances??[];

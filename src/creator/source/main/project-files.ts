@@ -10,6 +10,7 @@ import {libraries} from '../catalog/libraries';
 import {readTemplateSettings,initialSettings} from '../core/templates';
 import {readInputFile} from '../core/input-files';
 import {prepareResource} from '../compiler/build';
+import {readCollection,collectionItemSchema} from '../shared/ordinals';
 import type {BuildArtifact,ProjectSnapshot} from '../shared/types';
 
 type Format='archive'|'folder'|'html';
@@ -44,9 +45,9 @@ export class NativeProjectFiles {
     const project=await this.store.create({title:settings.name,template:'blank'},undefined,{entries:data.entries,libraries:selected,settings});
     return {canceled:false,project,skipped:data.skipped};
   }
-  async importAssets(payload:unknown){
+  async importAssets(payload:unknown,collection=false){
     const p=validate(mutationSchema,payload),project=await this.store.read(p.projectId);
-    const selection=await dialog.showOpenDialog(this.window,{title:'Add assets to your website',properties:['openFile','multiSelections'],filters:[{name:'Web assets',extensions:['png','jpg','jpeg','gif','webp','avif','svg','ico','woff','woff2','ttf','otf','mp3','wav','ogg','mp4','webm','glb','gltf','bin','wasm','json']} ]});
+    const selection=await dialog.showOpenDialog(this.window,{title:collection?'Add images to your collection':'Add assets to your website',properties:['openFile','multiSelections'],filters:[{name:'Web assets',extensions:collection?['png','jpg','jpeg','gif','webp','svg']:['png','jpg','jpeg','gif','webp','avif','svg','ico','woff','woff2','ttf','otf','mp3','wav','ogg','mp4','webm','glb','gltf','bin','wasm','json']} ]});
     if(selection.canceled||!selection.filePaths.length)return {canceled:true};
     if(selection.filePaths.length>64)throw new AppError('IMPORT_LIMIT','Import up to 64 assets at a time.');
     const occupied=new Set([...Object.keys(project.files),...Object.keys(project.assets)].map(name=>name.normalize('NFC').toLowerCase())),entries=[];let total=0;
@@ -55,7 +56,16 @@ export class NativeProjectFiles {
       while(occupied.has(relative.normalize('NFC').toLowerCase()))relative=`assets/${stem}-${index++}${extension}`;
       occupied.add(relative.normalize('NFC').toLowerCase());const bytes=await readInputFile(filename,8_000_000);total+=bytes.length;if(total>64_000_000)throw new AppError('IMPORT_LIMIT','Import up to 64 MB of assets at a time.');entries.push({path:relative,bytes});
     }
-    return {canceled:false,project:await this.store.importFiles(p,entries)};
+    return {canceled:false,project:collection?await this.store.importCollection(p,entries):await this.store.importFiles(p,entries)};
+  }
+  async importCollectionMetadata(payload:unknown){
+    const p=validate(mutationSchema,payload),project=await this.store.read(p.projectId),spec=readCollection(project.files);if(!spec)throw new AppError('COLLECTION_PROJECT_REQUIRED','Open an image collection first.');
+    const choice=await dialog.showOpenDialog(this.window,{title:'Import collection metadata',properties:['openFile'],filters:[{name:'JSON metadata',extensions:['json']}]});if(choice.canceled||!choice.filePaths[0])return {canceled:true};
+    let parsed:unknown;try{parsed=JSON.parse((await readInputFile(choice.filePaths[0],1_000_000)).toString('utf8'));}catch{throw new AppError('INVALID_METADATA','Choose a JSON array of {file, name, description, attributes} records.');}
+    const records=validate(z.array(z.object({file:z.string().min(1).max(240),name:collectionItemSchema.shape.name,description:collectionItemSchema.shape.description,attributes:collectionItemSchema.shape.attributes}).strict()).max(128),parsed),matches=new Map<string,typeof records[number]>();
+    for(const record of records){const candidates=spec.items.filter(item=>item.path===record.file||path.posix.basename(item.path)===record.file);if(candidates.length!==1||matches.has(candidates[0].path))throw new AppError('METADATA_MATCH_FAILED',`Match ${record.file} to exactly one imported image, once. Use its full project path if filenames repeat.`);matches.set(candidates[0].path,record);}
+    const items=spec.items.map(item=>{const record=matches.get(item.path);return record?{path:item.path,name:record.name,description:record.description,attributes:record.attributes}:item;});
+    return {canceled:false,project:await this.store.configureCollection(p,{...spec,items})};
   }
   async export(payload:unknown){
     const p=validate(z.object({projectId,format:z.enum(['archive','folder','html','choose']).default('choose')}).strict(),payload);

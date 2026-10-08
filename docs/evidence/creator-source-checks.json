@@ -1,19 +1,19 @@
 {
   "schemaVersion": 1,
-  "version": "0.2.0-rc.3",
+  "version": "0.2.0-rc.5",
   "sourceBuilderCommit": "96141f4",
-  "browserBaseCommit": "c87056ac13a99cbb7d3f1edd92e995222d41b367",
+  "browserBaseCommit": "3d73d1d612912a3c99ee510a72afa6e1fedca925",
   "checks": {
     "browser": {
       "passed": 2258,
       "failed": 0
     },
     "creator": {
-      "passed": 38,
+      "passed": 49,
       "failed": 0
     },
     "creatorTypeScript": true,
     "browserStaticSecurity": true
   },
-  "scope": "Local regression and type/static checks; package runtime qualification is recorded separately."
+  "scope": "Local browser regression, final Create domain/MCP/native-boundary tests and type/static checks. Exact signed-package qualification is recorded separately."
 }

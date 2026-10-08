@@ -1,15 +1,31 @@
 # Bitcoin Browser Create — macOS candidate
 
-Version: **0.2.0-rc.4**, macOS arm64, Electron **44.2.0**. This is a local release candidate. Developer ID signing, Apple notarization, production inscription qualification and public redistribution are distinct gates. The candidate does not claim notarization or mainnet execution qualification.
+Version: **0.2.0-rc.5**, macOS arm64, Electron **44.2.0**. This is a local release candidate. Developer ID signing, Apple notarization, production inscription qualification and public redistribution are distinct gates. The candidate does not claim notarization or mainnet execution qualification.
 
 ## Try the build
 
-Open `release/0.2.0-rc.4/mac-arm64/Bitcoin Browser.app`, then choose **Create** in the title bar. Browse and Create use the same native application window. Create opens its own project home with 13 starters and the Build → Test → Inscribe workflow. Existing browser data uses the original application identity.
+Open `release/0.2.0-rc.5/mac-arm64/Bitcoin Browser.app`, then choose **Create** in the title bar. Browse and Create use the same native application window. Create opens its own project home with 21 starters and the Build → Test → Inscribe workflow. Existing browser data uses the original application identity.
 
 Use **Explore library catalog** to search supported libraries and research inscriptions, inspect provenance/restrictions and copy an example. Drafts and published results use Bitcoin Browser's native content viewer and source preferences. There is no separate browsing engine.
 
 To bring over saved work, quit Website Builder and use **Create → Import Builder workspace**, choosing the old `projects` folder. Original data is preserved; existing IDs are skipped. Unsaved drafts should first be saved/exported. This imports project source/assets/history only. Existing deployment records, node credentials, wallet material and AI connections stay in the original application.
 
+
+### Create a collection or Rune
+
+Choose **Image collection** or **Recursive collection gallery**. **Add images** selects multiple PNG, JPEG, GIF, WebP or SVG files through the native chooser. Import up to 64 images / 64 MB at a time, with up to 128 members in a project. Arrange their order, edit titles/descriptions, add typed traits and see trait frequencies. Duplicate an artwork as an edition to preserve identical bytes while receiving a distinct inscription ID. Choose grid, full artwork showcase or crisp pixel layout.
+
+**Import metadata** accepts a JSON array of `{file, name, description, attributes}` records. Match the filename or full project path to exactly one imported image; attributes use `{trait_type, value}`. The complete import is validated before changes are saved. Removal from the collection retains source assets. Renames update the collection manifest. Managed gallery edits preserve unrelated custom code and library notices.
+
+Publication groups members into separate-output batches of at most 16, with a conservative size budget. Actual commit/reveal weight must remain below Bitcoin's standard transaction limit; a large individual image still needs reduction before it can publish. Each batch has its own exact approval showing members, hashes, metadata, outputs, postage and fees. The gallery publishes after all images confirm and verify, using their actual IDs. Gallery display does not create parent–child provenance.
+
+Choose **Rune etching** for a dedicated design screen. Set an uppercase name with optional spacers, one Unicode symbol, divisibility, premine and an optional open mint with exact amount, cap and block windows. Exact decimal / 128-bit arithmetic prevents rounded supply values. Turbo is optional and starts disabled. The connected Ord node checks names during preparation and again before reveal.
+
+A Rune publication etches the actual runestone with a JSON design manifest inscription. A positive premine receives a separate wallet-owned Taproot output; its address and postage appear in the review. The commit must reach six confirmations before the saved reveal can be submitted. Use **Reconcile & resume** when mature. Restart and cancellation preserve the exact transaction; they do not silently construct or reprice another one. A verified Rune receipt opens the native Bitcoin Browser Rune viewer.
+
+Additional starters target one-of-one artwork, PFP/pixel characters, seeded generative SVG art, interactive stories and collectible artifact cards. Home filters separate collections, art, experiences and Runes. All eight added starters work without an external library. The four interactive art/story/card starters are exercised inside the native opaque draft iframe.
+
+Source, collection metadata and Rune settings share project history and portable archives. Valid form edits save automatically; navigation waits for pending edits, and invalid designs remain visible instead of publishing older settings. Scoped MCP adds `collection_configure`, `collection_duplicate` and `rune_configure`; agents still cannot authorize spending or accept library warnings.
 
 ### Include an unqualified library
 
@@ -25,9 +41,9 @@ The research UI/runtime test uses an owned loopback fixture under a research cat
 
 Evidence is retained in `docs/evidence/creator-*.json`. Each receipt states its package version, driver and fixture scope. Each signed candidate is tested independently; the receipt version identifies the tested package.
 
-The final browser suite passes **2,258/2,258** checks. The creator suite passes **43/43** domain/MCP/native-boundary checks. TypeScript and the browser's static/security checks pass. The creator suite includes warning acceptance, research pinning, history/archive round trips, format checks, source failures and preservation of the publication license gate.
+The final browser suite passes **2,258/2,258** checks. The creator suite passes **49/49** domain/MCP/native-boundary checks. TypeScript and the browser's static/security checks pass. The creator suite includes warning acceptance, research pinning, history/archive round trips, format checks, source failures and preservation of the publication license gate.
 
-The exact signed **RC4** package executes all nine real interactive experiences against Brotli-compressed pinned public library bytes. It also passes mandatory warning acceptance, Cancel/Escape/focus restoration, accepted research execution in the opaque sandbox, sidebar Add, library search/details/clipboard, immediate-save mode switching, project restoration, 47 actual native-executable MCP tools and JSZip generation. See [the package experience receipt](evidence/creator-packaged.json).
+The prior signed **RC4** package executed all nine real interactive experiences against Brotli-compressed pinned public library bytes. It also passed mandatory warning acceptance, Cancel/Escape/focus restoration, accepted research execution in the opaque sandbox, sidebar Add, library search/details/clipboard, immediate-save mode switching, project restoration, 47 actual native-executable MCP tools and JSZip generation. Current RC5 qualification adds the new screens, templates and 50 scoped MCP tools; receipts identify their actual tested version. See [the package experience receipt](evidence/creator-packaged.json).
 
 The signed RC3 baseline package completed **two actual regtest inscriptions** through a disposable Core/Ord wallet. Checks include denial of MCP spending approval, tamper rejection, no broadcast before exact UI review, desktop restart, encrypted funding-wallet refusal, external Core unlocking, per-resource review, chain/content verification, native clipboard, AI revocation and release of reserved inputs. The completed root runs its recursively inscribed script in native Browse with no Node, creator or browser API. See [the package publication receipt](evidence/creator-packaged-regtest.json). All review clicks use the owned fixture wallet; no real coins or owner wallet were used.
 
@@ -37,9 +53,11 @@ The package driver uses a loopback Chromium renderer debugging endpoint and norm
 
 [Package integrity verification](evidence/creator-package-integrity.json) checks the ZIP hash, source inventory, packaged ASAR source/payload, unpacked worker hashes, Developer ID/hardened runtime and seven inherited release fuses. Lockfiles and TypeScript declarations are source inputs and are intentionally excluded by the packager. Runtime source and payload hashes match the final candidate.
 
-The current archive SHA-256 is recorded in `release/0.2.0-rc.4/SHA256SUMS` and its release manifest. Signing identity: `Developer ID Application: MoonScape Labs Inc (YAXG2D45G6)`. The candidate is **not notarized or published**.
+The current archive SHA-256 is recorded in `release/0.2.0-rc.5/SHA256SUMS` and its release manifest. Signing identity: `Developer ID Application: MoonScape Labs Inc (YAXG2D45G6)`. The candidate is **not notarized or published**.
 
 The interim RC1/RC2 packages are preserved in the migration checkout. Their failed compressed-result checks motivated the native negotiation/decoding fix; RC3 established the corrected behavior; RC4 retains those boundaries and adds explicit library warning acceptance. Cache/provenance retain wire bytes, while custom-protocol responses decode with output bounds and correct range/HEAD headers.
+
+Real Ordinals domain qualification additionally covers separate image outputs, identical editions, CBOR metadata, a recursive gallery, a maximum u128 mint cap, zero-premine preparation, six-confirmation maturity and restart. See [the Ordinals transaction receipt](evidence/creator-ordinals-regtest.json). Native desktop and package Ordinals receipts separately identify UI approval, actual etching and native browsing; the development harness also exercises multi-image and metadata native grants. No owner wallet or mainnet coins are used.
 
 ## Reproduce
 
@@ -66,6 +84,8 @@ The inscription harness requires the pinned macOS arm64 Core 31.1.0 / Ord 0.29.0
 ```sh
 npm --prefix src/creator run test:regtest -- --tools-dir=/absolute/qualified-tools
 npm --prefix src/creator run test:regtest -- --unavailable-storage --tools-dir=/absolute/qualified-tools
+src/creator/node_modules/.bin/tsx scripts/test-creator-ordinals-regtest.ts --tools-dir=/absolute/qualified-tools
+src/creator/node_modules/.bin/tsx scripts/test-creator-ordinals-native.ts --tools-dir=/absolute/qualified-tools
 ```
 
 To package a new local candidate, first choose an unused candidate version in both package manifests/lockfiles and set the root build output to `release/<version>`. The existing public `dist` policy continues to require notarization. This separate command produces a local signed candidate only:
@@ -74,6 +94,7 @@ To package a new local candidate, first choose an unused candidate version in bo
 node scripts/package-creator-candidate.mjs --developer-id='Developer ID Application: MoonScape Labs Inc (YAXG2D45G6)'
 npm --prefix src/creator run test:native -- --library-cache=/absolute/verified-cache --executable='/absolute/candidate/Bitcoin Browser.app/Contents/MacOS/Bitcoin Browser'
 npm --prefix src/creator run test:regtest -- --packaged --tools-dir=/absolute/qualified-tools
+src/creator/node_modules/.bin/tsx scripts/test-creator-ordinals-native.ts --packaged --tools-dir=/absolute/qualified-tools
 ```
 
 The archive SHA-256, complete source inventory, creator input/payload hashes and signature identity are in the versioned release manifest. The runtime has bundled compiler/merge workers and stdio MCP; it does not need a separate Node installation or a sibling Builder checkout. Locked development dependencies must be installed in both root and creator workspaces.

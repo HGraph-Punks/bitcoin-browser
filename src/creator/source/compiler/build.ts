@@ -1,3 +1,4 @@
+import {readCollection,readRune} from '../shared/ordinals';
 import { createHash } from 'node:crypto';
 import { brotliCompressSync, constants } from 'node:zlib';
 import { resolveLibraries } from '../catalog/libraries';
@@ -9,7 +10,7 @@ import {safeRelativePath} from '../core/validation';
 import {scanSource,rewriteReferences,type ParsedReference,type SourceScan} from './references';
 import type { BuildArtifact,BuildResource,Finding,ProjectSnapshot,ResourceReference,Network } from '../shared/types';
 
-export const COMPILER_VERSION='2.1.0';
+export const COMPILER_VERSION='2.2.0';
 const sha=(value:string|Buffer)=>createHash('sha256').update(value).digest('hex');
 const compressed=(value:string)=>brotliCompressSync(Buffer.from(value),{params:{[constants.BROTLI_PARAM_QUALITY]:9}}).length;
 const inscriptionId=/^[a-f0-9]{64}i(?:0|[1-9][0-9]{0,9})$/;
@@ -17,7 +18,10 @@ const inscriptionId=/^[a-f0-9]{64}i(?:0|[1-9][0-9]{0,9})$/;
 export function buildProject(project: ProjectSnapshot): BuildArtifact {
   if(typeof project.files['index.html']!=='string')throw new AppError('ENTRY_REQUIRED','The project needs an index.html entry point.');
   validateAssets(project.assets,project.files);
-  const findings:Finding[]=[];
+  const findings:Finding[]=[];let collection:ReturnType<typeof readCollection>=null,rune:ReturnType<typeof readRune>=null;
+  try{if(['collection','image','recursive'].includes(project.template)){collection=readCollection(project.files);if(!collection)throw new Error('Restore collection.json or a previous saved version.');}if(project.template==='runes'){rune=readRune(project.files);if(!rune)throw new Error('Restore rune.json or a previous saved version.');}}catch(error){findings.push({code:'INVALID_CREATOR_SPEC',severity:'error',title:'Check your creation settings',detail:(error as Error).message});}
+  if(collection)for(const item of collection.items)if(!Object.hasOwn(project.files,item.path)&&!Object.hasOwn(project.assets,item.path)||!/^image\/(png|jpeg|gif|webp|svg\+xml)$/.test(project.assets[item.path]?.mime??mimeFor(item.path)))findings.push({code:'INVALID_COLLECTION_MEMBER',severity:'error',title:'Restore a collection image',detail:`${item.path} is missing or has an unsupported image type.`});
+  if(collection&&!collection.items.length)findings.push({code:'COLLECTION_EMPTY',severity:'error',title:'Add your first image',detail:'Import at least one image before publication.'});
   const libs=resolveLibraries(project.libraries,project.libraryAcceptances);
   const knownIds=new Set(libs.map(l=>l.id));
   const scans=new Map<string,SourceScan>(),nodes=new Map<string,BuildResource>(),seenContexts=new Set<string>();
@@ -49,7 +53,8 @@ export function buildProject(project: ProjectSnapshot): BuildArtifact {
     if(!Object.hasOwn(project.files,relative)&&!Object.hasOwn(project.assets,relative)){addFinding('MISSING_RESOURCE','A local resource is missing',`Import “${relative}” or fix its reference in ${file}.`,file);return;}
     return {...reference,target:relative,suffix};
   }
-  const pending=[{file:'index.html',document:'index.html'}];
+  const pending=[{file:'index.html',document:'index.html'},...(collection?.items.filter(item=>Object.hasOwn(project.files,item.path)||Object.hasOwn(project.assets,item.path)).map(item=>({file:item.path,document:'index.html'}))??[])];
+  if(rune)pending.push({file:'rune.json',document:'index.html'});
   while(pending.length){
     const {file,document}=pending.shift()!,context=file+'\0'+document;
     if(seenContexts.has(context))continue;seenContexts.add(context);
@@ -69,7 +74,7 @@ export function buildProject(project: ProjectSnapshot): BuildArtifact {
   }
   const leafIdentities=new Map<string,string>();
   for(const node of [...nodes.values()].sort((a,b)=>a.path.localeCompare(b.path))){
-    if(node.path==='index.html'||node.dependencies.length)continue;
+    if(node.path==='index.html'||node.dependencies.length||collection?.items.some(item=>item.path===node.path))continue;
     const identity=node.mime+':'+node.sourceSha256,prior=leafIdentities.get(identity);
     if(prior){node.duplicateOf=prior;node.previewId=nodes.get(prior)!.previewId;}else leafIdentities.set(identity,node.path);
   }
@@ -82,7 +87,7 @@ export function buildProject(project: ProjectSnapshot): BuildArtifact {
     active.push(file);const values=node.dependencies.map(stage);active.pop();visited.add(file);
     node.stage=values.some(v=>v<0)?-1:values.length?Math.max(...values)+1:0;return node.stage;
   }
-  stage('index.html');
+  stage('index.html');for(const node of nodes.values())stage(node.path);
   for(const node of nodes.values()){
     if(node.kind==='binary'){node.sha256=node.sourceSha256;continue;}
     node.text=rewriteReferences(node.source!,node.references,node.containers,ref=>ref.target==='self:'?ref.suffix:ref.target.startsWith('inscription:')?'/content/'+ref.target.slice(12)+ref.suffix:'/content/'+nodes.get(ref.target)!.previewId+ref.suffix);
@@ -95,7 +100,7 @@ export function buildProject(project: ProjectSnapshot): BuildArtifact {
   for(const lib of libs.filter(l=>!l.key.includes('core')&&(!l.runtimeTested||!l.licenseReviewed)))findings.push({code:'LIBRARY_QUALIFICATION',severity:'warning',title:`${lib.name} ${lib.version}: ${!lib.runtimeTested?'runtime qualification pending':'license review pending'}`,detail:lib.licenseReviewed?'Exact license notices are retained. The target runtime recipe still needs qualification.':lib.license.scope});
   for(const lib of libs.filter(l=>l.userAcknowledgement))findings.push({code:'LIBRARY_WARNING_ACCEPTED',severity:'warning',title:`${lib.name}: unqualified use accepted`,detail:'You accepted the warning for these pinned bytes. This does not establish security, compatibility or permission to redistribute. Verify required dependencies and notices before inscription.'});
   findings.push({code:'STATIC_SCAN_LIMIT',severity:'info',title:'Run the website to complete the check',detail:'HTML, CSS, JavaScript imports and common literal requests are parsed. Calculated URLs, custom loaders and unused execution paths still need runtime inspection.'});
-  return {id:sha(JSON.stringify({compiler:COMPILER_VERSION,resources:resources.map(r=>[r.path,r.sha256,r.dependencies]),libraries:libs.map(l=>[l.id,l.sha256,l.format,l.userAcknowledgement??null])})),projectId:project.id,revision:project.revision,html,sha256:root.sha256,bytes:root.bytes,compressedBytes:root.compressedBytes,libraries:libs,findings,previewId:root.previewId,createdAt:new Date().toISOString(),compilerVersion:COMPILER_VERSION,resources,stages,unpublishedFiles:paths.filter(p=>!nodes.has(p)),totalNewBytes:resources.filter(r=>!r.duplicateOf).reduce((n,r)=>n+r.bytes,0),hasUnresolvedDependencies:root.dependencies.length>0};
+  return {...(collection?{collection}:{}),...(rune?{rune}:{}),id:sha(JSON.stringify({compiler:COMPILER_VERSION,resources:resources.map(r=>[r.path,r.sha256,r.dependencies]),libraries:libs.map(l=>[l.id,l.sha256,l.format,l.userAcknowledgement??null])})),projectId:project.id,revision:project.revision,html,sha256:root.sha256,bytes:root.bytes,compressedBytes:root.compressedBytes,libraries:libs,findings,previewId:root.previewId,createdAt:new Date().toISOString(),compilerVersion:COMPILER_VERSION,resources,stages,unpublishedFiles:paths.filter(p=>!nodes.has(p)),totalNewBytes:resources.filter(r=>!r.duplicateOf).reduce((n,r)=>n+r.bytes,0),hasUnresolvedDependencies:root.dependencies.length>0};
 }
 
 export type PublishedBinding={network:Network;id:string;sha256:string;mime:string};

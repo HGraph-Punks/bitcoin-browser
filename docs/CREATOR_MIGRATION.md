@@ -2,12 +2,12 @@
 
 The migration brings the Website Builder RC11 feature set into **Create**, a distinct mode of Bitcoin Browser. **Browse** retains the browser's existing tabs, navigation, providers, content viewers, wallet bridge and node manager. The creator does not launch another application or run a second browsing engine.
 
-Builder source checkpoint: `96141f4` (committed before migration). Candidate version: `0.2.0-rc.4`. Public release remains gated by Apple notarization, publication qualification and the existing library license restrictions.
+Builder source checkpoint: `96141f4` (committed before migration). Candidate version: `0.2.0-rc.5`. Public release remains gated by Apple notarization, publication qualification and the existing library license restrictions.
 
 ## Product design
 
 - The persistent Browse / Create selector occupies the same title-bar position in both modes. Create has its own project home and a focused **Build → Test → Inscribe** workflow. Browsing tabs and the address bar belong to Browse.
-- Create preserves the visual editor, code editor, source file tree, assets, history, merge review, library explorer and responsive preview widths. There are 13 starters and 149 distinct research inscription IDs; 9 visible supported library choices retain their verification and licensing distinctions.
+- Create preserves the visual editor, code editor, source file tree, assets, history, merge review, library explorer and responsive preview widths. There are 21 starters and 149 distinct research inscription IDs; 9 visible supported library choices retain their verification and licensing distinctions.
 - Leaving Create flushes the active code draft and queued source edits before changing mode. A failed save keeps the user in Create. Returning restores the last project; Browse restores its existing saved tabs.
 - Drafts use the existing native `ord:` protocol and the same opaque iframe sandbox as original inscription content. There is no Website Builder `site:` protocol, embedded separate app, webview, extra BrowserWindow or creator-owned WebContentsView.
 - Library inscriptions and completed publications open in native Browse. A completed publication's already-qualified local Ord endpoint becomes a read-only browser source on its matching network. Upstream library provenance is available in a native detail dialog with explicit inscription viewing and URL copying; it never opens the OS web browser.
@@ -17,7 +17,7 @@ Builder source checkpoint: `96141f4` (committed before migration). Candidate ver
 
 | Builder feature | Bitcoin Browser location / adapter | Migration behavior |
 | --- | --- | --- |
-| Project home and 13 starters | Create home; original `templates` and `ProjectStore` | Source and settings formats preserved |
+| Project home and 21 starters | Create home; original `templates` and `ProjectStore` | Source and settings formats preserved |
 | Visual content and appearance | Create → Build → Content | Marker-preserving source edits retained |
 | Multi-file code editor | Create → Build → Code | CodeMirror, local source autosave and revision checks retained |
 | Assets and safe file operations | Create → Build → Assets / Code | Native file grants, asset hashes, rename and delete graph checks retained |
@@ -30,7 +30,7 @@ Builder source checkpoint: `96141f4` (committed before migration). Candidate ver
 | Undo/redo, checkpoints, history and diffs | Create → History | Monotonic revisions, attribution and retained immutable versions |
 | Concurrent edits and merge | Creator merge review | Exact revision/path/result-hash binding and retry semantics retained |
 | Interrupted source draft recovery | Private `creator/drafts` | Same recoverable local draft protocol |
-| AI / MCP tools | Create → AI connection | 47 scoped tools; actual browser executable starts `--creator-mcp`; no owner spending approval through MCP |
+| AI / MCP tools | Create → AI connection | 50 scoped tools; actual browser executable starts `--creator-mcp`; no owner spending approval through MCP |
 | Inscription backend | Create → Inscribe | Local Core 31.1.0 / Ord 0.29.0 connection, loopback validation and native cookie/executable grants |
 | Frozen plans and exact review | Create → Inscribe | Original owner review, plan hash, quote expiry, fee/destination/funding checks |
 | Transaction execution and receipts | Private `creator/deployments` | Original OS-protected transaction vault, journal, reservations, resume and verification |
@@ -87,3 +87,7 @@ npm start
 ```
 
 Build and packaging use each repository's pinned lockfile. The production runtime does not depend on a sibling Website Builder checkout. The native qualification script requires a supplied SHA-256-named cache of the catalog's verified public library bytes and uses only an owned profile and loopback fixture source.
+
+## Ordinals creation extension
+
+RC5 adds native multi-image collection import, ordering, distinct editions, typed traits, metadata import, bounded separate-output batch publication and verified recursive galleries. Collection and Rune JSON settings are project source, preserved by history and archives. A dedicated Runes creator uses exact 128-bit amounts, actual Ord etchings, owner review, a six-confirmation commitment wait and native Rune viewing. Added authoring tools follow existing project grants; spending approval and unqualified-library acceptance remain desktop-only. See [the current build guide](CREATOR_BUILD.md) and versioned evidence for qualification scope.
