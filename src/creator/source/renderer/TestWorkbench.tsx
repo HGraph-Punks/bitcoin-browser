@@ -1,0 +1,23 @@
+import {AlertTriangle,Check,CheckCheck,CheckCircle2,Code2,Info,RotateCcw} from 'lucide-react';
+import type {BuildArtifact,PreviewState,ProjectSnapshot} from '../shared/types';
+
+function bytes(value:number){return value<1000?`${value} B`:`${(value/1000).toFixed(value>=100000?0:1)} KB`;}
+function Metric({label,value,detail}:{label:string;value:string;detail:string}){return <div className="metric-card"><span>{label}</span><strong>{value}</strong><p>{detail}</p></div>;}
+
+export default function TestWorkbench({project,build,preview,busy,onTest}:{project:ProjectSnapshot;build:BuildArtifact|null;preview:PreviewState|null;busy:boolean;onTest:()=>void}){
+  const current=build?.projectId===project.id&&build.revision===project.revision?build:null;
+  const observed=current&&preview?.projectId===project.id&&preview.revision===current.revision&&preview.buildId===current.id?preview:null;
+  return <main className="review-page">
+    <div className="review-title"><span className="round-icon"><CheckCheck/></span><div><p className="eyebrow">TEST BEFORE YOU INSCRIBE</p><h1>Know what you’re putting on Bitcoin.</h1><p>Check this revision’s content and the requests made by your preview.</p></div><button className="button" disabled={busy} onClick={onTest}><RotateCcw size={14}/>Run checks again</button></div>
+    <div className="review-metrics"><Metric label="New content" value={current?bytes(current.totalNewBytes):'—'} detail={current?`${current.resources.filter(r=>!r.duplicateOf).length} distinct resources · uncompressed`:'Run checks for this revision'}/><Metric label="With Brotli" value={current?bytes(current.compressedBytes):'—'} detail="Content size · not a transaction quote"/><Metric label="Shared libraries" value={current?String(current.libraries.filter(l=>!l.key.includes('core')).length):'—'} detail="Existing content reused by reference"/></div>
+    <div className="report-grid"><section className="report-card"><div className="report-heading"><h2>Readiness check</h2><span>Revision {project.revision}</span></div>
+      {!current?<div className="finding warning" role="status"><Info size={18}/><div><strong>This revision needs checking</strong><p>Your source changed or no report is available. Run checks again before reviewing an inscription.</p></div></div>:<>
+        {current.findings.map((finding,i)=><div className={`finding ${finding.severity}`} key={i}>{finding.severity==='error'?<AlertTriangle size={18}/>:<Info size={18}/>}<div><strong>{finding.title}</strong><p>{finding.detail}</p></div></div>)}
+        {!current.findings.some(f=>f.severity==='error')&&<div className="finding success"><CheckCircle2 size={18}/><div><strong>No static blockers found</strong><p>Checked revision {current.revision}. Runtime, backend, and final publication checks are separate.</p></div></div>}
+      </>}
+    </section><section className="report-card"><div className="report-heading"><h2>Preview activity</h2><span>{observed?`${observed.events.length} events · ${observed.status}`:'Not observed for this build'}</span></div>
+      {!observed?<div className="report-empty"><Info size={26}/><p>No matching preview observations are available.<br/>Run checks and explore this revision’s preview.</p></div>:observed.events.length?observed.events.slice(-18).map((event,i)=><div className={`request-row ${event.type}`} key={i}>{event.type==='resource'?<Check size={14}/>:event.type==='error'||event.type==='blocked'?<AlertTriangle size={14}/>:<Code2 size={14}/>}<div><p>{event.message}</p>{event.url&&<code>{event.url}</code>}</div></div>):<div className="report-empty"><Info size={26}/><p>{observed.status==='loading'?'The preview is still loading.':observed.status==='error'?'The preview did not load successfully.':'No library requests or errors were recorded.'}<br/>Explore all interactions in your preview.</p></div>}
+    </section></div>
+    {current&&<details className="build-details"><summary>Publication order & build details</summary><p>Dependencies are inscribed first. Each later stage uses their actual inscription IDs.</p><ol className="publication-stages">{current.stages.map((files,i)=><li key={i}><strong>Stage {i+1}</strong><span>{files.paths.join(', ')}</span></li>)}</ol>{!!current.unpublishedFiles.length&&<p>Unreferenced files stay local: {current.unpublishedFiles.join(', ')}</p>}<p>SHA-256 <code>{current.sha256}</code></p><p>Preview identity is provisional. This website has not been inscribed.</p></details>}
+  </main>;
+}

@@ -29,12 +29,13 @@ const APP_CSP = [
   "frame-ancestors 'none'"
 ].join('; ');
 
-export function installAppProtocol(electronSession, appRoot, logger) {
+export function installAppProtocol(electronSession, appRoot, logger, creator) {
   electronSession.protocol.handle('app', async (request) => {
     try {
       if (!['GET', 'HEAD'].includes(request.method)) return new Response('Method not allowed', { status: 405 });
       const url = new URL(request.url);
       if (url.hostname !== 'app') return new Response('Not found', { status: 404 });
+      if(url.pathname.startsWith('/creator-assets/'))return creator ? await creator.resolveAsset(request) : new Response('Not found',{status:404});
       let pathname;
       try { pathname = decodeURIComponent(url.pathname); } catch { return new Response('Bad request', { status: 400 }); }
       if (pathname.includes('\0') || pathname.includes('\\')) return new Response('Bad request', { status: 400 });

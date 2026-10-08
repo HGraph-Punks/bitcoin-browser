@@ -4,6 +4,8 @@
 
 Explore Bitcoin, Ordinals, inscriptions and Runes in a dedicated desktop browser by [Turtle Moon](https://turtlemoon.io/products/bitcoin-browser). Browse blocks, transactions, addresses and sats, view inscription media, inspect recursive content, and choose the data sources you trust.
 
+**Local creation candidate: v0.2.0-rc.3.** Choose **Browse** for Bitcoin exploration or **Create** to build websites, experiences and inscriptions. See [the migration plan](docs/CREATOR_MIGRATION.md) and [candidate build checks](docs/CREATOR_BUILD.md). This candidate is not a new public release.
+
 **v0.1.0 is the first public beta.** No account, wallet or full node is required to start browsing. macOS and Windows downloads are **unsigned beta builds**; macOS is not Apple-notarized. Read the installation guide before opening a download.
 
 [Release notes](https://github.com/HGraph-Punks/bitcoin-browser/releases/tag/v0.1.0) · [Getting started](docs/GETTING_STARTED.md) · [Report a bug](https://github.com/HGraph-Punks/bitcoin-browser/issues) · [Security policy](SECURITY.md)
@@ -49,7 +51,7 @@ See [getting started](docs/GETTING_STARTED.md) for a short walkthrough and optio
 
 ## Beta limits
 
-This is an early beta with manual updates. It is not a general-purpose web browser, wallet, key store or exchange. Packaged releases disable wallet signing. The optional Wallet Bridge remains isolated from inscription content; do not import a seed phrase or private key into Bitcoin Browser.
+This is an early beta with manual updates. It is not a general-purpose web browser, wallet, key store or exchange. Packaged releases disable Wallet Bridge signing. The creation candidate separately supports owner-reviewed inscription through an explicitly connected local Bitcoin Core / Ord wallet; it never imports a seed. The optional Wallet Bridge remains isolated from inscription content; do not import a seed phrase or private key into Bitcoin Browser.
 
 **Known macOS issue:** quitting can occasionally stall after network-content use. One local macOS 26.6.2 DMG test required a forced exit; the repeat passed. See the [macOS troubleshooting steps](docs/install/macos.md#troubleshooting) if the app remains running after Quit.
 
@@ -63,6 +65,8 @@ Use Node.js **22.23.2**, Git, and a desktop session on macOS, Windows or Linux:
 git clone https://github.com/HGraph-Punks/bitcoin-browser.git
 cd bitcoin-browser
 npm ci
+npm ci --prefix src/creator
+npm run build:creator
 npm run verify
 npm start
 ```

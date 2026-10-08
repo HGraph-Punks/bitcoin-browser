@@ -98,6 +98,7 @@ function executeIndex({ userData, failStateInit = false, source = indexSource })
   const processFixture = new EventEmitter();
   Object.assign(processFixture, { argv: [], defaultApp: false, execPath: '/node', env: {}, pid: 17, versions: { electron: 'fixture' }, platform: 'darwin' });
   const context = {
+    createCreatorIntegration: () => assert.fail('creator integration must not initialize after startup stop'),
     path, app, process: processFixture, console: { error(message, error) { shutdownErrors.push({ message, error: error ?? message }); } },
     protocol: { registerSchemesAsPrivileged() {} }, safeStorage: {}, session: { fromPartition: () => assert.fail('session must not initialize') },
     APP_PARTITION: 'app', APP_SCHEME: 'app', CONTENT_SCHEME: 'ord', DEEP_LINK_SCHEME: 'satnav', IPC: { APP_COMMAND: 'command' }, WALLET_PARTITION: 'wallet',

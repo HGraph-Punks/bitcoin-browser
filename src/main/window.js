@@ -178,12 +178,13 @@ export function createMainWindow(options) {
       allowRunningInsecureContent: false,
       experimentalFeatures: false,
       spellcheck: false,
+      autoplayPolicy: 'document-user-activation-required',
       devTools: true
     }
   });
   window.webContents.setWindowOpenHandler(() => ({ action: 'deny' }));
   window.webContents.on('will-navigate', (event, url) => {
-    if (!url.startsWith('app://app/renderer/')) event.preventDefault();
+    if (!url.startsWith('app://app/renderer/') && url !== 'app://app/creator/generated/renderer/index.html') event.preventDefault();
   });
   window.webContents.on('will-attach-webview', (event) => event.preventDefault());
   window.webContents.on('render-process-gone', (_event, details) => options.logger?.error('renderer.gone', details));

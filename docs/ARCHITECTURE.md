@@ -297,3 +297,13 @@ Potential safe extension points:
 ## Observability
 
 The logger writes structured JSON lines locally. Diagnostics include app/platform state, providers, source health, service state, cache state, and redacted settings. No telemetry endpoint exists. A production operator may add opt-in analytics only with a documented schema, data retention, consent, and local disablement.
+
+## Create mode (0.2.0 creator candidate)
+
+The same native main window switches between the Browse document and `app://app/creator/generated/renderer/index.html`. Create is a bundled React application with its own Build, Test and Inscribe workflow. The Browser tab session remains in the existing state store; Create selection and project data live under `userData/creator`. Mode exit waits for source saves, and failed saves keep the editor open.
+
+`creator-integration.js` lazily loads the bundled domain host, authenticates exact main-frame senders and integrates shutdown. The host retains the Builder project/compiler/merge/deployment services and 47 scoped MCP tools. Compiler and merge workers are bounded, packaged and unpacked from ASAR. `--creator-mcp` runs the native executable as the stdio server without opening a window or relying on Node on PATH.
+
+Draft preview is a native `ord://draft-<project>-<build>` content route. It uses the original browser resolver for libraries/chain reads and the same sandbox as Browse. Published inscriptions open in Browse through the qualified local read-only Ord source. No creator-owned browsing window or preview process is added.
+
+Creator storage includes projects, drafts, agent connections, selected project and deployments. The deployment vault retains encrypted transaction-specific reveal material; it does not store a wallet seed. See [ADR-005](adr/ADR-005-no-key-custody.md), [the feature migration map](CREATOR_MIGRATION.md) and [build qualification](CREATOR_BUILD.md).

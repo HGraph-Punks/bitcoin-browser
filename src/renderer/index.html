@@ -21,6 +21,7 @@
   <link rel="stylesheet" href="./sponsors.css">
   <link rel="stylesheet" href="./ai.css">
   <link rel="stylesheet" href="./release-ux.css">
+  <link rel="stylesheet" href="./creator-mode.css">
 </head>
 <body>
   <div id="app" class="app-shell" aria-busy="true" inert>
@@ -31,6 +32,7 @@
         <button class="brand no-drag" data-command="home" type="button" aria-label="Bitcoin Browser home">
           <img class="brand-mark app-logo" src="./assets/bitcoin-browser-logo.png" alt="" aria-hidden="true" width="30" height="30" draggable="false"><span class="brand-name">Bitcoin Browser</span>
         </button>
+        <div class="browser-mode-switch no-drag" role="group" aria-label="Application mode"><button type="button" aria-pressed="true">Browse</button><button type="button" aria-pressed="false" id="enter-create-mode" title="Create websites, experiences and inscriptions">Create <span aria-hidden="true">✧</span></button></div>
         <div class="title-status" id="title-status"><span class="status-dot unknown"></span><span>Starting</span></div>
         <div class="chrome-actions no-drag">
           <button class="icon-button" data-command="command-palette" type="button" aria-label="Open command palette" title="Command palette (Ctrl/Cmd+Shift+P)">⌘</button>
@@ -125,7 +127,9 @@
       <footer><span>↑↓ Navigate</span><span>↵ Select</span><span>Esc Close</span></footer>
     </section>
   </div>
+  <p id="creator-mode-error" class="creator-mode-error" role="alert" hidden></p>
   <div class="toast-region" id="toasts" aria-live="polite" aria-atomic="false"></div>
   <script type="module" src="./app.js"></script>
+  <script type="module" src="./creator-mode.js"></script>
 </body>
 </html>

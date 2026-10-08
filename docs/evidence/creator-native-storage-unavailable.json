@@ -1,0 +1,14 @@
+{
+  "checkedAt": "2026-10-08T18:57:43.269Z",
+  "applicationVersion": "0.2.0-rc.2",
+  "packaged": false,
+  "scope": "Injected unavailable async secure storage; no OS credential store read by this failure fixture.",
+  "checks": {
+    "boundedFailure": true,
+    "noVaultCreated": true,
+    "noBroadcast": true,
+    "authoringRemainsAvailable": true,
+    "gracefulClose": true
+  },
+  "localEvidence": ".creator-test/regtest/native-engine-IIRN6d"
+}

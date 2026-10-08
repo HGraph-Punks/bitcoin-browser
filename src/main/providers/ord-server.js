@@ -35,6 +35,9 @@ export class OrdServerProvider extends DataProvider {
     const headers = {
       accept: options.accept ?? '*/*',
       'user-agent': 'BitcoinBrowser/1.0',
+      // Ord requires explicit support before serving an inscription whose body
+      // uses Brotli. Preserve wire bytes/Content-Encoding for Chromium and cache.
+      ...(requestPath.startsWith('/content/') ? { 'accept-encoding': 'br, gzip, deflate' } : {}),
       ...(options.range ? { range: options.range } : {})
     };
     const response = await requestBuffer(joinBase(this.config.baseUrl, requestPath), {

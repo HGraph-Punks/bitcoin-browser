@@ -4,8 +4,8 @@ import { AppError } from '../shared/errors.js';
 
 const decoders = new Map([['br', promisify(brotliDecompress)], ['gzip', promisify(gunzip)], ['deflate', promisify(inflate)]]);
 
-// The resolver caches wire bytes and Original retains Content-Encoding. Inert
-// projections rebuild headers, so they must decode once with an OUTPUT bound.
+// The resolver caches wire bytes. Native custom-protocol responses and inert
+// projections decode once with an OUTPUT bound and rebuild response headers.
 export async function decodedContentBytes(result, maxBytes, signal) {
   signal?.throwIfAborted();
   if (!(result.data instanceof Uint8Array) || result.data.byteLength > maxBytes) throw new AppError('RESOURCE_TOO_LARGE', 'Content exceeds the preview size limit.', { status: 413 });

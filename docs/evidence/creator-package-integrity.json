@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-08T19:17:50.950Z",
+  "version": "0.2.0-rc.3",
+  "archiveSha256": "b2e007ae05b85b23bc7fa960e2c8a5bbb09de317a3f3291da072a53371100b6d",
+  "checks": {
+    "archiveHash": true,
+    "sourceInputs": true,
+    "asarSource": true,
+    "creatorPayload": true,
+    "unpackedWorkers": true,
+    "releaseFuses": true,
+    "developerId": true,
+    "hardenedRuntime": true,
+    "noKnownSecrets": true,
+    "noCreatorDevelopmentDependencies": true
+  },
+  "sourceFiles": 234,
+  "payloadFiles": 27,
+  "notarized": false
+}

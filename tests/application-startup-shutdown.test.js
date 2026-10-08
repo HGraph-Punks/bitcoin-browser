@@ -65,6 +65,7 @@ function executeIndex({ singleInstance = true, holdAt = null, failAt = null, cle
     versions: { electron: 'fixture' }, platform: 'darwin'
   });
   const context = {
+    createCreatorIntegration: () => ({attach(){},deferQuit(){return false;},shutdown:async()=>{calls.push('creator.shutdown');}}),
     dialog: {}, NodeSoftware: constructor('NodeSoftware'), createNodeSetupDialogs: () => ({}),
     NodeSetupManager: constructor('NodeSetupManager', { autoStart: async () => calls.push('setup.autostart'), shutdown: async () => calls.push('setup.shutdown') }),
     path, app, protocol: { registerSchemesAsPrivileged() {} }, safeStorage: {}, session: { fromPartition: (name) => { calls.push(`session:${name}`); return sessionValue(); } },
@@ -205,7 +206,7 @@ test('normal startup installs each reachable subsystem once and after-ready quit
   f.app.emit('before-quit', event);
   f.app.emit('before-quit', event);
   for (let turn = 0; turn < 5; turn += 1) await new Promise((resolve) => setImmediate(resolve));
-  for (const marker of ['timer.clear', 'provider.shutdown', 'wallet.shutdown', 'service.shutdown', 'extension.shutdown', 'secure.flush', 'cache.flush', 'state.flush', 'logger.flush']) {
+  for (const marker of ['timer.clear', 'creator.shutdown', 'provider.shutdown', 'wallet.shutdown', 'service.shutdown', 'extension.shutdown', 'secure.flush', 'cache.flush', 'state.flush', 'logger.flush']) {
     assert.equal(f.calls.filter((value) => value === marker).length, 1, marker);
   }
   assert.equal(f.calls.filter((value) => value === 'app.quit').length, 1);

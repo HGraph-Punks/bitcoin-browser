@@ -1,0 +1,7 @@
+.browser-mode-switch{display:flex;gap:3px;padding:3px;border:1px solid var(--border,#2b3038);border-radius:9px;background:var(--surface,#11151b);margin-left:16px;flex-shrink:0}
+.browser-mode-switch button{min-height:27px;padding:0 13px;border:0;border-radius:6px;background:transparent;color:var(--muted,#939ba7);font:inherit;font-size:11px;font-weight:600;cursor:pointer}
+.browser-mode-switch button[aria-pressed="true"]{color:var(--text,#ecf0f5);background:var(--surface-2,#252a32)}
+.browser-mode-switch button:hover:not(:disabled){color:#f7931a}
+.browser-mode-switch button:focus-visible{outline:2px solid #f7931a;outline-offset:3px}
+.creator-mode-error{position:fixed;top:48px;right:20px;max-width:400px;padding:14px;z-index:20;background:#282019;color:#ffcf9b;border:1px solid #bf7627;border-radius:8px}
+@media(max-width:980px){.browser-mode-switch{margin-left:4px}.browser-mode-switch button{padding:0 9px}.title-row .brand-name{display:none}}

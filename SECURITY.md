@@ -28,8 +28,8 @@ Changes must not weaken these controls:
 5. Inscription content receives no preload and runs in an opaque sandbox without same-origin, popup, top-navigation, download, or wallet privileges.
 6. The browser and Wallet Bridge use separate persistent partitions.
 7. Wallet extensions never load into the browser partition.
-8. Private keys and seed phrases are not imported, generated, or persisted.
-9. Every signing action originates in the trusted shell, receives native review, then receives the wallet's own review.
+8. Wallet private keys and seed phrases are not imported or managed. Create can prepare per-inscription transaction material, including an ephemeral reveal key and recovery descriptors, in an authenticated encrypted deployment vault protected by macOS Keychain. This transaction-specific material is separate from wallet custody; see [the creator boundary](docs/CREATOR_MIGRATION.md).
+9. Wallet Bridge signing remains disabled in this packaged candidate. Create publication requires exact owner review in its trusted UI and uses the explicitly selected local Core wallet. MCP and viewed content cannot supply owner approval.
 10. Provider credentials are not accepted in URLs and are not persisted unless Electron safe storage reports OS encryption.
 11. Managed local processes require absolute executable paths and spawn with `shell: false`.
 12. Recursive paths are restricted to normalized `/content/*` and `/r/*` namespaces with resource, concurrency, depth, and node bounds.
@@ -73,4 +73,4 @@ On-chain availability is not a safety signal. Inscriptions can contain phishing 
 
 ## Scope exclusions
 
-This repository is not a wallet, key manager, minting service, marketplace escrow, consensus client, or malware scanner. Transaction preview is an aid, not a substitute for verification in a trusted signing device and wallet.
+The browser does not provide wallet seed recovery or general private-key management. Create does provide inscription construction and exact publication through a qualified local Core/Ord connection. It is not marketplace escrow, a consensus client or a malware scanner. Transaction preview is an aid, not a substitute for verification in a trusted signing device and wallet.

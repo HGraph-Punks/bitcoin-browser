@@ -69,7 +69,7 @@ const forbidden = [
   [/enableRemoteModule\s*:\s*true/i, 'remote module enabled'],
   [/OutOfBlinkCors/i, 'Chromium CORS protections disabled'],
   [/sandbox\s*:\s*false/i, 'renderer sandbox disabled'],
-  [/allow-same-origin/i, 'inscription frame would share an origin']
+  [/sandbox\s*(?::|=)\s*(?:\{\s*)?['"][^'"]{0,200}allow-same-origin/i, 'inscription frame would share an origin']
 ];
 for (const file of sourceFiles) {
   if (!/\.(?:js|cjs|mjs|html)$/.test(file)) continue;

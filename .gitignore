@@ -14,3 +14,7 @@ Thumbs.db
 *.key
 *.crt
 local-data/
+
+src/creator/generated/
+.creator-test/
+src/creator/node_modules

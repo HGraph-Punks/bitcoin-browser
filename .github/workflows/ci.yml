@@ -32,6 +32,10 @@ jobs:
           node-version: 22.23.2
           package-manager-cache: false
       - run: npm ci --ignore-scripts --no-audit --no-fund
+      - run: npm ci --prefix src/creator --ignore-scripts --no-audit --no-fund
+      - run: npm run build:creator
+      - run: npm run check:creator
+      - run: npm run test:creator
       - run: npm run verify
       - name: Focused wallet and content security regression tests
         run: npm run security:beta
@@ -67,6 +71,8 @@ jobs:
           sudo apt-get update
           sudo apt-get install --yes --no-install-recommends xvfb dbus-x11 libnss3 libatk-bridge2.0-0 libgtk-3-0 libgbm1 libasound2 libxss1 libx11-xcb1 libdrm2 libxshmfence1
       - run: npm ci --no-audit --no-fund
+      - run: npm ci --prefix src/creator --ignore-scripts --no-audit --no-fund
+      - run: npm run build:creator
       - run: npm run pack -- --${{ matrix.arch }}
       - name: Run packaged smoke (Linux, sandbox enabled)
         if: runner.os == 'Linux'

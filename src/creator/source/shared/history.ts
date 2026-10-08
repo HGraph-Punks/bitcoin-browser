@@ -1,0 +1,11 @@
+export type ProjectActor={kind:'user'|'agent'|'system';label:string;id?:string};
+export type FileIdentity={kind:'text'|'asset';sha256:string;bytes:number;mime:string};
+export type FileChange={path:string;status:'added'|'modified'|'removed';before?:FileIdentity;after?:FileIdentity};
+export type ChangeSummary={files:FileChange[];settings:string[];librariesAdded:string[];librariesRemoved:string[]};
+export type ProjectRevision={revision:number;at:string;actor:ProjectActor;summary:string;changes:ChangeSummary;checkpointId:string;previousRevision?:number};
+export type ProjectCheckpoint={id:string;label:string;revision:number;createdAt:string;actor:ProjectActor;kind:'named'|'before-agent'|'before-build'|'before-restore'|'before-merge'};
+export type ProjectHistory={projectId:string;revision:number;availableFrom:number;revisions:ProjectRevision[];nextBefore?:number;checkpoints:ProjectCheckpoint[]};
+export type ProjectChange=ProjectRevision&{beforeCheckpointId:string};
+export type DiffLine={kind:'context'|'added'|'removed';text:string;oldLine?:number;newLine?:number;noNewline?:boolean};
+export type DiffHunk={oldStart:number;oldLines:number;newStart:number;newLines:number;lines:DiffLine[]};
+export type ProjectDiff={projectId:string;fromRevision:number;toRevision:number;changes:ChangeSummary;settings:{field:string;before?:string;after?:string}[];files:{path:string;status:FileChange['status'];before?:FileIdentity;after?:FileIdentity;hunks?:DiffHunk[];truncated?:boolean;reason?:string;beforeUri?:string;afterUri?:string}[];truncated:boolean};

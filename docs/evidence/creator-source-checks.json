@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "version": "0.2.0-rc.3",
+  "sourceBuilderCommit": "96141f4",
+  "browserBaseCommit": "c87056ac13a99cbb7d3f1edd92e995222d41b367",
+  "checks": {
+    "browser": {
+      "passed": 2258,
+      "failed": 0
+    },
+    "creator": {
+      "passed": 38,
+      "failed": 0
+    },
+    "creatorTypeScript": true,
+    "browserStaticSecurity": true
+  },
+  "scope": "Local regression and type/static checks; package runtime qualification is recorded separately."
+}

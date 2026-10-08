@@ -1,6 +1,6 @@
 {
   "name": "satoshi-browser",
-  "version": "0.1.0",
+  "version": "0.2.0-rc.3",
   "description": "A sovereign Bitcoin and Ordinals desktop browser",
   "homepage": "https://github.com/HGraph-Punks/bitcoin-browser",
   "repository": {
@@ -19,8 +19,8 @@
     "node": ">=22.13.0"
   },
   "scripts": {
-    "start": "electron .",
-    "dev": "SATOSHI_BROWSER_DEV=1 electron .",
+    "start": "npm run build:creator && electron .",
+    "dev": "npm run build:creator && SATOSHI_BROWSER_DEV=1 electron .",
     "build:icons": "node scripts/build-icons.mjs",
     "check:icons": "node scripts/build-icons.mjs --check",
     "build:viewers": "node scripts/build-viewers.mjs",
@@ -35,7 +35,10 @@
     "dist:mac": "node scripts/package.mjs --mac",
     "dist:win": "node scripts/package.mjs --win",
     "dist:linux": "node scripts/package.mjs --linux",
-    "source:archive": "node scripts/source-archive.mjs"
+    "source:archive": "node scripts/source-archive.mjs",
+    "build:creator": "node scripts/build-creator.mjs",
+    "check:creator": "npm --prefix src/creator run check",
+    "test:creator": "npm --prefix src/creator test"
   },
   "devDependencies": {
     "@electron/fuses": "2.1.3",
@@ -47,11 +50,14 @@
     "appId": "org.satoshibrowser.desktop",
     "productName": "Bitcoin Browser",
     "asar": true,
-    "asarUnpack": [],
+    "asarUnpack": [
+      "src/creator/generated/compiler/*.cjs",
+      "src/creator/generated/core/*.cjs"
+    ],
     "afterPack": "scripts/after-pack.cjs",
     "afterSign": "scripts/after-sign.cjs",
     "directories": {
-      "output": "release",
+      "output": "release/0.2.0-rc.3",
       "buildResources": "build"
     },
     "files": [
@@ -59,7 +65,9 @@
       "package.json",
       "LICENSE",
       "README.md",
-      "SECURITY.md"
+      "SECURITY.md",
+      "!src/creator/node_modules/**/*",
+      "!src/creator/tests/**/*"
     ],
     "protocols": [
       {

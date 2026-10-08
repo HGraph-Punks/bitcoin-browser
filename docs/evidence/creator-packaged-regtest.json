@@ -1,0 +1,69 @@
+{
+  "checkedAt": "2026-10-08T19:11:55.688Z",
+  "applicationVersion": "0.2.0-rc.3",
+  "packaged": true,
+  "driver": "renderer-cdp-with-main-inspection-disabled",
+  "archiveSha256": "b2e007ae05b85b23bc7fa960e2c8a5bbb09de317a3f3291da072a53371100b6d",
+  "config": {
+    "chain": "regtest",
+    "coreVersion": 31.1,
+    "ordVersion": "0.29.0",
+    "height": 102
+  },
+  "localEvidence": "../../../../../../../private/tmp/btc-create-packaged-n6V80L",
+  "checks": {
+    "encryptedFundingWallet": true,
+    "lockedWalletDeniedBeforeBroadcast": true,
+    "externalCoreUnlockResumedExactPlan": true,
+    "publicReceiptMatchesPayload": false,
+    "nativeReceiptExportDialog": false,
+    "ownedFixtureProfileConnection": true,
+    "nativeCookieGrant": false,
+    "nativeOrdBinaryGrant": false,
+    "actualMcpPlanning": true,
+    "explicitPublicationGrant": true,
+    "mcpApprovalDenied": true,
+    "reviewRequestedInGui": true,
+    "noBroadcastBeforeApproval": true,
+    "osProtectedVaultKey": true,
+    "authenticatedRecordTamperDenied": true,
+    "osEncryptedRecovery": true,
+    "desktopRestartPreservedReview": true,
+    "ownerClickedEachExactReview": true,
+    "grantRevocationCanceledUnapprovedWork": true,
+    "reservationsReleasedOnRevocation": true,
+    "actualRecursiveRuntime": {
+      "text": "Built with MCP. Reviewed by its owner.",
+      "node": "undefined",
+      "bridge": "undefined",
+      "browser": "undefined"
+    }
+  },
+  "receipt": {
+    "rootId": "92ff4ca75f291094a625d3c73962f5f194d22232e5771f681b0d335adcfb7f79i0",
+    "network": "regtest",
+    "sourceRevision": 2,
+    "buildId": "f0e28d793094cdc7fd40bef60b9412d31a9a83fff42c044bf12e43b86115b306",
+    "compilerVersion": "2.0.0",
+    "totalFeeSats": 628,
+    "totalPostageSats": 20000,
+    "resources": [
+      {
+        "path": "app.js",
+        "id": "629de5d0efdc367800ee018bd9c6b6772b481d5d6024bbf8ca5cacf17dfe9cfei0",
+        "sha256": "16f71b4f49b00e77264b5fca99a1c0e217a7aa87bb051b081af9e44c5f86fff3",
+        "commit": "76cb9945a98bbd6b3985aa011e84e58fd46e1b6e58b4d3cb639930052205d913",
+        "reveal": "629de5d0efdc367800ee018bd9c6b6772b481d5d6024bbf8ca5cacf17dfe9cfe",
+        "blockHash": "4d010088013ba187329f9eca34e3f2eba3b99dba119810ce9644570e0d71ae5d"
+      },
+      {
+        "path": "index.html",
+        "id": "92ff4ca75f291094a625d3c73962f5f194d22232e5771f681b0d335adcfb7f79i0",
+        "sha256": "e37ff7b1a3f851145fe82ef0ff559b9e67ede363862829022841c826c2823b31",
+        "commit": "4fdfb2b1b27bdecb03c288c6392dd698e272a90a91fbcdf64a03038d47a65833",
+        "reveal": "92ff4ca75f291094a625d3c73962f5f194d22232e5771f681b0d335adcfb7f79",
+        "blockHash": "35e53cc961bfaefa57ec77c535a8ed4f7a1356c45fc3c5e50b533c354c6278ef"
+      }
+    ]
+  }
+}

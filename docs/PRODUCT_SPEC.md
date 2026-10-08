@@ -486,3 +486,9 @@ A feature is done only when:
 - packaged builds pass on affected platforms;
 - docs and migration notes are updated; and
 - no shortcut deletes difficult functionality instead of implementing it.
+
+## Create mode extension — 0.2.0 candidate
+
+Create provides the migrated Website Builder feature set as a separate mode: project home, 13 starters, visual and multi-file editing, assets, history/merges, library exploration, native responsive preview, build/test reports, scoped AI connections and exact inscription review. Browse retains its original navigation and wallet partition. All creation previews and published-result browsing use the browser's native content protocol and source routing.
+
+The original exclusions for wallet seeds, general private-key management and general wallet recovery remain. Inscription construction now retains authenticated, OS-encrypted transaction-specific reveal material. Create's local Core signer is a separate exact-review path; packaged Wallet Bridge signing remains disabled. The full mapping and release limits are in [CREATOR_MIGRATION.md](CREATOR_MIGRATION.md).

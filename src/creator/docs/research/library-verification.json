@@ -1,0 +1,819 @@
+{
+  "schemaVersion": 1,
+  "researchedAt": "2026-09-23T07:02:31.293Z",
+  "limitations": "Gateway reads and inert literal inspection only. Matching gateways are not independent consensus verification. No JavaScript was executed, licenses were not reviewed, and runtime compatibility is unqualified. HTTP wire bytes are not necessarily the inscription body encoding; consult Ord metadata separately.",
+  "libraries": [
+    {
+      "key": "three-r178",
+      "id": "a4a6f99205628bdc3ca2143a4e380f7ebc576b4414c16dffdb34be28337ffe83i0",
+      "network": "mainnet",
+      "fetchedAt": "2026-09-23T07:02:26.216Z",
+      "gatewayAgreement": true,
+      "upstreamComparison": "exact-after-declared-import-rewrite",
+      "inscription": {
+        "id": "a4a6f99205628bdc3ca2143a4e380f7ebc576b4414c16dffdb34be28337ffe83i0",
+        "number": 100509472,
+        "height": 906159,
+        "content_type": "text/javascript",
+        "content_length": 66349,
+        "delegate": null
+      },
+      "references": [
+        "/content/35aee6992ab002de22acf9df65e7067779512a8038e131a3af6c1757a6da90f5i0"
+      ],
+      "literalImports": [
+        "/content/35aee6992ab002de22acf9df65e7067779512a8038e131a3af6c1757a6da90f5i0"
+      ],
+      "headerSnippet": "/**\n * @license\n * Copyright 2010-2025 Three.js Authors\n * SPDX-License-Identifier: MIT\n */\nimport{Matrix3 as e,Vector2 as t,Color as n,mergeUniforms as r,Vector3 as i,CubeUVReflectionMapping as a,Mesh as o,BoxGeometry as s,ShaderMaterial as l,BackSide as c,cloneUniforms as d,Euler as u,Matrix4 as f,ColorManagement as p,SRGBTransfer as m,PlaneGeometry as h,FrontSide as _,getUnlitUniformColorSpace as g,IntType as v,Ha",
+      "responses": [
+        {
+          "url": "https://ordinals.com/content/a4a6f99205628bdc3ca2143a4e380f7ebc576b4414c16dffdb34be28337ffe83i0",
+          "mime": "text/javascript",
+          "contentEncoding": "br",
+          "wireBytes": 66349,
+          "decodedBytes": 337801,
+          "wireSha256": "bae861990d032ebb76c65a62cc794f2deb71f543c398258995b9936b2ce98d5e",
+          "decodedSha256": "6cece4198426265684ba8f67878dde76591abfab63b5270618738d7d9a2a8ea8"
+        },
+        {
+          "url": "https://ord-mirror.magiceden.dev/content/a4a6f99205628bdc3ca2143a4e380f7ebc576b4414c16dffdb34be28337ffe83i0",
+          "mime": "text/javascript",
+          "contentEncoding": "br",
+          "wireBytes": 83690,
+          "decodedBytes": 337801,
+          "wireSha256": "c7c082edb9ea1477f440a99d9143eb6ae5e50695cf1ac6c2b3db798b1bf679ac",
+          "decodedSha256": "6cece4198426265684ba8f67878dde76591abfab63b5270618738d7d9a2a8ea8"
+        },
+        {
+          "url": "https://ordinals.com/r/inscription/a4a6f99205628bdc3ca2143a4e380f7ebc576b4414c16dffdb34be28337ffe83i0",
+          "mime": "application/json",
+          "contentEncoding": "br",
+          "wireBytes": 286,
+          "decodedBytes": 532,
+          "wireSha256": "4a3035ca571587602197f1176bfb2d970e24387ec3091b540d792ab344ea5778",
+          "decodedSha256": "2e51520b0402864b644a3f8d1866fa71a10182e9a9aa0bb9799111b1178a2c90"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/mrdoob/three.js/refs/tags/r178/build/three.module.min.js",
+          "mime": "text/plain; charset=utf-8",
+          "contentEncoding": "gzip",
+          "wireBytes": 78676,
+          "decodedBytes": 337689,
+          "wireSha256": "e829a0b0854c813498bf5b5f8257f0979e5413d86f71d73d695259b418e72b4f",
+          "decodedSha256": "c49cf3f5bfd5d7fb588b19d725e70e5bf9d88e2a4e040ffb9a64a7f8f5fb372d"
+        }
+      ],
+      "runtimeTested": false,
+      "licenseReviewed": false,
+      "chainIndependentlyVerified": false
+    },
+    {
+      "key": "three-core-r178",
+      "id": "35aee6992ab002de22acf9df65e7067779512a8038e131a3af6c1757a6da90f5i0",
+      "network": "mainnet",
+      "fetchedAt": "2026-09-23T07:02:26.464Z",
+      "gatewayAgreement": true,
+      "upstreamComparison": "exact-decoded-byte-match",
+      "inscription": {
+        "id": "35aee6992ab002de22acf9df65e7067779512a8038e131a3af6c1757a6da90f5i0",
+        "number": 100504568,
+        "height": 906152,
+        "content_type": "text/javascript",
+        "content_length": 80451,
+        "delegate": null
+      },
+      "references": [],
+      "literalImports": [],
+      "headerSnippet": "/**\n * @license\n * Copyright 2010-2025 Three.js Authors\n * SPDX-License-Identifier: MIT\n */\nconst t=\"178\",e={LEFT:0,MIDDLE:1,RIGHT:2,ROTATE:0,DOLLY:1,PAN:2},i={ROTATE:0,PAN:1,DOLLY_PAN:2,DOLLY_ROTATE:3},s=0,r=1,n=2,a=3,o=0,h=1,l=2,c=3,u=0,d=1,p=2,m=0,y=1,g=2,f=3,x=4,b=5,v=100,w=101,M=102,S=103,_=104,A=200,T=201,z=202,I=203,C=204,B=205,k=206,E=207,R=208,P=209,O=210,N=211,F=212,V=213,L=214,j=0,W=1,U=2,D=3,H=4,q=5,J=6,X",
+      "responses": [
+        {
+          "url": "https://ordinals.com/content/35aee6992ab002de22acf9df65e7067779512a8038e131a3af6c1757a6da90f5i0",
+          "mime": "text/javascript",
+          "contentEncoding": "br",
+          "wireBytes": 80451,
+          "decodedBytes": 376914,
+          "wireSha256": "216efa145fc54ece447e8d93ebef97511f14d60b41532ad08fb2787aec6e176e",
+          "decodedSha256": "065c1e27e1e87051cf65e2d41d2f8f102b5dc0e5decf87d3da5fd79da6432110"
+        },
+        {
+          "url": "https://ord-mirror.magiceden.dev/content/35aee6992ab002de22acf9df65e7067779512a8038e131a3af6c1757a6da90f5i0",
+          "mime": "text/javascript",
+          "contentEncoding": "br",
+          "wireBytes": 104331,
+          "decodedBytes": 376914,
+          "wireSha256": "ccabca8539ecf3ece8c4520198d6c4beff3e574637ff74695f67893700b75ccc",
+          "decodedSha256": "065c1e27e1e87051cf65e2d41d2f8f102b5dc0e5decf87d3da5fd79da6432110"
+        },
+        {
+          "url": "https://ordinals.com/r/inscription/35aee6992ab002de22acf9df65e7067779512a8038e131a3af6c1757a6da90f5i0",
+          "mime": "application/json",
+          "contentEncoding": "br",
+          "wireBytes": 328,
+          "decodedBytes": 533,
+          "wireSha256": "958adea57005cbf6ea4dd0a75e30c78eb50db57863c34fbb0a4f63310af6e9ba",
+          "decodedSha256": "324019d954e37669b73017340ae4bdcc02574ed050cc4a6eb34e3b6583689326"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/mrdoob/three.js/refs/tags/r178/build/three.core.min.js",
+          "mime": "text/plain; charset=utf-8",
+          "contentEncoding": "gzip",
+          "wireBytes": 99831,
+          "decodedBytes": 376914,
+          "wireSha256": "549d04abe3f3949092fb3d6510faffc9d00a9636cabd9aca6d93898bd02bba6d",
+          "decodedSha256": "065c1e27e1e87051cf65e2d41d2f8f102b5dc0e5decf87d3da5fd79da6432110"
+        }
+      ],
+      "runtimeTested": false,
+      "licenseReviewed": false,
+      "chainIndependentlyVerified": false
+    },
+    {
+      "key": "p5-1.11.2",
+      "id": "13a5c8e41dfc110514b450b2f15317988c0aaf276d3dbdcca9aa3c7d0b2188a7i0",
+      "network": "mainnet",
+      "fetchedAt": "2026-09-23T07:02:27.383Z",
+      "gatewayAgreement": true,
+      "upstreamComparison": "exact-decoded-byte-match",
+      "inscription": {
+        "id": "13a5c8e41dfc110514b450b2f15317988c0aaf276d3dbdcca9aa3c7d0b2188a7i0",
+        "number": 81082946,
+        "height": 877101,
+        "content_type": "text/javascript",
+        "content_length": 197762,
+        "delegate": null
+      },
+      "references": [],
+      "literalImports": [
+        "),z=e(",
+        ":146}],145:[function(e,t,r){var o=e(",
+        ");o({target:",
+        ":17,",
+        "),V=e(",
+        ",t)},function(e){if(",
+        "),e(",
+        ":162,",
+        ".concat(r,",
+        "):window.mocha||(e=new Event(",
+        "),t("
+      ],
+      "headerSnippet": "/*! p5.js v1.11.2 November 28, 2024 */\n!function(e){\"object\"==typeof exports&&\"undefined\"!=typeof module?module.exports=e():\"function\"==typeof define&&define.amd?define([],e):(\"undefined\"!=typeof window?window:\"undefined\"!=typeof global?global:\"undefined\"!=typeof self?self:this).p5=e()}(function(){var s,t,r;return function o(n,s,i){function a(t,e){if(!s[t]){if(!n[t]){var r=\"function\"==typeof require&&require;if(!e&&r",
+      "responses": [
+        {
+          "url": "https://ordinals.com/content/13a5c8e41dfc110514b450b2f15317988c0aaf276d3dbdcca9aa3c7d0b2188a7i0",
+          "mime": "text/javascript",
+          "contentEncoding": "br",
+          "wireBytes": 197762,
+          "decodedBytes": 1055288,
+          "wireSha256": "bedb6d7dfbabbc49b2e85c89933395bda56a21692a870e57b7a02bf6b123e8df",
+          "decodedSha256": "2ee031e707ccbd2cc8551c985fd1ebf5f59fea0abe186a7b23606568a1a306a1"
+        },
+        {
+          "url": "https://ord-mirror.magiceden.dev/content/13a5c8e41dfc110514b450b2f15317988c0aaf276d3dbdcca9aa3c7d0b2188a7i0",
+          "mime": "text/javascript",
+          "contentEncoding": "br",
+          "wireBytes": 257012,
+          "decodedBytes": 1055288,
+          "wireSha256": "7931c5874e1305b8e1792e6cbcf8128d3af598efd98169e42203ed4d22c70a98",
+          "decodedSha256": "2ee031e707ccbd2cc8551c985fd1ebf5f59fea0abe186a7b23606568a1a306a1"
+        },
+        {
+          "url": "https://ordinals.com/r/inscription/13a5c8e41dfc110514b450b2f15317988c0aaf276d3dbdcca9aa3c7d0b2188a7i0",
+          "mime": "application/json",
+          "contentEncoding": "br",
+          "wireBytes": 325,
+          "decodedBytes": 534,
+          "wireSha256": "d398dec3f7b6f7888624bc09ebb9f3749f7601b39537163612b8dc3d9bd34f54",
+          "decodedSha256": "8951608209da335dbf1dfe0d1dd8ca691e2c4c0f76a8852061b5504d2346edab"
+        },
+        {
+          "url": "https://release-assets.githubusercontent.com/github-production-release-asset/8424040/1b8b5f07-a9d2-4e50-a7d1-7e3db5c99366?sp=r&sv=2018-11-09&sr=b&spr=https&se=2026-09-23T07%3A43%3A20Z&rscd=attachment%3B+filename%3Dp5.min.js&rsct=application%2Foctet-stream&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2026-09-23T06%3A42%3A45Z&ske=2026-09-23T07%3A43%3A20Z&sks=b&skv=2018-11-09&sig=xdyMQKLgPfQfaeJVUOYXJLUcyF3z4Y67ZYaIaiomeho%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc5MDE0NzI0NiwibmJmIjoxNzkwMTQ2OTQ2LCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.f-uCLdguQHmg0ToI7746nXs7rQtg1Yb7mWmTzKYEnxQ&response-content-disposition=attachment%3B%20filename%3Dp5.min.js&response-content-type=application%2Foctet-stream",
+          "mime": "application/octet-stream",
+          "contentEncoding": "identity",
+          "wireBytes": 1055288,
+          "decodedBytes": 1055288,
+          "wireSha256": "2ee031e707ccbd2cc8551c985fd1ebf5f59fea0abe186a7b23606568a1a306a1",
+          "decodedSha256": "2ee031e707ccbd2cc8551c985fd1ebf5f59fea0abe186a7b23606568a1a306a1"
+        }
+      ],
+      "runtimeTested": false,
+      "licenseReviewed": false,
+      "chainIndependentlyVerified": false
+    },
+    {
+      "key": "p5-2.0.1",
+      "id": "bed725759768159b0868fe0e6c9cd26a4c437f9e0903f70893edad280e35d843i0",
+      "network": "mainnet",
+      "fetchedAt": "2026-09-23T07:02:28.420Z",
+      "gatewayAgreement": true,
+      "upstreamComparison": "exact-decoded-byte-match",
+      "inscription": {
+        "id": "bed725759768159b0868fe0e6c9cd26a4c437f9e0903f70893edad280e35d843i0",
+        "number": 94660185,
+        "height": 894118,
+        "content_type": "text/javascript",
+        "content_length": 213776,
+        "delegate": null
+      },
+      "references": [],
+      "literalImports": [
+        "}${e||t?",
+        ",6:",
+        ",6:qh+",
+        ",ru),_null:nu(",
+        " and ",
+        "),this.type!==au.string&&this.unexpected(),e.source=this.parseExprAtom(),this.options.ecmaVersion>=16&&(e.attributes=this.parseWithClause()),this.semicolon(),this.finishNode(e,",
+        "))this.type!==au.string&&this.unexpected(),e.source=this.parseExprAtom(),this.options.ecmaVersion>=16&&(e.attributes=this.parseWithClause());else{for(var i=0,r=e.specifiers;i<r.length;i+=1){var s=r[i];this.checkUnreserved(s.local),this.checkLocalExport(s.local),",
+        "),e.source=this.type===au.string?this.parseExprAtom():this.unexpected()),this.options.ecmaVersion>=16&&(e.attributes=this.parseWithClause()),this.semicolon(),this.finishNode(e,",
+        "),this.next(),this.type===au.parenL&&!e)return this.parseDynamicImport(t);if(this.type===au.dot){var i=this.startNodeAt(t.start,t.loc&&t.loc.start);return i.name=",
+        ",t.meta=this.finishNode(i,",
+        "===e;case 7:return",
+        "+g,this.generateExpression(e.source,i.Sequence,7),this.semicolon(r)]):n.push(this.semicolon(r))),n)},ExportAllDeclaration:function(e,t){return[",
+        "+g,this.generateExpression(e.source,i.Sequence,7),this.semicolon(t)]},ExpressionStatement:function(e,r){var s,n;return 123===(n=R(s=[this.generateExpression(e.expression,i.Sequence,7)]).toString()).charCodeAt(0)||function(e){var t;return",
+        ",g,this.generateExpression(e.source,i.Sequence,7),this.semicolon(r)]:(s=[",
+        "],n=0,e.specifiers[n].type===t.ImportDefaultSpecifier&&(s=U(s,[this.generateExpression(e.specifiers[n],i.Sequence,7)]),++n),e.specifiers[n]&&(0!==n&&s.push(",
+        "+g,this.generateExpression(e.source,i.Sequence,7),this.semicolon(r)]))},VariableDeclarator:function(e,t){var r=1&t?7:6;return e.init?[this.generateExpression(e.id,i.Assignment,r),g,"
+      ],
+      "headerSnippet": "var p5=function(){\"use strict\";const t=Math.PI,i=\"2.0.1\",r=\"p2d\",s=\"webgl\",n=\"webgl2\",a=\"default\",o=\"simple\",h=\"full\",u=\"crosshair\",l=\"pointer\",c=\"move\",p=\"text\",d=\"wait\",f=t/2,g=t,m=t/4,y=2*t,x=2*t,v=t/180,b=180/t,_=\"corner\",w=\"corners\",C=\"radius\",D=\"right\",E=\"left\",A=\"center\",S=\"bottom\",F=\"alphabetic\",T=0,M=1,k=\"quads\",I=\"quad_strip\",B=\"close\",L=\"open\",P=\"chord\",O=\"pie\",N=\"square\",R=\"butt\",V=\"round\",U=\"bevel\",G=\"mi",
+      "responses": [
+        {
+          "url": "https://ordinals.com/content/bed725759768159b0868fe0e6c9cd26a4c437f9e0903f70893edad280e35d843i0",
+          "mime": "text/javascript",
+          "contentEncoding": "br",
+          "wireBytes": 213776,
+          "decodedBytes": 899114,
+          "wireSha256": "6c76b30b8e3576b7adb37c0f9423570101fe41b08e5309cdcb8e3c27cf03b188",
+          "decodedSha256": "435e39b3ee2cb46f6d8cc616916b7dabb05f2b8fdd5cbde5f87c870ff6f2278d"
+        },
+        {
+          "url": "https://ord-mirror.magiceden.dev/content/bed725759768159b0868fe0e6c9cd26a4c437f9e0903f70893edad280e35d843i0",
+          "mime": "text/javascript",
+          "contentEncoding": "br",
+          "wireBytes": 271552,
+          "decodedBytes": 899114,
+          "wireSha256": "5cd8866192915b4cb5cea65b548cc7cdbe763e4ba24a1c025329090dd287a782",
+          "decodedSha256": "435e39b3ee2cb46f6d8cc616916b7dabb05f2b8fdd5cbde5f87c870ff6f2278d"
+        },
+        {
+          "url": "https://ordinals.com/r/inscription/bed725759768159b0868fe0e6c9cd26a4c437f9e0903f70893edad280e35d843i0",
+          "mime": "application/json",
+          "contentEncoding": "br",
+          "wireBytes": 288,
+          "decodedBytes": 533,
+          "wireSha256": "aac984a29931b73273d416d7a1aa4e973a45126efcc066e230ecafd324919194",
+          "decodedSha256": "0b03ae8ec6079094a27d634c318ee25f46f00b1bb5f29d1d4b7947775d19158f"
+        },
+        {
+          "url": "https://release-assets.githubusercontent.com/github-production-release-asset/8424040/18401ebb-fc17-472f-9a2a-14a621be1158?sp=r&sv=2018-11-09&sr=b&spr=https&se=2026-09-23T07%3A44%3A19Z&rscd=attachment%3B+filename%3Dp5.min.js&rsct=application%2Foctet-stream&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2026-09-23T06%3A44%3A19Z&ske=2026-09-23T07%3A44%3A19Z&sks=b&skv=2018-11-09&sig=P7bHAMhHxWxmO1%2FE0JpdOH%2BQBEowoBOKQQa3Wdj43Pg%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc5MDE0NzI0NywibmJmIjoxNzkwMTQ2OTQ3LCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.Z9U_JYaqCuqVJh8LGgaYX-Wa1_JmOb_UNoamLV69SLk&response-content-disposition=attachment%3B%20filename%3Dp5.min.js&response-content-type=application%2Foctet-stream",
+          "mime": "application/octet-stream",
+          "contentEncoding": "identity",
+          "wireBytes": 899114,
+          "decodedBytes": 899114,
+          "wireSha256": "435e39b3ee2cb46f6d8cc616916b7dabb05f2b8fdd5cbde5f87c870ff6f2278d",
+          "decodedSha256": "435e39b3ee2cb46f6d8cc616916b7dabb05f2b8fdd5cbde5f87c870ff6f2278d"
+        }
+      ],
+      "runtimeTested": false,
+      "licenseReviewed": false,
+      "chainIndependentlyVerified": false
+    },
+    {
+      "key": "phaser-3.80.1",
+      "id": "0d1a04b71975ec948b36cf3ccdff415fca851b9c17144413997395f5ea166e42i0",
+      "network": "mainnet",
+      "fetchedAt": "2026-09-23T07:02:29.434Z",
+      "gatewayAgreement": null,
+      "upstreamComparison": "exact-decoded-byte-match",
+      "inscription": {
+        "id": "0d1a04b71975ec948b36cf3ccdff415fca851b9c17144413997395f5ea166e42i0",
+        "number": 74261173,
+        "height": 856625,
+        "content_type": "text/javascript",
+        "content_length": 249600,
+        "delegate": null
+      },
+      "references": [],
+      "literalImports": [
+        ",0),d=l(n,",
+        ",0),t.to=r(t,",
+        ",null);null!==h&&(r=i+h),e.push({complete:!1,time:r,repeat:0,if:o(n,",
+        "),A=e.hasOwnProperty(",
+        ",0),p=l(e,",
+        ",0),u="
+      ],
+      "headerSnippet": "!function(t,e){\"object\"==typeof exports&&\"object\"==typeof module?module.exports=e():\"function\"==typeof define&&define.amd?define(\"Phaser\",[],e):\"object\"==typeof exports?exports.Phaser=e():t.Phaser=e()}(this,(()=>(()=>{var t={50792:t=>{\"use strict\";var e=Object.prototype.hasOwnProperty,i=\"~\";function s(){}function n(t,e,i){this.fn=t,this.context=e,this.once=i||!1}function r(t,e,s,r,o){if(\"function\"!=typeof s)throw new",
+      "responses": [
+        {
+          "url": "https://ordinals.com/content/0d1a04b71975ec948b36cf3ccdff415fca851b9c17144413997395f5ea166e42i0",
+          "mime": "text/javascript",
+          "contentEncoding": "br",
+          "wireBytes": 249600,
+          "decodedBytes": 1181917,
+          "wireSha256": "715197f9f57b15110113baa6ee4ce96aa0c4eb309769a0564b9db04feae31914",
+          "decodedSha256": "62081f6a1b51d040473f919ffedef9009953c20833518e146da5a8d1c9405ea8"
+        },
+        {
+          "url": "https://ord-mirror.magiceden.dev/content/0d1a04b71975ec948b36cf3ccdff415fca851b9c17144413997395f5ea166e42i0",
+          "error": "HTTP 500"
+        },
+        {
+          "url": "https://ordinals.com/r/inscription/0d1a04b71975ec948b36cf3ccdff415fca851b9c17144413997395f5ea166e42i0",
+          "mime": "application/json",
+          "contentEncoding": "br",
+          "wireBytes": 277,
+          "decodedBytes": 518,
+          "wireSha256": "c86db335293f71d2aa81182a6ee95dcf19f0153beb29439e34ae491c1f559cb4",
+          "decodedSha256": "1fa7d21bae7c48d2d19f58cfb76e310c836895a45aebec0db0f42866ebafa13c"
+        },
+        {
+          "url": "https://release-assets.githubusercontent.com/github-production-release-asset/9393759/6d46236b-fd5a-4723-9d3e-1c88956414d3?sp=r&sv=2018-11-09&sr=b&spr=https&se=2026-09-23T07%3A50%3A35Z&rscd=attachment%3B+filename%3Dphaser.min.js&rsct=application%2Foctet-stream&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2026-09-23T06%3A49%3A55Z&ske=2026-09-23T07%3A50%3A35Z&sks=b&skv=2018-11-09&sig=y5ArE0X7UknKDiGrz5zjvKnuS74hK5a7177rigw1aH4%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc5MDE0NzI0NywibmJmIjoxNzkwMTQ2OTQ3LCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.Z9U_JYaqCuqVJh8LGgaYX-Wa1_JmOb_UNoamLV69SLk&response-content-disposition=attachment%3B%20filename%3Dphaser.min.js&response-content-type=application%2Foctet-stream",
+          "mime": "application/octet-stream",
+          "contentEncoding": "identity",
+          "wireBytes": 1181917,
+          "decodedBytes": 1181917,
+          "wireSha256": "62081f6a1b51d040473f919ffedef9009953c20833518e146da5a8d1c9405ea8",
+          "decodedSha256": "62081f6a1b51d040473f919ffedef9009953c20833518e146da5a8d1c9405ea8"
+        }
+      ],
+      "runtimeTested": false,
+      "licenseReviewed": false,
+      "chainIndependentlyVerified": false
+    },
+    {
+      "key": "tone-15.0.4",
+      "id": "04813d7748d918bd8a3069cb1823ebc9586f0ce16cd6a97a784581ec38d13062i0",
+      "network": "mainnet",
+      "fetchedAt": "2026-09-23T07:02:27.986Z",
+      "gatewayAgreement": true,
+      "upstreamComparison": "exact-decoded-byte-match",
+      "inscription": {
+        "id": "04813d7748d918bd8a3069cb1823ebc9586f0ce16cd6a97a784581ec38d13062i0",
+        "number": 82822125,
+        "height": 879134,
+        "content_type": "text/javascript",
+        "content_length": 67180,
+        "delegate": null
+      },
+      "references": [],
+      "literalImports": [],
+      "headerSnippet": "/*! For license information please see Tone.js.LICENSE.txt */\n!function(t,e){\"object\"==typeof exports&&\"object\"==typeof module?module.exports=e():\"function\"==typeof define&&define.amd?define([],e):\"object\"==typeof exports?exports.Tone=e():t.Tone=e()}(\"undefined\"!=typeof self?self:this,(()=>(()=>{var t={871:function(t,e,s){!function(t,e,s,n){\"use strict\";var i=function(t,e,s){return{endTime:e,insertTime:s,type:\"expone",
+      "responses": [
+        {
+          "url": "https://ordinals.com/content/04813d7748d918bd8a3069cb1823ebc9586f0ce16cd6a97a784581ec38d13062i0",
+          "mime": "text/javascript",
+          "contentEncoding": "br",
+          "wireBytes": 67180,
+          "decodedBytes": 345744,
+          "wireSha256": "e792adf98b9f0d726987e93329285e1957176c8852120824feac5feee55fcedd",
+          "decodedSha256": "33c3fdc2f26f66f203631deb2c51a5ade54cdffb8271d2d98106c295de89bc0d"
+        },
+        {
+          "url": "https://ord-mirror.magiceden.dev/content/04813d7748d918bd8a3069cb1823ebc9586f0ce16cd6a97a784581ec38d13062i0",
+          "mime": "text/javascript",
+          "contentEncoding": "br",
+          "wireBytes": 86746,
+          "decodedBytes": 345744,
+          "wireSha256": "d251df1a43ddb81c97b625743136e75cb33a8f2f16df37bf60abdd07a7c07bfb",
+          "decodedSha256": "33c3fdc2f26f66f203631deb2c51a5ade54cdffb8271d2d98106c295de89bc0d"
+        },
+        {
+          "url": "https://ordinals.com/r/inscription/04813d7748d918bd8a3069cb1823ebc9586f0ce16cd6a97a784581ec38d13062i0",
+          "mime": "application/json",
+          "contentEncoding": "br",
+          "wireBytes": 276,
+          "decodedBytes": 516,
+          "wireSha256": "301eed92d877db5f1eb8949ba66770bb09211dee92d3458bcc6797c424665759",
+          "decodedSha256": "203d110dcf2de5fda539becbbc56ac0b972eefa47d9adea23e596bdcf03d71e7"
+        },
+        {
+          "url": "https://unpkg.com/tone@15.0.4/build/Tone.js",
+          "mime": "text/javascript; charset=utf-8",
+          "contentEncoding": "gzip",
+          "wireBytes": 79513,
+          "decodedBytes": 345744,
+          "wireSha256": "4715a7350d230e26fcfde53bf1efc3d2783e1e51b94b7240d732a5d764cdee5d",
+          "decodedSha256": "33c3fdc2f26f66f203631deb2c51a5ade54cdffb8271d2d98106c295de89bc0d"
+        }
+      ],
+      "runtimeTested": false,
+      "licenseReviewed": false,
+      "chainIndependentlyVerified": false
+    },
+    {
+      "key": "scure-btc-signer-1.6.0",
+      "id": "39990020855d5bd14b35f8ada3c6059e0b008f6ebb673a883c1e4891b5368c74i0",
+      "network": "mainnet",
+      "fetchedAt": "2026-09-23T07:02:30.173Z",
+      "gatewayAgreement": true,
+      "upstreamComparison": "exact-decoded-byte-match",
+      "inscription": {
+        "id": "39990020855d5bd14b35f8ada3c6059e0b008f6ebb673a883c1e4891b5368c74i0",
+        "number": 83860621,
+        "height": 881244,
+        "content_type": "text/javascript",
+        "content_length": 35554,
+        "delegate": null
+      },
+      "references": [],
+      "literalImports": [],
+      "headerSnippet": "\"use strict\";var scureBtcSigner=(()=>{var Kn=Object.defineProperty;var Ds=Object.getOwnPropertyDescriptor;var Os=Object.getOwnPropertyNames;var Ms=Object.prototype.hasOwnProperty;var uo=(t,e)=>{for(var n in e)Kn(t,n,{get:e[n],enumerable:!0})},Vs=(t,e,n,r)=>{if(e&&typeof e==\"object\"||typeof e==\"function\")for(let o of Os(e))!Ms.call(t,o)&&o!==n&&Kn(t,o,{get:()=>e[o],enumerable:!(r=Ds(e,o))||r.enumerable});return t};var",
+      "responses": [
+        {
+          "url": "https://ordinals.com/content/39990020855d5bd14b35f8ada3c6059e0b008f6ebb673a883c1e4891b5368c74i0",
+          "mime": "text/javascript",
+          "contentEncoding": "br",
+          "wireBytes": 35554,
+          "decodedBytes": 120087,
+          "wireSha256": "720043fff36772e91c1bd1e9b35a27a292c20b86a668e31b111890f0109e7040",
+          "decodedSha256": "732d415145fd3707f327bf08364102d330e459ec4cc3efeebd115eac916560c9"
+        },
+        {
+          "url": "https://ord-mirror.magiceden.dev/content/39990020855d5bd14b35f8ada3c6059e0b008f6ebb673a883c1e4891b5368c74i0",
+          "mime": "text/javascript",
+          "contentEncoding": "br",
+          "wireBytes": 43059,
+          "decodedBytes": 120087,
+          "wireSha256": "92ea0dd24aad43bdf95938369dc23b908847df5de03eb631210c081f4f839dfb",
+          "decodedSha256": "732d415145fd3707f327bf08364102d330e459ec4cc3efeebd115eac916560c9"
+        },
+        {
+          "url": "https://ordinals.com/r/inscription/39990020855d5bd14b35f8ada3c6059e0b008f6ebb673a883c1e4891b5368c74i0",
+          "mime": "application/json",
+          "contentEncoding": "br",
+          "wireBytes": 278,
+          "decodedBytes": 516,
+          "wireSha256": "bfcef3ba55b2cead441aed3ae054303a942f1db105367fd88ce967b8981dcf2c",
+          "decodedSha256": "f613522dd5c1ae47ae7533da199bb7c0a4f92f02f14e1601da28215fddd3404c"
+        },
+        {
+          "url": "https://release-assets.githubusercontent.com/github-production-release-asset/530492676/02f3ece3-60ff-4e4a-98a2-b49c2edc5459?sp=r&sv=2018-11-09&sr=b&spr=https&se=2026-09-23T07%3A42%3A36Z&rscd=attachment%3B+filename%3Dscure-btc-signer.min.js&rsct=application%2Foctet-stream&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2026-09-23T06%3A42%3A11Z&ske=2026-09-23T07%3A42%3A36Z&sks=b&skv=2018-11-09&sig=fOlckYHjIuQedxEFPgYvJ7tChzW3ub6RGoV8qfkKPas%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc5MDE0NzI0OSwibmJmIjoxNzkwMTQ2OTQ5LCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.U7JCDirFsuioh-d98i-PfgW5JfK7FVvxcusenFe9Wi8&response-content-disposition=attachment%3B%20filename%3Dscure-btc-signer.min.js&response-content-type=application%2Foctet-stream",
+          "mime": "application/octet-stream",
+          "contentEncoding": "identity",
+          "wireBytes": 120087,
+          "decodedBytes": 120087,
+          "wireSha256": "732d415145fd3707f327bf08364102d330e459ec4cc3efeebd115eac916560c9",
+          "decodedSha256": "732d415145fd3707f327bf08364102d330e459ec4cc3efeebd115eac916560c9"
+        }
+      ],
+      "runtimeTested": false,
+      "licenseReviewed": false,
+      "chainIndependentlyVerified": false
+    },
+    {
+      "key": "matter",
+      "id": "9d567e6ef8bd6b13458cc67cc5e8339395a4433e45db4554ff83c88a5df8bae2i0",
+      "network": "mainnet",
+      "fetchedAt": "2026-09-23T07:02:29.689Z",
+      "gatewayAgreement": true,
+      "upstreamComparison": "not-attempted",
+      "inscription": {
+        "id": "9d567e6ef8bd6b13458cc67cc5e8339395a4433e45db4554ff83c88a5df8bae2i0",
+        "number": 11774132,
+        "height": 794241,
+        "content_type": "text/javascript",
+        "content_length": 80807,
+        "delegate": null
+      },
+      "references": [],
+      "literalImports": [],
+      "headerSnippet": "/*!\n * matter-js 0.19.0 by @liabru\n * http://brm.io/matter-js/\n * License MIT\n */\n!function(e,t){\"object\"==typeof exports&&\"object\"==typeof module?module.exports=t():\"function\"==typeof define&&define.amd?define(\"Matter\",[],t):\"object\"==typeof exports?exports.Matter=t():e.Matter=t()}(this,(function(){return function(e){var t={};function n(i){if(t[i])return t[i].exports;var o=t[i]={i:i,l:!1,exports:{}};return e[i].call",
+      "responses": [
+        {
+          "url": "https://ordinals.com/content/9d567e6ef8bd6b13458cc67cc5e8339395a4433e45db4554ff83c88a5df8bae2i0",
+          "mime": "text/javascript",
+          "contentEncoding": "br",
+          "wireBytes": 25544,
+          "decodedBytes": 80807,
+          "wireSha256": "86aae62bbbb53f456d8dff010220c6becc9b4e894d0f1acae843c9664b9dcb66",
+          "decodedSha256": "bdf68e297d6c4ec85b8dd693b8781d99db0090449c9a3ba69948eede08c9275a"
+        },
+        {
+          "url": "https://ord-mirror.magiceden.dev/content/9d567e6ef8bd6b13458cc67cc5e8339395a4433e45db4554ff83c88a5df8bae2i0",
+          "mime": "text/javascript",
+          "contentEncoding": "br",
+          "wireBytes": 27012,
+          "decodedBytes": 80807,
+          "wireSha256": "9f30a513e8907c48aeecd99fe4749ed5ac4cdd2288838616a968d3d501a89ac3",
+          "decodedSha256": "bdf68e297d6c4ec85b8dd693b8781d99db0090449c9a3ba69948eede08c9275a"
+        },
+        {
+          "url": "https://ordinals.com/r/inscription/9d567e6ef8bd6b13458cc67cc5e8339395a4433e45db4554ff83c88a5df8bae2i0",
+          "mime": "application/json",
+          "contentEncoding": "br",
+          "wireBytes": 287,
+          "decodedBytes": 479,
+          "wireSha256": "a79b65afdbd8ccfede58b52e924c7f1c7243248e16b38060cf056d584a13a66e",
+          "decodedSha256": "316ca498a861295829b3f096d8e57911b46c421438744a6cedc493ef13f34070"
+        }
+      ],
+      "runtimeTested": false,
+      "licenseReviewed": false,
+      "chainIndependentlyVerified": false
+    },
+    {
+      "key": "gsap",
+      "id": "6577ec768235a2a911e91a115b964618581bde91d99bc58f5c7390fdfb155ae6i0",
+      "network": "mainnet",
+      "fetchedAt": "2026-09-23T07:02:29.688Z",
+      "gatewayAgreement": true,
+      "upstreamComparison": "not-attempted",
+      "inscription": {
+        "id": "6577ec768235a2a911e91a115b964618581bde91d99bc58f5c7390fdfb155ae6i0",
+        "number": 14150095,
+        "height": 796412,
+        "content_type": "text/javascript",
+        "content_length": 62549,
+        "delegate": null
+      },
+      "references": [],
+      "literalImports": [],
+      "headerSnippet": "/*!\n * GSAP 3.6.1\n * https://greensock.com\n * \n * @license Copyright 2021, GreenSock. All rights reserved.\n * Subject to the terms at https://greensock.com/standard-license or for Club GreenSock members, the agreement issued with that membership.\n * @author: Jack Doyle, jack@greensock.com\n */\n\n!function(t,e){\"object\"==typeof exports&&\"undefined\"!=typeof module?e(exports):\"function\"==typeof define&&define.amd?define([",
+      "responses": [
+        {
+          "url": "https://ordinals.com/content/6577ec768235a2a911e91a115b964618581bde91d99bc58f5c7390fdfb155ae6i0",
+          "mime": "text/javascript",
+          "contentEncoding": "gzip",
+          "wireBytes": 24562,
+          "decodedBytes": 62549,
+          "wireSha256": "4060dc1881f56c250e8722c344148dca4b0bfc3890ded07ca00841d1184bb805",
+          "decodedSha256": "dce03f3336254bd93ae523da00dc35de7a9851eb33fb6fbe20d94d4d32612a2a"
+        },
+        {
+          "url": "https://ord-mirror.magiceden.dev/content/6577ec768235a2a911e91a115b964618581bde91d99bc58f5c7390fdfb155ae6i0",
+          "mime": "text/javascript",
+          "contentEncoding": "gzip",
+          "wireBytes": 24687,
+          "decodedBytes": 62549,
+          "wireSha256": "86b3981a6e2e606f6638a2cc55546c4e7c5afca2279001ec42aea2820edc2d6b",
+          "decodedSha256": "dce03f3336254bd93ae523da00dc35de7a9851eb33fb6fbe20d94d4d32612a2a"
+        },
+        {
+          "url": "https://ordinals.com/r/inscription/6577ec768235a2a911e91a115b964618581bde91d99bc58f5c7390fdfb155ae6i0",
+          "mime": "application/json",
+          "contentEncoding": "br",
+          "wireBytes": 267,
+          "decodedBytes": 499,
+          "wireSha256": "3a34e7fb0d227865732b187f922e42bcedf47972a307dab48869ca3157a63af8",
+          "decodedSha256": "30c8c3c4cb10d77bf94be3dc5ffab4471e42d4738ddbde7c52b008241aae4294"
+        }
+      ],
+      "runtimeTested": false,
+      "licenseReviewed": false,
+      "chainIndependentlyVerified": false
+    },
+    {
+      "key": "anime",
+      "id": "23ad98a190933e5c238b57e05814acc154d55928edf02d298cc82f4fac0313fei0",
+      "network": "mainnet",
+      "fetchedAt": "2026-09-23T07:02:30.406Z",
+      "gatewayAgreement": true,
+      "upstreamComparison": "not-attempted",
+      "inscription": {
+        "id": "23ad98a190933e5c238b57e05814acc154d55928edf02d298cc82f4fac0313fei0",
+        "number": 35139362,
+        "height": 810917,
+        "content_type": "text/javascript",
+        "content_length": 17741,
+        "delegate": null
+      },
+      "references": [],
+      "literalImports": [],
+      "headerSnippet": "/*\n * anime.js v3.2.1\n * (c) 2020 Julian Garnier\n * Released under the MIT license\n * animejs.com\n */\n\n!function(n,e){\"object\"==typeof exports&&\"undefined\"!=typeof module?module.exports=e():\"function\"==typeof define&&define.amd?define(e):n.anime=e()}(this,function(){\"use strict\";var n={update:null,begin:null,loopBegin:null,changeBegin:null,change:null,changeComplete:null,loopComplete:null,complete:null,loop:1,directi",
+      "responses": [
+        {
+          "url": "https://ordinals.com/content/23ad98a190933e5c238b57e05814acc154d55928edf02d298cc82f4fac0313fei0",
+          "mime": "text/javascript",
+          "contentEncoding": "br",
+          "wireBytes": 7330,
+          "decodedBytes": 17741,
+          "wireSha256": "adc513dd2c97440a46ef713d801bd4a910c7449313322c34fb96f1128a906c90",
+          "decodedSha256": "5cbda29ea5096ac9404c59c77493a2f467d0eb4a27f16c750b61fc0d888dd716"
+        },
+        {
+          "url": "https://ord-mirror.magiceden.dev/content/23ad98a190933e5c238b57e05814acc154d55928edf02d298cc82f4fac0313fei0",
+          "mime": "text/javascript",
+          "contentEncoding": "br",
+          "wireBytes": 7672,
+          "decodedBytes": 17741,
+          "wireSha256": "05fcc03bfb5b1abfa6bdf270b41034ff4f2f94ceb23fadf3e6faf0bd1f4c5fb9",
+          "decodedSha256": "5cbda29ea5096ac9404c59c77493a2f467d0eb4a27f16c750b61fc0d888dd716"
+        },
+        {
+          "url": "https://ordinals.com/r/inscription/23ad98a190933e5c238b57e05814acc154d55928edf02d298cc82f4fac0313fei0",
+          "mime": "application/json",
+          "contentEncoding": "br",
+          "wireBytes": 265,
+          "decodedBytes": 499,
+          "wireSha256": "af55847e1e86a9f79cafdb777a6d28c26ba60fa6828f9d442481d0d454a58d6a",
+          "decodedSha256": "1e6c1848eacfee19e2e1c90910b9d18bed8a446e4072ac3b2251815078608dff"
+        }
+      ],
+      "runtimeTested": false,
+      "licenseReviewed": false,
+      "chainIndependentlyVerified": false
+    },
+    {
+      "key": "seedrandom",
+      "id": "c192f63c1990ee1377d51de1f5b6820eac412aa779d717b9497806a072ea49f6i0",
+      "network": "mainnet",
+      "fetchedAt": "2026-09-23T07:02:30.406Z",
+      "gatewayAgreement": true,
+      "upstreamComparison": "not-attempted",
+      "inscription": {
+        "id": "c192f63c1990ee1377d51de1f5b6820eac412aa779d717b9497806a072ea49f6i0",
+        "number": 27758217,
+        "height": 805809,
+        "content_type": "text/javascript",
+        "content_length": 2730,
+        "delegate": null
+      },
+      "references": [],
+      "literalImports": [],
+      "headerSnippet": "/*\r\nCopyright 2019 David Bau.\r\n\r\nPermission is hereby granted, free of charge, to any person obtaining\r\na copy of this software and associated documentation files (the\r\n\"Software\"), to deal in the Software without restriction, including\r\nwithout limitation the rights to use, copy, modify, merge, publish,\r\ndistribute, sublicense, and/or sell copies of the Software, and to\r\npermit persons to whom the Software is furnis",
+      "responses": [
+        {
+          "url": "https://ordinals.com/content/c192f63c1990ee1377d51de1f5b6820eac412aa779d717b9497806a072ea49f6i0",
+          "mime": "text/javascript",
+          "contentEncoding": "br",
+          "wireBytes": 1645,
+          "decodedBytes": 2730,
+          "wireSha256": "27369ebf0cee9145290c394a80b4f3ae21852b7b9a228a5fdd2e3a795347b620",
+          "decodedSha256": "6e51abf6855ffb8719101a1e36630d9b0b74ca132b0f5a87b3f353ac5832a84f"
+        },
+        {
+          "url": "https://ord-mirror.magiceden.dev/content/c192f63c1990ee1377d51de1f5b6820eac412aa779d717b9497806a072ea49f6i0",
+          "mime": "text/javascript",
+          "contentEncoding": "br",
+          "wireBytes": 1646,
+          "decodedBytes": 2730,
+          "wireSha256": "6a02e44b84076006e967da68b8b6d73313b84b8846f9a4af5dfc7d0ac645a102",
+          "decodedSha256": "6e51abf6855ffb8719101a1e36630d9b0b74ca132b0f5a87b3f353ac5832a84f"
+        },
+        {
+          "url": "https://ordinals.com/r/inscription/c192f63c1990ee1377d51de1f5b6820eac412aa779d717b9497806a072ea49f6i0",
+          "mime": "application/json",
+          "contentEncoding": "br",
+          "wireBytes": 263,
+          "decodedBytes": 496,
+          "wireSha256": "d3dabfa2daa6eddc525ef48077ed42e7e45a540fd1843b36996bff2b5b2a7434",
+          "decodedSha256": "d953813403e5c90b5895d205caaa38e7ab1ab5c662662fc056ec567242e5e158"
+        }
+      ],
+      "runtimeTested": false,
+      "licenseReviewed": false,
+      "chainIndependentlyVerified": false
+    },
+    {
+      "key": "chroma",
+      "id": "c49f28a5c9e67efb85d44b9ee12efa2839b0251bad14efc5e6c32406505e259ci0",
+      "network": "mainnet",
+      "fetchedAt": "2026-09-23T07:02:30.423Z",
+      "gatewayAgreement": true,
+      "upstreamComparison": "not-attempted",
+      "inscription": {
+        "id": "c49f28a5c9e67efb85d44b9ee12efa2839b0251bad14efc5e6c32406505e259ci0",
+        "number": 62796089,
+        "height": 832529,
+        "content_type": "application/x-gzip",
+        "content_length": 23760,
+        "delegate": null
+      },
+      "references": [],
+      "literalImports": [],
+      "headerSnippet": "H4sIAPWTy2UAA8V9aXfbONLu9zln/oPi6bePFkoWqV0yo+stjjuO7bad1eObw9ViLJMKRdlxJ/7v96kCwEWWk8x08t7OjAWCAIgqFKoKhUJhvVr95z9K1ZIziaNrq/FxXqqX/rBurFMnDmZJaRrYsRXflfwoLjnRlP+GN148D6JwThW58nY0u4uDy0lSKjuVktHU9Tr+DLTSXuxdos5mMHcmXHJzOi1xyXkp9uZefOO5jbSZE88N5kkc2IsEzZes0C0t5l4pCEvzaBE7HufYQSg7dD3XSrdBMinhC/QbLRJu5jpyAz9wLGpEK1mxV5p58XWQJJ5bmsXRTeAikUysBH88NDSdRrdBeEmQuQFVmnOlay8Zpl3TG0u9m5ciX3XLiVwUX8wTwJRY6C61a9nRDb1SmAmjJHA8De8C",
+      "responses": [
+        {
+          "url": "https://ordinals.com/content/c49f28a5c9e67efb85d44b9ee12efa2839b0251bad14efc5e6c32406505e259ci0",
+          "mime": "application/x-gzip",
+          "contentEncoding": "br",
+          "wireBytes": 17883,
+          "decodedBytes": 23760,
+          "wireSha256": "f565e22216321ce6d846a4b528f2aeb3aafdbe1bebb944d27d116c198f55df02",
+          "decodedSha256": "41ea7443cf47e824c786f985c70c5c2bf51d5fb361adb23049564177d5e81f53"
+        },
+        {
+          "url": "https://ord-mirror.magiceden.dev/content/c49f28a5c9e67efb85d44b9ee12efa2839b0251bad14efc5e6c32406505e259ci0",
+          "mime": "application/x-gzip",
+          "contentEncoding": "identity",
+          "wireBytes": 23760,
+          "decodedBytes": 23760,
+          "wireSha256": "41ea7443cf47e824c786f985c70c5c2bf51d5fb361adb23049564177d5e81f53",
+          "decodedSha256": "41ea7443cf47e824c786f985c70c5c2bf51d5fb361adb23049564177d5e81f53"
+        },
+        {
+          "url": "https://ordinals.com/r/inscription/c49f28a5c9e67efb85d44b9ee12efa2839b0251bad14efc5e6c32406505e259ci0",
+          "mime": "application/json",
+          "contentEncoding": "br",
+          "wireBytes": 293,
+          "decodedBytes": 496,
+          "wireSha256": "9d232508db33f2c9a1669d271a9fe14cd9f44ae0ef5c8da2cb5d9d13fc7a3050",
+          "decodedSha256": "e46676b60b7f5e4db81e8a459ba6d13204df79679e408f23dcf7c55310a980b3"
+        }
+      ],
+      "runtimeTested": false,
+      "licenseReviewed": false,
+      "chainIndependentlyVerified": false
+    },
+    {
+      "key": "fflate-ocm",
+      "id": "6bac7ab4ce8d5d32f202c2e31bba2b5476a18275802b4e0595c708760f9f56b5i0",
+      "network": "mainnet",
+      "fetchedAt": "2026-09-23T07:02:30.635Z",
+      "gatewayAgreement": true,
+      "upstreamComparison": "not-attempted",
+      "inscription": {
+        "id": "6bac7ab4ce8d5d32f202c2e31bba2b5476a18275802b4e0595c708760f9f56b5i0",
+        "number": -76674,
+        "height": 795275,
+        "content_type": "text/html;charset=utf-8",
+        "content_length": 4868,
+        "delegate": null
+      },
+      "references": [],
+      "literalImports": [],
+      "headerSnippet": "// fflate code from 2dbdf9ebbec6be793fd16ae9b797c7cf968ab2427166aaf390b90b71778266abi0\nvar u=Uint8Array,A=Uint16Array,_=Uint32Array,rr=new u([0,0,0,0,0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,0,0,0,0]),nr=new u([0,0,0,0,1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8,9,9,10,10,11,11,12,12,13,13,0,0]),pr=new u([16,17,18,0,8,7,9,6,10,5,11,4,12,3,13,2,14,1,15]),tr=function(r,t){for(var n=new A(31),e=0;e<31;++e)n[e]=t+=1<<r[e-1];f",
+      "responses": [
+        {
+          "url": "https://ordinals.com/content/6bac7ab4ce8d5d32f202c2e31bba2b5476a18275802b4e0595c708760f9f56b5i0",
+          "mime": "text/html;charset=utf-8",
+          "contentEncoding": "br",
+          "wireBytes": 2552,
+          "decodedBytes": 4868,
+          "wireSha256": "b0e33cc970902a9d1bdfbb1ae09612770f7997847b63e2d8c5d401cab88cad8f",
+          "decodedSha256": "ee50bca9d623d756b40658c270134c39ab9977d9ab990f4b8052706afc7aa05d"
+        },
+        {
+          "url": "https://ord-mirror.magiceden.dev/content/6bac7ab4ce8d5d32f202c2e31bba2b5476a18275802b4e0595c708760f9f56b5i0",
+          "mime": "text/html;charset=utf-8",
+          "contentEncoding": "br",
+          "wireBytes": 2647,
+          "decodedBytes": 4868,
+          "wireSha256": "f80e46705913cda51296f7f0f66da980fee1647bf3a95e39ddd5795ef98d66c0",
+          "decodedSha256": "ee50bca9d623d756b40658c270134c39ab9977d9ab990f4b8052706afc7aa05d"
+        },
+        {
+          "url": "https://ordinals.com/r/inscription/6bac7ab4ce8d5d32f202c2e31bba2b5476a18275802b4e0595c708760f9f56b5i0",
+          "mime": "application/json",
+          "contentEncoding": "br",
+          "wireBytes": 283,
+          "decodedBytes": 529,
+          "wireSha256": "e351e05b001a7a0014a3b92a5d60a66a03b1e3437769340e08d6e17053bd3bea",
+          "decodedSha256": "5476ceda40f7b85bd012a34d0e5fc7849e5dc3532cae3a404b63abfb05a2b9ea"
+        }
+      ],
+      "runtimeTested": false,
+      "licenseReviewed": false,
+      "chainIndependentlyVerified": false
+    },
+    {
+      "key": "ocm-dimensions",
+      "id": "2dbdf9ebbec6be793fd16ae9b797c7cf968ab2427166aaf390b90b71778266abi0",
+      "network": "mainnet",
+      "fetchedAt": "2026-09-23T07:02:31.293Z",
+      "gatewayAgreement": true,
+      "upstreamComparison": "not-attempted",
+      "inscription": {
+        "id": "2dbdf9ebbec6be793fd16ae9b797c7cf968ab2427166aaf390b90b71778266abi0",
+        "number": 203112,
+        "height": 778593,
+        "content_type": "text/html;charset=utf-8",
+        "content_length": 250274,
+        "delegate": null
+      },
+      "references": [],
+      "literalImports": [],
+      "headerSnippet": "<style>\n  body {\n    background-color: black;\n  }\n\n  * {\n    margin: 0;\n    padding: 0\n  }\n\n  canvas {\n    width: 100%;\n    height: 100%\n  }\n\n  #ui {\n    position: absolute;\n    top: 8px;\n    left: 8px;\n  }\n</style>\n<div id=\"scene\"></div>\n<div id=\"ui\">\n  <button id=\"prev\">Prev</button>\n  <input type=\"text\" id=\"tokenID\">\n  <button id=\"next\">Next</button>\n</div>\n<script>\nvar u=Uint8Array,A=Uint16Array,_=Uint32Array,rr=",
+      "responses": [
+        {
+          "url": "https://ordinals.com/content/2dbdf9ebbec6be793fd16ae9b797c7cf968ab2427166aaf390b90b71778266abi0",
+          "mime": "text/html;charset=utf-8",
+          "contentEncoding": "br",
+          "wireBytes": 186364,
+          "decodedBytes": 250274,
+          "wireSha256": "337785b1dade98c918a8a74bb77dddf10f6b72217cd033f9107995640d71b65e",
+          "decodedSha256": "9f63bf166e69a99a368233a9f192e8ab182ca09b70cb9c1187b046021a3c99e8"
+        },
+        {
+          "url": "https://ord-mirror.magiceden.dev/content/2dbdf9ebbec6be793fd16ae9b797c7cf968ab2427166aaf390b90b71778266abi0",
+          "mime": "text/html;charset=utf-8",
+          "contentEncoding": "br",
+          "wireBytes": 187976,
+          "decodedBytes": 250274,
+          "wireSha256": "9f70493d1a4ce6c939b5b6b15bcf03aeefdd50aebc2d4746549e4bbcb040de60",
+          "decodedSha256": "9f63bf166e69a99a368233a9f192e8ab182ca09b70cb9c1187b046021a3c99e8"
+        },
+        {
+          "url": "https://ordinals.com/r/inscription/2dbdf9ebbec6be793fd16ae9b797c7cf968ab2427166aaf390b90b71778266abi0",
+          "mime": "application/json",
+          "contentEncoding": "br",
+          "wireBytes": 312,
+          "decodedBytes": 509,
+          "wireSha256": "9a2501ba9978c5ae70f700d9ec810c73ee9f712e24b561d6da50dcea055b4e98",
+          "decodedSha256": "6c398267767251a4cfc1bbe2d036f9658725788f0d6944ec448ac2bac4f4fb7a"
+        }
+      ],
+      "runtimeTested": false,
+      "licenseReviewed": false,
+      "chainIndependentlyVerified": false
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "network": "mainnet",
+  "status": "Research candidates; promotion requires license review, dependency verification, and runtime tests.",
+  "sources": {
+    "elements": "https://github.com/TheWizardsOfOrd/Elements",
+    "ocm": "https://github.com/metagood/OCM-Dimensions/blob/main/tools/studio/index.html"
+  },
+  "libraries": [
+    {"key":"three-r178","name":"Three.js","version":"r178","source":"elements","id":"a4a6f99205628bdc3ca2143a4e380f7ebc576b4414c16dffdb34be28337ffe83i0","upstream":"https://raw.githubusercontent.com/mrdoob/three.js/refs/tags/r178/build/three.module.min.js","expectedImportRewrite":{"from":"./three.core.min.js","to":"/content/35aee6992ab002de22acf9df65e7067779512a8038e131a3af6c1757a6da90f5i0"},"format":"esm"},
+    {"key":"three-core-r178","name":"Three.js core","version":"r178","source":"three-r178 content imports","id":"35aee6992ab002de22acf9df65e7067779512a8038e131a3af6c1757a6da90f5i0","upstream":"https://raw.githubusercontent.com/mrdoob/three.js/refs/tags/r178/build/three.core.min.js","format":"esm"},
+    {"key":"p5-1.11.2","name":"p5.js","version":"1.11.2","source":"elements","id":"13a5c8e41dfc110514b450b2f15317988c0aaf276d3dbdcca9aa3c7d0b2188a7i0","upstream":"https://github.com/processing/p5.js/releases/download/v1.11.2/p5.min.js","format":"classic"},
+    {"key":"p5-2.0.1","name":"p5.js","version":"2.0.1","source":"elements","id":"bed725759768159b0868fe0e6c9cd26a4c437f9e0903f70893edad280e35d843i0","upstream":"https://github.com/processing/p5.js/releases/download/v2.0.1/p5.min.js","format":"classic"},
+    {"key":"phaser-3.80.1","name":"Phaser","version":"3.80.1","source":"elements","id":"0d1a04b71975ec948b36cf3ccdff415fca851b9c17144413997395f5ea166e42i0","upstream":"https://github.com/phaserjs/phaser/releases/download/v3.80.1/phaser.min.js","format":"classic"},
+    {"key":"tone-15.0.4","name":"Tone.js","version":"15.0.4","source":"elements","id":"04813d7748d918bd8a3069cb1823ebc9586f0ce16cd6a97a784581ec38d13062i0","upstream":"https://unpkg.com/tone@15.0.4/build/Tone.js","format":"classic"},
+    {"key":"scure-btc-signer-1.6.0","name":"scure-btc-signer","version":"1.6.0","source":"elements","id":"39990020855d5bd14b35f8ada3c6059e0b008f6ebb673a883c1e4891b5368c74i0","upstream":"https://github.com/paulmillr/scure-btc-signer/releases/download/1.6.0/scure-btc-signer.min.js","format":"inspect-before-use"},
+    {"key":"matter","name":"Matter.js","version":null,"source":"ocm","id":"9d567e6ef8bd6b13458cc67cc5e8339395a4433e45db4554ff83c88a5df8bae2i0","format":"inspect-before-use"},
+    {"key":"gsap","name":"GSAP","version":null,"source":"ocm","id":"6577ec768235a2a911e91a115b964618581bde91d99bc58f5c7390fdfb155ae6i0","format":"inspect-before-use"},
+    {"key":"anime","name":"anime.js","version":null,"source":"ocm","id":"23ad98a190933e5c238b57e05814acc154d55928edf02d298cc82f4fac0313fei0","format":"inspect-before-use"},
+    {"key":"seedrandom","name":"seedrandom","version":null,"source":"ocm","id":"c192f63c1990ee1377d51de1f5b6820eac412aa779d717b9497806a072ea49f6i0","format":"inspect-before-use"},
+    {"key":"chroma","name":"Chroma.js","version":null,"source":"ocm","id":"c49f28a5c9e67efb85d44b9ee12efa2839b0251bad14efc5e6c32406505e259ci0","format":"inspect-before-use"},
+    {"key":"fflate-ocm","name":"fflate","version":null,"source":"https://github.com/metagood/OCM-Dimensions/blob/main/tools/inscriptions.json","id":"6bac7ab4ce8d5d32f202c2e31bba2b5476a18275802b4e0595c708760f9f56b5i0","format":"inspect-before-use"},
+    {"key":"ocm-dimensions","name":"OCM Dimensions / Three.js + fflate","version":null,"source":"ocm","id":"2dbdf9ebbec6be793fd16ae9b797c7cf968ab2427166aaf390b90b71778266abi0","format":"custom-extraction"}
+  ]
+}

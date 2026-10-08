@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "records": [
+    {
+      "key": "matter-0.19.0",
+      "id": "9d567e6ef8bd6b13458cc67cc5e8339395a4433e45db4554ff83c88a5df8bae2i0",
+      "sha256": "bdf68e297d6c4ec85b8dd693b8781d99db0090449c9a3ba69948eede08c9275a",
+      "profile": "builder-opaque-ord-emulation",
+      "checkedAt": "2026-10-08T17:20:16.062Z",
+      "evidence": "docs/evidence/experiences-native.json",
+      "recipe": "physics",
+      "limitations": [
+        "Only the documented starter APIs on macOS arm64 were exercised.",
+        "Independent mainnet chain verification and direct Ord runtime qualification are not claimed."
+      ]
+    },
+    {
+      "key": "anime-3.2.1",
+      "id": "23ad98a190933e5c238b57e05814acc154d55928edf02d298cc82f4fac0313fei0",
+      "sha256": "5cbda29ea5096ac9404c59c77493a2f467d0eb4a27f16c750b61fc0d888dd716",
+      "profile": "builder-opaque-ord-emulation",
+      "checkedAt": "2026-10-08T17:20:16.062Z",
+      "evidence": "docs/evidence/experiences-native.json",
+      "recipe": "motion",
+      "limitations": [
+        "Only the documented starter APIs on macOS arm64 were exercised.",
+        "Independent mainnet chain verification and direct Ord runtime qualification are not claimed."
+      ]
+    },
+    {
+      "key": "d3-7.8.5",
+      "id": "dcc251660ca7ce393f94c812642d214d8d2c440f314b542a8059c18404c57bf0i2",
+      "sha256": "d6b03aefc9f6c44c7bc78713679c78c295028fa914319119e5cc4b4954855b1c",
+      "profile": "builder-opaque-ord-emulation",
+      "checkedAt": "2026-10-08T17:20:16.062Z",
+      "evidence": "docs/evidence/experiences-native.json",
+      "recipe": "chart",
+      "limitations": [
+        "Only the documented starter APIs on macOS arm64 were exercised.",
+        "Independent mainnet chain verification and direct Ord runtime qualification are not claimed."
+      ]
+    },
+    {
+      "key": "jszip-3.10.1",
+      "id": "372c5388030820daed356d25d7a1218d0b88d78a6d051d27c91d0f25ac4c3c5ei0",
+      "sha256": "acc7e41455a80765b5fd9c7ee1b8078a6d160bbbca455aeae854de65c947d59e",
+      "profile": "builder-opaque-ord-emulation",
+      "checkedAt": "2026-10-08T17:17:58.636Z",
+      "evidence": "docs/evidence/library-jszip-native.json",
+      "recipe": "archive example",
+      "limitations": [
+        "ZIP generation from a small trusted string only.",
+        "Bundled dependency license review pending."
+      ]
+    }
+  ]
+}

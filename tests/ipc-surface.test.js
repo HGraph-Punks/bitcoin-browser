@@ -18,6 +18,7 @@ const EVENT_ONLY = new Set([
 ]);
 
 const FACADE_TO_CHANNEL = Object.freeze({
+  'creator.open': 'creator:open',
   'app.bootstrap': IPC.APP_BOOTSTRAP,
   'app.openExternal': IPC.APP_OPEN_EXTERNAL,
   'app.revealPath': IPC.APP_REVEAL_PATH,
@@ -153,7 +154,7 @@ test('IPC constants partition exactly into registered invoke handlers and explic
 test('application preload exposes only the reviewed facade and maps every request method to its exact channel', async () => {
   const setup = executePreload(new URL('../src/main/preload.cjs', import.meta.url), 'satBrowser');
   assert.deepEqual(Object.keys(setup.facade).sort(), [
-    'ai', 'app', 'bookmarks', 'cache', 'content', 'diagnostics', 'extensions', 'history',
+    'ai', 'app', 'bookmarks', 'cache', 'content', 'creator', 'diagnostics', 'extensions', 'history',
     'navigation', 'nodeSetup', 'providers', 'psbt', 'resolver', 'services', 'settings', 'tabs', 'wallet'
   ]);
   const subscriberPaths = new Set(['app.onCommand', 'app.onDeepLink', 'wallet.onState']);

@@ -1,0 +1,68 @@
+{
+  "checkedAt": "2026-10-08T19:09:08.123Z",
+  "applicationVersion": "0.2.0-rc.3",
+  "packaged": false,
+  "driver": "playwright-electron-development",
+  "config": {
+    "chain": "regtest",
+    "coreVersion": 31.1,
+    "ordVersion": "0.29.0",
+    "height": 102
+  },
+  "localEvidence": "../../../../../../../private/tmp/btc-create-engine-9c1q0D",
+  "checks": {
+    "encryptedFundingWallet": true,
+    "lockedWalletDeniedBeforeBroadcast": true,
+    "externalCoreUnlockResumedExactPlan": true,
+    "publicReceiptMatchesPayload": true,
+    "nativeReceiptExportDialog": true,
+    "ownedFixtureProfileConnection": false,
+    "nativeCookieGrant": true,
+    "nativeOrdBinaryGrant": true,
+    "actualMcpPlanning": true,
+    "explicitPublicationGrant": true,
+    "mcpApprovalDenied": true,
+    "reviewRequestedInGui": true,
+    "noBroadcastBeforeApproval": true,
+    "osProtectedVaultKey": true,
+    "authenticatedRecordTamperDenied": true,
+    "osEncryptedRecovery": true,
+    "desktopRestartPreservedReview": true,
+    "ownerClickedEachExactReview": true,
+    "grantRevocationCanceledUnapprovedWork": true,
+    "reservationsReleasedOnRevocation": true,
+    "actualRecursiveRuntime": {
+      "text": "Built with MCP. Reviewed by its owner.",
+      "node": "undefined",
+      "bridge": "undefined",
+      "browser": "undefined"
+    }
+  },
+  "receipt": {
+    "rootId": "85d13da782e1322f8494808fecf14a3e4643ccc48d156da36e0039819259bb2di0",
+    "network": "regtest",
+    "sourceRevision": 2,
+    "buildId": "f0e28d793094cdc7fd40bef60b9412d31a9a83fff42c044bf12e43b86115b306",
+    "compilerVersion": "2.0.0",
+    "totalFeeSats": 628,
+    "totalPostageSats": 20000,
+    "resources": [
+      {
+        "path": "app.js",
+        "id": "3bc8a993eba81f345cc802b1f68864c17c7e7e53aba15ecf77d504c194a40399i0",
+        "sha256": "16f71b4f49b00e77264b5fca99a1c0e217a7aa87bb051b081af9e44c5f86fff3",
+        "commit": "238702f839686528d8ea7e8e8c5ab3d3010dace023ed71a43ec5e1404e30189b",
+        "reveal": "3bc8a993eba81f345cc802b1f68864c17c7e7e53aba15ecf77d504c194a40399",
+        "blockHash": "4c69aaef8804f37fac35e8b43b8b7f51e2b8b62d8116de618c160d72cf43fc76"
+      },
+      {
+        "path": "index.html",
+        "id": "85d13da782e1322f8494808fecf14a3e4643ccc48d156da36e0039819259bb2di0",
+        "sha256": "382c041e8a1beef19e8743c7ef2be259e6ff59a58f9b6745b61dd95ecf1e9efe",
+        "commit": "bbb49c55b19e260e60d93af186b135a402c37bdd42dacdcc3d3ade5aed485453",
+        "reveal": "85d13da782e1322f8494808fecf14a3e4643ccc48d156da36e0039819259bb2d",
+        "blockHash": "314380d09f6dc45b78c62a9b0078e5ea14cb9585c584b8a0995a573e50e510b9"
+      }
+    ]
+  }
+}

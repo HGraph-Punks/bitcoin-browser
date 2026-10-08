@@ -4,7 +4,8 @@
 
 Highest-value assets and guarantees:
 
-- wallet private keys remain outside the application;
+- wallet seeds and funding private keys remain outside the application;
+- transaction-specific inscription reveal material stays in authenticated, OS-protected deployment records;
 - signing intent and payload are not silently changed;
 - provider RPC credentials remain confidential;
 - local Bitcoin/ord data and filesystem are not exposed to inscriptions;
@@ -223,3 +224,11 @@ Validation rejects URLs with username or password components. Credentials are st
 - state/cache corruption recovery tests;
 - dependency audit/SBOM/signature verification; and
 - manual CSP/permission validation in packaged builds.
+
+## Create mode boundary
+
+Create is a different trusted main document, authenticated against the live main window, its main frame and exact URL. The native Browse document can request entering Create but cannot invoke creator commands. Both documents render untrusted content only through the existing opaque native `ord:` iframe. Draft origins bind project and build identity; obsolete builds, unknown resources and external URLs fail closed. Library bytes pass the native browser resolver and then match the catalog's pinned hash.
+
+A compromised Create renderer would hold source-editing and owner publication capabilities. Source content must never be inserted into that document as executable markup. MCP connections are independently scoped, authenticated, revoked and denied spending approval. Native cookie and executable grants stay outside MCP payloads.
+
+Create's additional assets are immutable source history, recoverable unsaved source drafts and the per-transaction deployment vault. An altered sealed record is rejected before broadcast. Exact owner review binds the transaction, inputs, output destination, fee, network and resource. Vault startup has a bounded secure-storage timeout; an unavailable Keychain leaves authoring available. Wallet recovery is not offered. This local candidate has no real mainnet execution qualification.

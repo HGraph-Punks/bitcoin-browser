@@ -1,0 +1,50 @@
+{
+  "name": "bitcoin-browser-creator",
+  "version": "0.2.0-rc.3",
+  "private": true,
+  "description": "Create, test, and inscribe recursive Bitcoin websites",
+  "type": "module",
+  "main": "generated/host.cjs",
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "overrides": {
+    "source-map-js": "1.2.2"
+  },
+  "scripts": {
+    "check": "tsc --noEmit",
+    "test": "tsx --test tests/*.test.ts",
+    "test:native": "tsx ../../scripts/test-creator-native.ts",
+    "test:regtest": "tsx ../../scripts/test-creator-regtest.ts"
+  },
+  "dependencies": {
+    "@codemirror/commands": "6.11.1",
+    "@codemirror/lang-css": "6.3.1",
+    "@codemirror/lang-html": "6.4.12",
+    "@codemirror/lang-javascript": "6.2.5",
+    "@codemirror/lang-json": "6.0.2",
+    "@codemirror/state": "6.7.6",
+    "@codemirror/view": "6.43.13",
+    "@modelcontextprotocol/sdk": "1.32.1",
+    "acorn": "8.18.0",
+    "diff": "9.0.0",
+    "lucide-react": "1.47.0",
+    "parse5": "8.0.1",
+    "postcss": "8.5.28",
+    "postcss-value-parser": "4.2.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "zod": "4.6.5"
+  },
+  "devDependencies": {
+    "@electron/packager": "20.0.4",
+    "@playwright/test": "1.63.0",
+    "@types/node": "26.6.2",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "electron": "44.4.5",
+    "esbuild": "0.28.2",
+    "tsx": "4.23.15",
+    "typescript": "7.0.2"
+  }
+}

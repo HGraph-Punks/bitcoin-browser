@@ -1,0 +1,159 @@
+{
+  "schemaVersion": 1,
+  "records": [
+    {
+      "key": "three-r178",
+      "id": "a4a6f99205628bdc3ca2143a4e380f7ebc576b4414c16dffdb34be28337ffe83i0",
+      "sha256": "6cece4198426265684ba8f67878dde76591abfab63b5270618738d7d9a2a8ea8",
+      "profile": "Builder preview (opaque sandbox)",
+      "checkedAt": "2026-10-08T17:20:16.062Z",
+      "evidence": "docs/evidence/experiences-native.json",
+      "recipe": "three",
+      "limitations": [
+        "Only the documented starter APIs and macOS arm64 were exercised. Independent mainnet chain verification is not claimed."
+      ]
+    },
+    {
+      "key": "three-r178",
+      "id": "a4a6f99205628bdc3ca2143a4e380f7ebc576b4414c16dffdb34be28337ffe83i0",
+      "sha256": "6cece4198426265684ba8f67878dde76591abfab63b5270618738d7d9a2a8ea8",
+      "profile": "Ord 0.29.0 (regtest)",
+      "checkedAt": "2026-09-23T09:57:43.285Z",
+      "evidence": "docs/evidence/three-regtest.json",
+      "recipe": "three",
+      "limitations": [
+        "Only the documented starter APIs and macOS arm64 were exercised. Independent mainnet chain verification is not claimed.",
+        "Regtest equivalents use the documented core-import rewrite."
+      ]
+    },
+    {
+      "key": "three-core-r178",
+      "id": "35aee6992ab002de22acf9df65e7067779512a8038e131a3af6c1757a6da90f5i0",
+      "sha256": "065c1e27e1e87051cf65e2d41d2f8f102b5dc0e5decf87d3da5fd79da6432110",
+      "profile": "Builder preview (opaque sandbox)",
+      "checkedAt": "2026-10-08T17:20:16.062Z",
+      "evidence": "docs/evidence/experiences-native.json",
+      "recipe": "three",
+      "limitations": [
+        "Only the documented starter APIs and macOS arm64 were exercised. Independent mainnet chain verification is not claimed."
+      ]
+    },
+    {
+      "key": "three-core-r178",
+      "id": "35aee6992ab002de22acf9df65e7067779512a8038e131a3af6c1757a6da90f5i0",
+      "sha256": "065c1e27e1e87051cf65e2d41d2f8f102b5dc0e5decf87d3da5fd79da6432110",
+      "profile": "Ord 0.29.0 (regtest)",
+      "checkedAt": "2026-09-23T09:57:43.285Z",
+      "evidence": "docs/evidence/three-regtest.json",
+      "recipe": "three",
+      "limitations": [
+        "Only the documented starter APIs and macOS arm64 were exercised. Independent mainnet chain verification is not claimed.",
+        "Regtest equivalents use the documented core-import rewrite."
+      ]
+    },
+    {
+      "key": "p5-1.11.2",
+      "id": "13a5c8e41dfc110514b450b2f15317988c0aaf276d3dbdcca9aa3c7d0b2188a7i0",
+      "sha256": "2ee031e707ccbd2cc8551c985fd1ebf5f59fea0abe186a7b23606568a1a306a1",
+      "profile": "Builder preview (opaque sandbox)",
+      "checkedAt": "2026-10-08T17:20:16.062Z",
+      "evidence": "docs/evidence/experiences-native.json",
+      "recipe": "sketch",
+      "limitations": [
+        "Only the documented starter APIs and macOS arm64 were exercised. Independent mainnet chain verification is not claimed.",
+        "The library registers motion-sensor listeners; their accelerometer access is denied. The drawing recipe works without sensors."
+      ]
+    },
+    {
+      "key": "p5-1.11.2",
+      "id": "13a5c8e41dfc110514b450b2f15317988c0aaf276d3dbdcca9aa3c7d0b2188a7i0",
+      "sha256": "2ee031e707ccbd2cc8551c985fd1ebf5f59fea0abe186a7b23606568a1a306a1",
+      "profile": "Ord 0.29.0 (regtest)",
+      "checkedAt": "2026-09-23T11:45:07.991Z",
+      "evidence": "docs/evidence/experiences-regtest.json",
+      "recipe": "sketch",
+      "limitations": [
+        "Only the documented starter APIs and macOS arm64 were exercised. Independent mainnet chain verification is not claimed.",
+        "The library registers motion-sensor listeners; their accelerometer access is denied. The drawing recipe works without sensors.",
+        "Exact library bytes were republished as owned regtest inscriptions."
+      ]
+    },
+    {
+      "key": "p5-2.0.1",
+      "id": "bed725759768159b0868fe0e6c9cd26a4c437f9e0903f70893edad280e35d843i0",
+      "sha256": "435e39b3ee2cb46f6d8cc616916b7dabb05f2b8fdd5cbde5f87c870ff6f2278d",
+      "profile": "Builder preview (opaque sandbox)",
+      "checkedAt": "2026-10-08T17:20:16.062Z",
+      "evidence": "docs/evidence/experiences-native.json",
+      "recipe": "sketch2",
+      "limitations": [
+        "Only the documented starter APIs and macOS arm64 were exercised. Independent mainnet chain verification is not claimed.",
+        "The library registers motion-sensor listeners; their accelerometer access is denied. The drawing recipe works without sensors."
+      ]
+    },
+    {
+      "key": "p5-2.0.1",
+      "id": "bed725759768159b0868fe0e6c9cd26a4c437f9e0903f70893edad280e35d843i0",
+      "sha256": "435e39b3ee2cb46f6d8cc616916b7dabb05f2b8fdd5cbde5f87c870ff6f2278d",
+      "profile": "Ord 0.29.0 (regtest)",
+      "checkedAt": "2026-09-23T11:45:07.991Z",
+      "evidence": "docs/evidence/experiences-regtest.json",
+      "recipe": "sketch2",
+      "limitations": [
+        "Only the documented starter APIs and macOS arm64 were exercised. Independent mainnet chain verification is not claimed.",
+        "The library registers motion-sensor listeners; their accelerometer access is denied. The drawing recipe works without sensors.",
+        "Exact library bytes were republished as owned regtest inscriptions."
+      ]
+    },
+    {
+      "key": "phaser-3.80.1",
+      "id": "0d1a04b71975ec948b36cf3ccdff415fca851b9c17144413997395f5ea166e42i0",
+      "sha256": "62081f6a1b51d040473f919ffedef9009953c20833518e146da5a8d1c9405ea8",
+      "profile": "Builder preview (opaque sandbox)",
+      "checkedAt": "2026-10-08T17:20:16.062Z",
+      "evidence": "docs/evidence/experiences-native.json",
+      "recipe": "game",
+      "limitations": [
+        "Only the documented starter APIs and macOS arm64 were exercised. Independent mainnet chain verification is not claimed."
+      ]
+    },
+    {
+      "key": "phaser-3.80.1",
+      "id": "0d1a04b71975ec948b36cf3ccdff415fca851b9c17144413997395f5ea166e42i0",
+      "sha256": "62081f6a1b51d040473f919ffedef9009953c20833518e146da5a8d1c9405ea8",
+      "profile": "Ord 0.29.0 (regtest)",
+      "checkedAt": "2026-09-23T11:45:07.991Z",
+      "evidence": "docs/evidence/experiences-regtest.json",
+      "recipe": "game",
+      "limitations": [
+        "Only the documented starter APIs and macOS arm64 were exercised. Independent mainnet chain verification is not claimed.",
+        "Exact library bytes were republished as owned regtest inscriptions."
+      ]
+    },
+    {
+      "key": "tone-15.0.4",
+      "id": "04813d7748d918bd8a3069cb1823ebc9586f0ce16cd6a97a784581ec38d13062i0",
+      "sha256": "33c3fdc2f26f66f203631deb2c51a5ade54cdffb8271d2d98106c295de89bc0d",
+      "profile": "Builder preview (opaque sandbox)",
+      "checkedAt": "2026-10-08T17:20:16.062Z",
+      "evidence": "docs/evidence/experiences-native.json",
+      "recipe": "audio",
+      "limitations": [
+        "Only the documented starter APIs and macOS arm64 were exercised. Independent mainnet chain verification is not claimed."
+      ]
+    },
+    {
+      "key": "tone-15.0.4",
+      "id": "04813d7748d918bd8a3069cb1823ebc9586f0ce16cd6a97a784581ec38d13062i0",
+      "sha256": "33c3fdc2f26f66f203631deb2c51a5ade54cdffb8271d2d98106c295de89bc0d",
+      "profile": "Ord 0.29.0 (regtest)",
+      "checkedAt": "2026-09-23T11:45:07.991Z",
+      "evidence": "docs/evidence/experiences-regtest.json",
+      "recipe": "audio",
+      "limitations": [
+        "Only the documented starter APIs and macOS arm64 were exercised. Independent mainnet chain verification is not claimed.",
+        "Exact library bytes were republished as owned regtest inscriptions."
+      ]
+    }
+  ]
+}

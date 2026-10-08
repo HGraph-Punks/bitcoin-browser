@@ -1,4 +1,5 @@
 import path from 'node:path';
+import {createCreatorIntegration,startCreatorMcp} from './creator-integration.js';
 import {
   app,
   dialog,
@@ -44,10 +45,12 @@ protocol.registerSchemesAsPrivileged([
 app.enableSandbox();
 app.commandLine.appendSwitch('force-color-profile', 'srgb');
 
-const singleInstance = app.requestSingleInstanceLock({ deepLink: extractDeepLinkArgument(process.argv) });
+const creatorMcp=process.argv.includes('--creator-mcp');
+const singleInstance = creatorMcp || app.requestSingleInstanceLock({ deepLink: extractDeepLinkArgument(process.argv) });
 if (!singleInstance) app.quit();
 
 let mainWindow = null;
+let creator = null;
 let pendingDeepLink = extractDeepLinkArgument(process.argv);
 let localServiceManager = null;
 let nodeSetup = null;
@@ -68,7 +71,7 @@ const initialized = { logger: false, state: false, secure: false, cache: false }
 const shellWindows = createShellWindowController({
   createWindow: createMainWindow,
   initialDeepLinks: pendingDeepLink ? [pendingDeepLink] : [],
-  onWindow: (window) => { mainWindow = window; },
+  onWindow: (window) => { mainWindow = window; creator?.attach(window); },
   onShellLoaded: (window) => recordShellDocumentLoaded(window.webContents, logger)
 });
 pendingDeepLink = null;
@@ -141,10 +144,11 @@ async function initializeApplication({ step }) {
     resolver = new RecursiveResolver(providerManager, cache, stateStore, logger);
   });
 
+  await step(() => { creator=createCreatorIntegration({app,dataDirectory,stateStore,providerManager,resolver,getWindow:()=>mainWindow,openDeepLink:sendDeepLink}); });
   await step(() => { appSession = session.fromPartition(APP_PARTITION, { cache: true }); });
   await step(() => { walletSession = session.fromPartition(WALLET_PARTITION, { cache: true }); });
-  await step(() => installAppProtocol(appSession, appRoot, logger));
-  await step(() => installContentProtocol(appSession, resolver, stateStore, logger));
+  await step(() => installAppProtocol(appSession, appRoot, logger, creator));
+  await step(() => installContentProtocol(appSession, resolver, stateStore, logger, creator));
   await step(() => installWalletProtocol(walletSession, appRoot, logger));
 
   await step(() => {
@@ -239,7 +243,9 @@ async function initializeApplication({ step }) {
   });
 }
 
-if (singleInstance) {
+if (creatorMcp) {
+  void startCreatorMcp(app,process.argv.slice(1));
+} else if (singleInstance) {
   app.whenReady().then(
     () => startup.run(initializeApplication),
     (error) => startup.run(() => { throw error; })
@@ -253,6 +259,7 @@ if (singleInstance) {
 }
 
 app.on('before-quit', (event) => {
+  if(creator?.deferQuit(event))return;
   startup.stop();
   shellWindows.beginShutdown();
   quitWatchdog.arm();
@@ -273,7 +280,7 @@ app.on('before-quit', (event) => {
         shutdownStartup: () => startup.stop(),
         shutdownNodeSetup: () => nodeSetup?.shutdown(),
         shutdownProvider: () => providerManager?.shutdown(),
-        shutdownIpc: () => ipcLifecycle?.shutdown(),
+        shutdownIpc: async () => { await creator?.shutdown(); await ipcLifecycle?.shutdown(); },
         shutdownWallet: () => walletManager?.shutdown(),
         flushBounds: () => flushWindowBounds(mainWindow),
         shutdownServices: () => localServiceManager?.shutdown(),
