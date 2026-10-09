@@ -1,6 +1,6 @@
 # Verify a download
 
-Download the app file and **SHA256SUMS** from the same [official v0.1.0 release](https://github.com/HGraph-Punks/bitcoin-browser/releases/tag/v0.1.0). Confirm the owner is **HGraph-Punks**, the repository is **bitcoin-browser**, and the tag is **v0.1.0**.
+Download the app file and **SHA256SUMS** from the same [official v0.2.0-beta.1 release](https://github.com/HGraph-Punks/bitcoin-browser/releases/tag/v0.2.0-beta.1). Confirm the owner is **HGraph-Punks**, the repository is **bitcoin-browser**, and the tag is **v0.2.0-beta.1**.
 
 ## macOS
 
@@ -10,7 +10,7 @@ Example for Apple silicon:
 
 ```sh
 cd ~/Downloads
-shasum -a 256 bitcoin-browser-0.1.0-macos-arm64-unsigned.dmg
+shasum -a 256 bitcoin-browser-0.2.0-beta.1-macos-arm64-unsigned.dmg
 ```
 
 ## Windows
@@ -18,7 +18,7 @@ shasum -a 256 bitcoin-browser-0.1.0-macos-arm64-unsigned.dmg
 Open PowerShell in the download folder:
 
 ```powershell
-Get-FileHash .\bitcoin-browser-0.1.0-windows-x64-unsigned-setup.exe -Algorithm SHA256
+Get-FileHash .\bitcoin-browser-0.2.0-beta.1-windows-x64-unsigned-setup.exe -Algorithm SHA256
 ```
 
 Compare the complete Hash value with the corresponding SHA256SUMS entry; uppercase/lowercase does not matter. Substitute the filename you actually downloaded.
@@ -27,7 +27,7 @@ Compare the complete Hash value with the corresponding SHA256SUMS entry; upperca
 
 ```sh
 cd ~/Downloads
-sha256sum bitcoin-browser-0.1.0-linux-x86_64.AppImage
+sha256sum bitcoin-browser-0.2.0-beta.1-linux-x86_64.AppImage
 ```
 
 Compare the whole hash with the exact filename's SHA256SUMS entry. If you downloaded the entire release set, `sha256sum --check SHA256SUMS` checks it together; missing assets will otherwise be reported as missing.

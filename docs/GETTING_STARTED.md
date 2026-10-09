@@ -1,6 +1,6 @@
 # Get started with Bitcoin Browser
 
-Install v0.1.0 using the [macOS](install/macos.md), [Windows](install/windows.md) or [Linux](install/linux.md) guide. Downloads live in the [official HGraph-Punks repository](https://github.com/HGraph-Punks/bitcoin-browser/releases/tag/v0.1.0).
+Install v0.2.0-beta.1 using the [macOS](install/macos.md), [Windows](install/windows.md) or [Linux](install/linux.md) guide. Downloads live in the [official HGraph-Punks repository](https://github.com/HGraph-Punks/bitcoin-browser/releases/tag/v0.2.0-beta.1).
 
 ## Your first five minutes
 
@@ -10,6 +10,14 @@ Install v0.1.0 using the [macOS](install/macos.md), [Windows](install/windows.md
 4. Choose **Inscriptions**, select a card and inspect its content and **Details**. Use media filters on the loaded page, or paste an exact inscription number/ID into **Find**.
 5. Open **Runes** to explore examples and supply/mint details. Values reflect the configured source; missing information stays unavailable.
 6. Bookmark a page and open another tab. Restart the app to check your saved session. Tabs, bookmarks and history are stored on this device.
+
+## Create Alpha
+
+Choose **Create · Alpha** in the application header. Start with one of 24 templates, create a website or experience, add images and traits to a collection, or choose the native Runes, Bitmap, BRC-20 or Sats Names tools. Drafts work without a node. Use **Browse** to return to the native Bitcoin browser.
+
+The library catalog distinguishes qualified dependencies from unqualified ones. Adding an unqualified library requires accepting its warning. Recursive dependencies must be available for a published inscription to work.
+
+Publishing requires a separately connected local Bitcoin Core 31.1.0 / Ord 0.29.0 wallet and review of the exact transaction. No seed import or wallet recovery is included. Mainnet execution is not yet qualified; protocol indexers can reject a payload even when an inscription confirms. Read [the creation guide](CREATOR_BUILD.md) and [Alpha release scope](PUBLIC_ALPHA_RELEASE.md) before publishing.
 
 ## Choose where data comes from
 
@@ -30,4 +38,4 @@ Updates are manual: read the next release's notes, quit the app, and install the
 
 The internal profile name remains `satoshi-browser`. Default locations are `~/Library/Application Support/satoshi-browser` on macOS, `%APPDATA%\satoshi-browser` on Windows, and `$XDG_CONFIG_HOME/satoshi-browser` (normally `~/.config/satoshi-browser`) on Linux. A custom user-data directory overrides these. Quit before making a backup. OS-encrypted credentials may not transfer to another machine or account; enter those again rather than sharing credential files.
 
-To report a bug, include v0.1.0, your OS/version, CPU architecture, download filename, steps and expected/actual behavior in a [GitHub issue](https://github.com/HGraph-Punks/bitcoin-browser/issues). **Settings → Export diagnostics** provides a report to review before attaching. Do not include private RPC credentials, wallet material or a full browsing profile. Email [patches@turtlemoon.io](mailto:patches@turtlemoon.io) for private reports.
+To report a bug, include v0.2.0-beta.1, your OS/version, CPU architecture, download filename, steps and expected/actual behavior in a [GitHub issue](https://github.com/HGraph-Punks/bitcoin-browser/issues). **Settings → Export diagnostics** provides a report to review before attaching. Do not include private RPC credentials, wallet material or a full browsing profile. Email [patches@turtlemoon.io](mailto:patches@turtlemoon.io) for private reports.

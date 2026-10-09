@@ -1,3 +1,5 @@
+Current public preparation: **v0.2.0-beta.1 / Create Alpha**. Follow [PUBLIC_ALPHA_RELEASE.md](PUBLIC_ALPHA_RELEASE.md) for the explicitly authorized signed, unnotarized macOS Alpha and unsigned Windows builds. The v0.1.0 procedure below is retained as historical release engineering. Normal signed distribution still requires notarization.
+
 # Release engineering
 
 The first public release is **v0.1.0 beta** in [HGraph-Punks/bitcoin-browser](https://github.com/HGraph-Punks/bitcoin-browser). It uses explicitly unsigned macOS and Windows build modes. The old private RC numbering and dated investigation checkpoints remain historical records, not the public release status.

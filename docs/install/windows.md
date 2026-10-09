@@ -1,19 +1,19 @@
 # Install on Windows
 
-Use a supported 64-bit Windows installation; **Windows 11** is the recommended desktop baseline. Choose **x64** for Intel/AMD or **arm64** for Windows on ARM. Find **System type** in Settings → System → About. There is no 32-bit build. Download from the [v0.1.0 release](https://github.com/HGraph-Punks/bitcoin-browser/releases/tag/v0.1.0) and [verify the SHA-256 hash](verify-download.md).
+Use a supported 64-bit Windows installation; **Windows 11** is the recommended desktop baseline. Choose **x64** for Intel/AMD or **arm64** for Windows on ARM. Find **System type** in Settings → System → About. There is no 32-bit build. Download from the [v0.2.0-beta.1 release](https://github.com/HGraph-Punks/bitcoin-browser/releases/tag/v0.2.0-beta.1) and [verify the SHA-256 hash](verify-download.md).
 
 The application, setup and portable executables are **unsigned beta builds** with no Authenticode publisher certificate. The filenames include `unsigned`. Windows may warn or block them.
 
 ## Setup EXE — standard installation
 
-1. Download `bitcoin-browser-0.1.0-windows-x64-unsigned-setup.exe` (or the `arm64` version).
+1. Download `bitcoin-browser-0.2.0-beta.1-windows-x64-unsigned-setup.exe` (or the `arm64` version).
 2. Open it. Review any Windows prompt using the guidance below.
 3. Follow the installer to choose the offered installation location and finish.
 4. Open **Bitcoin Browser** from the Start menu, then follow [getting started](../GETTING_STARTED.md).
 
 ## Portable EXE — no installer
 
-1. Download `bitcoin-browser-0.1.0-windows-x64-unsigned-portable.exe` (or `arm64`).
+1. Download `bitcoin-browser-0.2.0-beta.1-windows-x64-unsigned-portable.exe` (or `arm64`).
 2. Save it in a folder you can write to and open it normally. The first launch may take longer while files are extracted.
 3. Keep the EXE for later launches. No Start menu installation is required.
 
@@ -21,7 +21,7 @@ The application, setup and portable executables are **unsigned beta builds** wit
 
 ## ZIP — unpacked application
 
-1. Download `bitcoin-browser-0.1.0-windows-x64-unsigned.zip` (or `arm64`).
+1. Download `bitcoin-browser-0.2.0-beta.1-windows-x64-unsigned.zip` (or `arm64`).
 2. Right-click → **Extract All** into a permanent folder.
 3. Open **Bitcoin Browser.exe** inside that folder. Keep all DLLs, resources, locales and other files alongside it; do not run directly inside the ZIP.
 

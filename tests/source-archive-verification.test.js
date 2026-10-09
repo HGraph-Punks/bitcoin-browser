@@ -36,11 +36,11 @@ function updateChecksum(buffer) {
 test('source inventory excludes local profiles and credentials while retaining source and example configuration', async (t) => {
   const root = await fs.mkdtemp(path.join(os.tmpdir(), 'source-exclusions-'));
   t.after(() => fs.rm(root, { recursive: true, force: true }));
-  for (const name of ['local-data/profile/state.json', 'dist/app.js', 'release/app.zip', 'nested/.env.local', 'nested/signing.p12', 'debug.log', '.env', 'src/main.js', '.env.example']) {
+  for (const name of ['local-data/profile/state.json', '.creator-test/profile/state.json', 'src/creator/generated/host.cjs', 'src/document-viewer/generated/pdf.worker.js', 'dist/app.js', 'release/app.zip', 'nested/.env.local', 'nested/signing.p12', 'debug.log', '.env', 'src/main.js', '.env.example']) {
     await fs.mkdir(path.dirname(path.join(root, name)), { recursive: true });
     await fs.writeFile(path.join(root, name), 'fixture');
   }
-  assert.deepEqual((await walkEligible(root)).map(file => path.relative(root, file).split(path.sep).join('/')), ['.env.example', 'src/main.js']);
+  assert.deepEqual((await walkEligible(root)).map(file => path.relative(root, file).split(path.sep).join('/')), ['.env.example', 'src/document-viewer/generated/pdf.worker.js', 'src/main.js']);
 });
 
 test('parseTar reads a bounded regular ustar entry', () => {

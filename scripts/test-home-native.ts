@@ -10,6 +10,8 @@ const require=createRequire(path.join(root,'src/creator/package.json'));
 const {_electron}=require('playwright'),{expect}=require('@playwright/test');
 const rootRequire=createRequire(path.join(root,'package.json'));
 const packaged=process.argv.includes('--packaged');
+const receiptName=process.argv.find(v=>v.startsWith('--receipt-name='))?.slice('--receipt-name='.length);
+if(receiptName&&!/^[a-z0-9][a-z0-9.-]{0,95}\.json$/.test(receiptName))throw new Error('Invalid receipt basename');
 const version=JSON.parse(await fs.readFile(path.join(root,'package.json'),'utf8')).version;
 const executable=packaged?path.join(root,'release',version,'mac-arm64/Bitcoin Browser.app/Contents/MacOS/Bitcoin Browser'):rootRequire('electron');
 const run=await fs.mkdtemp('/private/tmp/btc-home-native-');
@@ -59,6 +61,6 @@ try{
   await expect(page.locator('.home-intro-scene')).toHaveAttribute('data-motion-state','ambient',{timeout:15000});await screenshot('home-returning');checks.push('Returning users receive a welcome back and recent places/bookmarks before discovery cards');
   assert.deepEqual(errors,[]);await expect(page.locator('#app')).toHaveAttribute('aria-busy','false');await app.close();app=null;
   const receipt={schemaVersion:1,version,packaged,driver:packaged?'renderer-cdp-with-main-inspection-disabled':'playwright-electron-development',archiveSha256:packaged?JSON.parse(await fs.readFile(path.join(root,'release',version,'release-manifest.json'),'utf8')).sha256:undefined,at:new Date().toISOString(),localEvidence:run,checks,initial,screenshots,rendererErrors:errors,scope:'Owned fresh and returning profiles; native homepage and Create navigation only. No wallet or financial transaction test.'};
-  await fs.writeFile(path.join(run,'receipt.json'),JSON.stringify(receipt,null,2)+'\n');await fs.writeFile(path.join(root,'docs/evidence/home-'+(packaged?'packaged':'native')+'.json'),JSON.stringify(receipt,null,2)+'\n');console.log('Native homepage qualification passed: '+path.join(run,'receipt.json'));
+  await fs.writeFile(path.join(run,'receipt.json'),JSON.stringify(receipt,null,2)+'\n');await fs.writeFile(path.join(root,'docs/evidence',receiptName??'home-'+(packaged?'packaged':'native')+'.json'),JSON.stringify(receipt,null,2)+'\n');console.log('Native homepage qualification passed: '+path.join(run,'receipt.json'));
 }catch(error){if(page)await page.screenshot({path:path.join(run,'failure.png')}).catch(()=>{});console.error('Homepage evidence: '+run,error);throw error;}
 finally{if(app)await app.close();}

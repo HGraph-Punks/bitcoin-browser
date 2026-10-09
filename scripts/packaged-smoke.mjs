@@ -14,6 +14,7 @@ import { createPackagedOutput } from './packaged-smoke-output.mjs';
 import { sampleOwnedProcess } from './packaged-smoke-sampler.mjs';
 import { findPackagedExecutable, packagedArtifactDirectory } from './packaged-executable.mjs';
 import { readBackPackagedLibraryChecks, runPackagedLibraryChecks } from './packaged-library-checks.mjs';
+import { runPackagedCreatorModeChecks } from './packaged-creator-mode-checks.mjs';
 import { runPackagedSettingsNavigationChecks } from './packaged-settings-navigation-checks.mjs';
 import { runPackagedSettingsControlChecks } from './packaged-settings-controls.mjs';
 import { createDisabledEmptyProviderDraft, runPackagedProviderControlChecks, verifyDisabledEmptyProviderDraftAfterRestart } from './packaged-provider-controls.mjs';
@@ -527,6 +528,9 @@ try {
     }
     return samples;
   });
+
+  await check('Create Alpha opens all native creation types and returns to Browse with separate renderer authority',
+    () => runPackagedCreatorModeChecks({cdp,poll,assert}));
 
   await check('Settings section controls honor live reduced motion and continue keyboard focus at the destination',
     () => runPackagedSettingsNavigationChecks({ cdp, poll, assert }));

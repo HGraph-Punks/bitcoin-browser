@@ -5,3 +5,5 @@
 .browser-mode-switch button:focus-visible{outline:2px solid #f7931a;outline-offset:3px}
 .creator-mode-error{position:fixed;top:48px;right:20px;max-width:400px;padding:14px;z-index:20;background:#282019;color:#ffcf9b;border:1px solid #bf7627;border-radius:8px}
 @media(max-width:980px){.browser-mode-switch{margin-left:4px}.browser-mode-switch button{padding:0 9px}.title-row .brand-name{display:none}}
+
+.mode-alpha{display:inline-flex;align-items:center;padding:2px 5px;border:1px solid color-mix(in srgb,var(--accent) 45%,transparent);border-radius:4px;background:var(--accent-bg);color:var(--accent-ink);font-size:8px;font-weight:700;line-height:1.2;letter-spacing:.06em;text-transform:uppercase}

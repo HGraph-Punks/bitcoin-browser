@@ -3,7 +3,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import { gunzipSync } from 'node:zlib';
 
-export const EXCLUDED_NAMES = new Set(['node_modules', 'release', '.git', 'coverage', '.DS_Store', 'dist', 'local-data', 'test-results', 'Thumbs.db']);
+export const EXCLUDED_NAMES = new Set(['node_modules', 'release', '.git', 'coverage', '.DS_Store', 'dist', 'local-data', '.creator-test', 'test-results', 'Thumbs.db']);
 export function excludedSourceName(name) {
   return EXCLUDED_NAMES.has(name) || (name !== '.env.example' && /^\.env(?:\.|$)/.test(name))
     || /\.(?:log|pem|p12|pfx|key|crt)$/i.test(name);
@@ -129,7 +129,7 @@ export async function walkEligible(root) {
   const output = [];
   async function walk(directory) {
     for (const entry of await fs.readdir(directory, { withFileTypes: true })) {
-      if (excludedSourceName(entry.name)) continue;
+      if (excludedSourceName(entry.name) || path.relative(root, path.join(directory, entry.name)).split(path.sep).join('/') === 'src/creator/generated') continue;
       const absolute = path.join(directory, entry.name);
       if (entry.isDirectory()) await walk(absolute);
       else if (entry.isFile()) {

@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.2.0-beta.1 — Create Alpha and a new Start experience (2026-10-08)
+
+- Added a separate **Create (Alpha)** mode inside Bitcoin Browser, with 24 starters for websites, recursive experiences, image collections, original artwork and protocol inscriptions.
+- Added collection ordering, duplicate editions, typed traits and metadata import, with individually reviewed inscription batches and a recursive gallery.
+- Added dedicated native Rune etching, Bitmap, legacy BRC-20 deploy/mint and Sats Names editors. Protocol-indexer acceptance remains separate from verified on-chain bytes.
+- Added an inscription-library catalog, interactive examples and mandatory acknowledgement before including an unqualified library.
+- Added local source/history/archive/import tools, scoped MCP connections and a Build → Test → Inscribe flow with exact transaction review. Wallet seed recovery is excluded.
+- Redesigned Start with WebGL particles that gather into the Bitcoin Browser logo, clear search, full-card discovery actions and recent/bookmarked places for returning users. Pause/replay, reduced motion and static fallbacks keep navigation available.
+- Updated vulnerable transitive build dependencies within their existing version constraints.
+- Prepared macOS Apple silicon/Intel, Windows x64/ARM64 and Linux x64/ARM64 downloads. macOS Alpha builds are MoonScape Developer ID-signed and **not Apple-notarized**; Windows builds are explicitly unsigned. Linux package signatures are not provided.
+- Preserved v0.1.0 and the October 7 signed/notarized v1.0.0-rc.2 Mac download in the website’s release history. Updates remain manual.
+
+Create is experimental. Production inscription execution requires connected local Core/Ord services and exact owner approval; automated transaction qualification uses disposable regtest wallets, not an owner’s mainnet wallet.
+
 ## 0.1.0 — first public beta (2026-09-22)
 
 - Published Bitcoin Browser under `HGraph-Punks/bitcoin-browser`, starting from an exact import of the existing Satoshi Browser source tree.

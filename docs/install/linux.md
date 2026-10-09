@@ -1,6 +1,6 @@
 # Install on Linux
 
-The release builds and native runtime checks use **Ubuntu 22.04**, with x64 and ARM64 runners. A graphical desktop is required. Other distributions may work but are not all qualified by those checks. These downloads are not repository-signed packages. Get them from the [official v0.1.0 release](https://github.com/HGraph-Punks/bitcoin-browser/releases/tag/v0.1.0), then [verify SHA-256](verify-download.md).
+The release builds and native runtime checks use **Ubuntu 22.04**, with x64 and ARM64 runners. A graphical desktop is required. Other distributions may work but are not all qualified by those checks. These downloads are not repository-signed packages. Get them from the [official v0.2.0-beta.1 release](https://github.com/HGraph-Punks/bitcoin-browser/releases/tag/v0.2.0-beta.1), then [verify SHA-256](verify-download.md).
 
 Run `uname -m`: `x86_64` means x64 / amd64; `aarch64` or `arm64` means ARM64. Pick the native architecture. The filenames follow each packaging format's naming convention.
 
@@ -14,26 +14,26 @@ Run `uname -m`: `x86_64` means x64 / amd64; `aarch64` or `arm64` means ARM64. Pi
 In the download folder, install the matching file with APT so dependencies are resolved:
 
 ```sh
-sudo apt install ./bitcoin-browser-0.1.0-linux-amd64.deb
+sudo apt install ./bitcoin-browser-0.2.0-beta.1-linux-amd64.deb
 bitcoin-browser
 ```
 
-For ARM64, use `bitcoin-browser-0.1.0-linux-arm64.deb`. You can also launch **Bitcoin Browser** from your desktop's applications menu. Always launch the app as your normal user; elevated permissions are only for package installation.
+For ARM64, use `bitcoin-browser-0.2.0-beta.1-linux-arm64.deb`. You can also launch **Bitcoin Browser** from your desktop's applications menu. Always launch the app as your normal user; elevated permissions are only for package installation.
 
 ## RPM — Fedora / RPM family
 
 ```sh
-sudo dnf install ./bitcoin-browser-0.1.0-linux-x86_64.rpm
+sudo dnf install ./bitcoin-browser-0.2.0-beta.1-linux-x86_64.rpm
 bitcoin-browser
 ```
 
-For ARM64, use `bitcoin-browser-0.1.0-linux-aarch64.rpm`. A distribution using another RPM package manager needs its equivalent local-package command. Native runtime qualification uses Ubuntu, so an RPM build is not a claim that every Fedora/RHEL version has been tested.
+For ARM64, use `bitcoin-browser-0.2.0-beta.1-linux-aarch64.rpm`. A distribution using another RPM package manager needs its equivalent local-package command. Native runtime qualification uses Ubuntu, so an RPM build is not a claim that every Fedora/RHEL version has been tested.
 
 ## AppImage — single executable
 
 ```sh
-chmod +x bitcoin-browser-0.1.0-linux-x86_64.AppImage
-./bitcoin-browser-0.1.0-linux-x86_64.AppImage
+chmod +x bitcoin-browser-0.2.0-beta.1-linux-x86_64.AppImage
+./bitcoin-browser-0.2.0-beta.1-linux-x86_64.AppImage
 ```
 
 For ARM64, substitute `arm64`. If mounting reports a missing FUSE library, install your distribution's FUSE 2 compatibility package (Ubuntu 22.04: `sudo apt install libfuse2`; Ubuntu 24.04: `libfuse2t64`). See [AppImage's FUSE guide](https://docs.appimage.org/user-guide/troubleshooting/fuse.html). If FUSE cannot be used, prefer the DEB/RPM package or tar archive.
@@ -42,7 +42,7 @@ For ARM64, substitute `arm64`. If mounting reports a missing FUSE library, insta
 
 ```sh
 mkdir -p "$HOME/Applications/bitcoin-browser-0.1.0"
-tar -xzf bitcoin-browser-0.1.0-linux-x64.tar.gz -C "$HOME/Applications/bitcoin-browser-0.1.0"
+tar -xzf bitcoin-browser-0.2.0-beta.1-linux-x64.tar.gz -C "$HOME/Applications/bitcoin-browser-0.1.0"
 cd "$HOME/Applications/bitcoin-browser-0.1.0"
 ./bitcoin-browser
 ```
