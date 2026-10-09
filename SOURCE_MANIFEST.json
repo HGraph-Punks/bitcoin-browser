@@ -631,8 +631,8 @@
     },
     {
       "path": "scripts/beta-release.mjs",
-      "bytes": 12238,
-      "sha256": "7e349d267cf63d91ae8ce0e070ea9eff4b503b07d9c82d718c5ca7c08a7eb050"
+      "bytes": 12296,
+      "sha256": "7ff56c001db13abc57e98e322bc528fd8059c2b3adfc7c7a383fbc87fcec835e"
     },
     {
       "path": "scripts/beta-security.mjs",
@@ -2256,8 +2256,8 @@
     },
     {
       "path": "tests/beta-release.test.js",
-      "bytes": 14943,
-      "sha256": "85993e1d5f125664c80df49b2cbb1886c6dbc87fead28ad71dfdeb302b0b8e5d"
+      "bytes": 15744,
+      "sha256": "6190b2ccac92c48a9e3b43199e334ac8139610bd857902e8e09429f51a6249dd"
     },
     {
       "path": "tests/bitcoin-core-auth.test.js",

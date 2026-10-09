@@ -220,3 +220,18 @@ test('the real plan command binds a validated Windows signing choice to subseque
     }
   }
 });
+
+
+test('versioned Linux packages stage into the shared artifact path without reusing stale root packages', async (t) => {
+  const directory = await temporary(t);
+  const output = path.join(directory, version);
+  await fs.mkdir(output);
+  const target = BETA_TARGETS.find(item => item.id === 'linux-x64');
+  const expected = expectedAssets(version, [target]);
+  for (const name of expected) {
+    await fs.writeFile(path.join(directory, name), 'stale-root');
+    await fs.writeFile(path.join(output, name), 'current-version');
+  }
+  assert.deepEqual(await stageAssets(directory, version, target.id, 'unsigned-beta', 'unsigned-beta', output), expected);
+  for (const name of expected) assert.equal(await fs.readFile(path.join(directory, 'beta-assets', target.id, name), 'utf8'), 'current-version');
+});

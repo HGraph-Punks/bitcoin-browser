@@ -85,13 +85,13 @@ async function requireRegularAsset(file) {
   if (!stat.isFile() || stat.isSymbolicLink() || stat.size === 0) throw new Error(`Release asset must be a nonempty regular file: ${path.basename(file)}`);
 }
 
-export async function stageAssets(directory, version, targetId, windowsSigning = 'signed', macosSigning = 'signed') {
+export async function stageAssets(directory, version, targetId, windowsSigning = 'signed', macosSigning = 'signed', distributionDirectory = directory) {
   const target = BETA_TARGETS.find((item) => item.id === targetId);
   if (!target) throw new Error(`Unknown beta target: ${targetId}`);
   const assets = expectedAssets(version, [target], windowsSigning, macosSigning);
   const source = target.platform === 'win32' && windowsSigning === 'unsigned-beta'
     ? path.join(directory, UNSIGNED_WINDOWS_DIRECTORY)
-    : target.platform === 'darwin' && macosSigning === 'unsigned-beta' ? path.join(directory, UNSIGNED_MACOS_DIRECTORY) : directory;
+    : target.platform === 'darwin' && macosSigning === 'unsigned-beta' ? path.join(directory, UNSIGNED_MACOS_DIRECTORY) : distributionDirectory;
   for (const name of assets) await requireRegularAsset(path.join(source, name));
   const destination = path.join(directory, 'beta-assets', targetId);
   await fs.mkdir(path.dirname(destination), { recursive: true });
@@ -158,7 +158,7 @@ async function main() {
     console.log(`Native runner confirmed: ${requireNativeTarget(process.argv[3]).id}`);
   } else if (command === 'stage') {
     requireNativeTarget(process.argv[3]);
-    console.log((await stageAssets(process.platform==='linux'?path.resolve(root,JSON.parse(await fs.readFile(path.join(root,'package.json'),'utf8')).build.directories.output):path.join(root, 'release'), version, process.argv[3], windowsSigning, macosSigning)).join('\n'));
+    console.log((await stageAssets(path.join(root, 'release'), version, process.argv[3], windowsSigning, macosSigning, process.platform==='linux'?path.resolve(root,JSON.parse(await fs.readFile(path.join(root,'package.json'),'utf8')).build.directories.output):undefined)).join('\n'));
   } else if (command === 'draft') {
     validateBetaTag(tag, version);
     const repository = process.env.GITHUB_REPOSITORY;
