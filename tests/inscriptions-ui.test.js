@@ -189,7 +189,7 @@ test('block helper is progressively disclosed and rejects invalid heights before
 test('Home has a primary gallery shortcut while retaining guided Bitcoin lookup', () => {
   const f = fixture(); const home = renderHome(f.model, f.ctx);
   control(home, '◈Explore inscriptions').listeners.click(); assert.deepEqual(f.calls, [['satnav://inscriptions']]);
-  assert.match(home.textContent, /Find your way around Bitcoin/); assert.ok(home.querySelector('form')); assert.ok(home.querySelector('select'));
+  assert.match(home.textContent, /A whole world\. Built on Bitcoin/); assert.ok(home.querySelector('form')); assert.ok(home.querySelector('select'));
 });
 
 test('actual page publication preserves search/block drafts, disclosure and focus through delayed success and error', async () => {

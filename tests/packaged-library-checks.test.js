@@ -35,7 +35,7 @@ function fixtureState(bookmarks = [], history = [], behavior = {}) {
       }
       if (source.includes('library:snapshot')) {
         const heading = state.route === 'bookmarks' ? 'Bookmarks' : state.route === 'history' ? 'History'
-          : state.route === 'home' ? 'Find your way around Bitcoin.' : 'Fixture';
+          : state.route === 'home' ? 'A whole world. Built on Bitcoin.' : 'Fixture';
         const page = state.route === 'bookmarks'
           ? (state.bookmarks.length ? state.bookmarks.join('\n') : 'No bookmarks')
           : state.route === 'history' ? (state.history.length ? state.history.join('\n') : 'History is empty')
@@ -137,8 +137,8 @@ test('first pass rejects prefix-only Home card identities instead of substring m
 test('failed Home readback retains bounded evidence without weakening the canonical check', async () => {
   const fixture = fixtureState([], ['x'.repeat(8000)], { homeRecentOverride: [] });
   await assert.rejects(runPackagedLibraryChecks(harness(fixture)), error => {
-    assert.equal(error.evidence.expectedHeading, 'Find your way around Bitcoin.');
-    assert.equal(error.evidence.lastSnapshot.heading, 'Find your way around Bitcoin.');
+    assert.equal(error.evidence.expectedHeading, 'A whole world. Built on Bitcoin.');
+    assert.equal(error.evidence.lastSnapshot.heading, 'A whole world. Built on Bitcoin.');
     assert.equal(error.evidence.lastSnapshot.page.length, 4096);
     assert.deepEqual(error.evidence.lastSnapshot.homeSections[0].canonicals, []);
     return true;

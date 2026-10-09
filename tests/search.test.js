@@ -245,7 +245,7 @@ test('UI refuses unrelated links in auto mode but saved mode searches the litera
 test('Home exposes guided lookup, honest source/privacy wording and existing quick navigation', () => {
   const calls = [];
   const view = renderHome(model(), { navigate: target => calls.push(target) });
-  assert.equal(view.querySelector('h1').textContent, 'Find your way around Bitcoin.');
+  assert.equal(view.querySelector('h1').textContent, 'A whole world. Built on Bitcoin.');
   assert.equal(view.querySelectorAll('form').length, 1);
   assert.match(view.textContent, /Exact lookups use your configured data sources/);
   assert.match(view.textContent, /saved-item search stays on this device/);

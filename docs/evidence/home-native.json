@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "version": "0.2.0-rc.7",
+  "packaged": false,
+  "driver": "playwright-electron-development",
+  "at": "2026-10-09T02:31:43.743Z",
+  "localEvidence": "/private/tmp/btc-home-native-o6B274",
+  "checks": [
+    "Real native WebGL shaders assemble the bundled logo and enter ambient animation without GL errors",
+    "Pause freezes frames and time; Resume advances; Replay restarts assembly",
+    "Examples focus and prefill search without navigation; four explicit discovery actions",
+    "Animation suspends offscreen and resumes when visible",
+    "Reduced motion releases WebGL, presents the real logo, and responds to live preference changes",
+    "Navigating away disposes the previous scene and native Home creates a fresh one",
+    "Homepage Create opens the dedicated native 24-starter creator and Browse returns to the browser",
+    "Native light theme and narrow layouts retain search before decoration without horizontal overflow",
+    "Actual WebGL context loss switches to the static logo while keeping search usable",
+    "Unavailable WebGL has a static bundled fallback with usable search",
+    "Returning users receive a welcome back and recent places/bookmarks before discovery cards"
+  ],
+  "initial": {
+    "state": "ambient",
+    "frames": 103,
+    "elapsed": 3.8421039999999964,
+    "particles": 2257,
+    "renderer": "webgl",
+    "disposed": false
+  },
+  "screenshots": [
+    "/private/tmp/btc-home-native-o6B274/home-desktop.png",
+    "/private/tmp/btc-home-native-o6B274/home-discovery.png",
+    "/private/tmp/btc-home-native-o6B274/home-assembling.png",
+    "/private/tmp/btc-home-native-o6B274/home-reduced-motion.png",
+    "/private/tmp/btc-home-native-o6B274/home-light.png",
+    "/private/tmp/btc-home-native-o6B274/home-narrow.png",
+    "/private/tmp/btc-home-native-o6B274/home-small.png",
+    "/private/tmp/btc-home-native-o6B274/home-context-fallback.png",
+    "/private/tmp/btc-home-native-o6B274/home-returning.png"
+  ],
+  "rendererErrors": [],
+  "scope": "Owned fresh and returning profiles; native homepage and Create navigation only. No wallet or financial transaction test."
+}

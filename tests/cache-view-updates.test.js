@@ -142,12 +142,14 @@ test('cache updates ignore unrelated roots and unknown markers without touching 
 
 test('missing and malformed cache values retain formatter behavior and use safe text, not markup', () => {
   const view = renderHome(model(), { navigate() {} });
+  const bundledLogo = view.querySelectorAll('img');
+  assert.equal(bundledLogo.length, 1);
   updateCacheViews(view, undefined);
   assert.equal(metrics(view).bytes.textContent, '0 B');
   assert.equal(metrics(view).entries.textContent, '0 cached resources');
   updateCacheViews(view, { bytes: -1, entries: '<img onerror=fixture>' });
   assert.equal(metrics(view).bytes.textContent, '—');
   assert.equal(metrics(view).entries.textContent, '<img onerror=fixture> cached resources');
-  assert.deepEqual(view.querySelectorAll('img'), []);
+  assert.deepEqual(view.querySelectorAll('img'), bundledLogo, 'untrusted cache text must not add an image');
   assert.equal(metrics(view).entries.children.length, 0, 'textContent assignment never parses HTML in this collaborator');
 });

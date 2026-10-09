@@ -73,7 +73,7 @@ async function clickHomeCanonical(options, sectionTitle, canonical) {
 
 async function waitForHomeCardDestination(options, canonical, expectedText, label) {
   return options.poll(() => pageSnapshot(options.cdp), (value) => value.busy === 'false'
-    && value.target === canonical && value.heading !== 'Find your way around Bitcoin.'
+    && value.target === canonical && value.heading !== 'A whole world. Built on Bitcoin.'
     && value.page.includes(expectedText) && !/Navigation error/i.test(value.page), undefined, label);
 }
 
@@ -99,7 +99,7 @@ export async function runPackagedLibraryChecks(rawOptions) {
   options.assert(second?.target && second.target !== canonical, 'Fixture targets did not resolve to distinct canonical targets');
 
   options.assert(await clickRoute(options.cdp, 'home'), 'Home navigation control was not reachable');
-  const home = await waitForPage(options, 'Find your way around Bitcoin.', (value) => {
+  const home = await waitForPage(options, 'A whole world. Built on Bitcoin.', (value) => {
     const recent = value.homeSections.find((section) => section.title === 'Recent')?.canonicals ?? [];
     const bookmarks = value.homeSections.find((section) => section.title === 'Bookmarks')?.canonicals ?? [];
     return recent.includes(canonical) && recent.includes(second.target) && bookmarks.includes(canonical);
@@ -109,12 +109,12 @@ export async function runPackagedLibraryChecks(rawOptions) {
   await waitForHomeCardDestination(options, second.target, secondTarget.expectedText, 'Home Recent row opened');
 
   options.assert(await clickRoute(options.cdp, 'home'), 'Home navigation control was not reachable after Recent');
-  await waitForPage(options, 'Find your way around Bitcoin.', (value) => value.homeSections.find((section) => section.title === 'Bookmarks')?.canonicals.includes(canonical));
+  await waitForPage(options, 'A whole world. Built on Bitcoin.', (value) => value.homeSections.find((section) => section.title === 'Bookmarks')?.canonicals.includes(canonical));
   options.assert(await clickHomeCanonical(options, 'Bookmarks', canonical), 'Home Bookmarks exact canonical row was not interactive');
   await waitForHomeCardDestination(options, canonical, bookmarkTarget.expectedText, 'Home bookmark row opened');
 
   options.assert(await clickRoute(options.cdp, 'home'), 'Home navigation control was not reachable before All history');
-  await waitForPage(options, 'Find your way around Bitcoin.');
+  await waitForPage(options, 'A whole world. Built on Bitcoin.');
   const allHistory = await options.cdp.evaluate(`(() => { /*library:all-history*/
     const section = [...document.querySelectorAll('#page section.section')].find((node) => node.querySelector('.section-heading h2')?.textContent === 'Recent');
     const button = [...(section?.querySelectorAll('button') ?? [])].find((node) => node.textContent?.trim() === 'All history');

@@ -4,7 +4,7 @@
 
 Explore Bitcoin, Ordinals, inscriptions and Runes in a dedicated desktop browser by [Turtle Moon](https://turtlemoon.io/products/bitcoin-browser). Browse blocks, transactions, addresses and sats, view inscription media, inspect recursive content, and choose the data sources you trust.
 
-**Local creation candidate: v0.2.0-rc.3.** Choose **Browse** for Bitcoin exploration or **Create** to build websites, experiences and inscriptions. See [the migration plan](docs/CREATOR_MIGRATION.md) and [candidate build checks](docs/CREATOR_BUILD.md). This candidate is not a new public release.
+**Local creation candidate: v0.2.0-rc.7.** Choose **Browse** for Bitcoin exploration or **Create** to build websites, experiences and inscriptions. See [the migration plan](docs/CREATOR_MIGRATION.md) and [candidate build checks](docs/CREATOR_BUILD.md). This candidate is not a new public release.
 
 **v0.1.0 is the first public beta.** No account, wallet or full node is required to start browsing. macOS and Windows downloads are **unsigned beta builds**; macOS is not Apple-notarized. Read the installation guide before opening a download.
 
@@ -89,4 +89,4 @@ The initial commit is an exact source-tree import of Satoshi Browser commit `b3e
 
 ### Ordinals creation candidate
 
-The local RC6 Create candidate adds dedicated native Runes, Bitmap, BRC-20 and Sats Names creation types alongside image collections, trait metadata, recursive galleries and targeted art/experience starters. Protocol tools show their exact inscription payload and keep protocol-indexer acceptance separate from confirmed chain content. Drafting works without a node; inscription and Rune publication use a connected Core 31.1.0 / Ord 0.29.0 wallet with exact owner review. See [the candidate guide](docs/CREATOR_BUILD.md) for limits, testing and local packaging. This candidate is not the notarized public release.
+The local RC7 candidate introduces an animated Bitcoin homepage, with particles assembling into the browser logo, clear search, native Explore/Create actions and returning-user shortcuts. It retains dedicated native Runes, Bitmap, BRC-20 and Sats Names creation types alongside image collections, trait metadata, recursive galleries and targeted art/experience starters. See [the homepage design and qualification](docs/HOME_EXPERIENCE.md). Protocol tools show their exact inscription payload and keep protocol-indexer acceptance separate from confirmed chain content. Drafting works without a node; inscription and Rune publication use a connected Core 31.1.0 / Ord 0.29.0 wallet with exact owner review. See [the candidate guide](docs/CREATOR_BUILD.md) for limits, testing and local packaging. This candidate is not the notarized public release.

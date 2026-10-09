@@ -561,6 +561,7 @@ async function copyToClipboard(value) {
 const context = {
   ai: api.ai,
   openAiWorkspace,
+  openCreate: () => document.getElementById('enter-create-mode')?.click(),
   async saveAiPreferences(localAi) {
     return queueAuthorityMutation(async () => {
       const settings = await api.settings.update({ localAi });
@@ -649,7 +650,9 @@ function renderPage() {
   elements.page.classList.toggle('compact', ['inscription', 'inscription-number', 'content', 'recursive'].includes(result.target.kind) && !result.error);
   if (result.target.kind === 'inscriptions' && updateInscriptions(elements.page.querySelector('.inscription-explorer'), result, context)) return;
   if (['rune', 'runes'].includes(result.target.kind) && updateRunes(elements.page.querySelector('.runes-explorer'), result, context)) return;
-  if (elements.page.querySelector('.home-page')?.retainHome?.(result, model)) return;
+  const homeView = elements.page.querySelector('.home-page');
+  if (homeView?.retainHome?.(result, model)) return;
+  homeView?.dispose?.();
   if (elements.page.querySelector('.about-page')?.retainAbout?.(result, model)) return;
   if (elements.page.querySelector('.sponsors-page')?.retainSponsors?.(result, model)) return;
   let view;

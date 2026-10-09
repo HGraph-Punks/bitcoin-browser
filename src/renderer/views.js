@@ -15,6 +15,7 @@ import {
   timeAgo
 } from './dom.js';
 import { renderLookup, searchSavedItems } from './search.js';
+import { createHomeIntro } from './home-particles.js';
 import { providerRecoveryExplanation, providerRecoveryReview } from '../shared/provider-recovery.js';
 import { createInscriptionDisplay } from './inscription-display.js';
 import { INSCRIPTION_DISPLAY_ID } from '../shared/inscription-presentation.js';
@@ -174,27 +175,43 @@ export function renderHome(model, ctx) {
   const status = homeBrowserStatus(model, ctx);
   const owner = model.activeTabId;
   const navigation = model.requestSequence?.[owner];
-  const root = h('div', { className: 'home-page' },
-    h('section', { className: 'home-hero', ariaLabel: 'Search Bitcoin' },
-      h('h1', {}, 'Find your way around Bitcoin.'),
-      h('p', { className: 'home-intro' }, 'Discover inscriptions and Runes, or look up something you know.'),
-      h('p', { className: 'home-reassurance' }, 'No wallet required. Running your own node is optional.'),
-      renderLookup(ctx, { simple: true })
-    ),
-    status.notice,
-    h('section', { className: 'home-explore', ariaLabel: 'Explore Bitcoin' },
-      h('div', { className: 'home-destination' },
+  const returning = Boolean(model.history?.length || model.bookmarks?.length);
+  const intro = createHomeIntro();
+  const lookup = renderLookup(ctx, { simple: true });
+  const query = lookup.querySelector('input');
+  const examples = h('div', { className: 'home-starter-examples', role: 'group', ariaLabel: 'Try a Bitcoin identifier' },
+    h('span', {}, 'Try something:'),
+    ...[['The halving block', 'block:840000'], ['The very first sat', 'sat:0'], ['A Rune', 'rune:UNCOMMON•GOODS']].map(([label, value]) =>
+      button(label, { className: 'home-example', onClick: () => { query.value = value; query.setAttribute('aria-invalid', 'false'); lookup.querySelector('.lookup-error').textContent = ''; lookup.querySelector('.lookup-choices').replaceChildren(); query.focus(); query.select(); } })));
+  const libraries = h('section', { className: 'home-library-area', ariaLabel: 'Your saved places' },
+    h('div', { className: 'home-section-title' }, h('div', {}, h('span', { className: 'home-kicker' }, 'YOUR BITCOIN'), h('h2', {}, returning ? 'Pick up where you left off.' : 'Make this space yours.'))),
+    h('div', { className: 'home-library-grid' }, renderHomeLibrarySection('history', model, ctx), renderHomeLibrarySection('bookmarks', model, ctx)));
+  const explore = h('section', { className: 'home-explore-area', ariaLabel: 'Explore Bitcoin' },
+    h('div', { className: 'home-section-title' }, h('div', {}, h('span', { className: 'home-kicker' }, 'CHOOSE YOUR NEXT ADVENTURE'), h('h2', {}, 'There’s more to Bitcoin.')), h('p', {}, 'Follow your curiosity. You’re in control.')),
+    h('div', { className: 'home-explore' },
+      h('div', { className: 'home-destination home-art' }, h('span', { className: 'home-card-kicker', 'aria-hidden': 'true' }, '01 / DISCOVER'),
         button('Explore inscriptions', { className: 'home-destination-button', icon: '◈', onClick: () => ctx.navigate('satnav://inscriptions') }),
-        h('p', {}, 'Browse art, images and on-chain artifacts.')),
-      h('div', { className: 'home-destination' },
+        h('p', {}, 'Art, games, stories. Discover what people are putting on Bitcoin.'), h('span', { className: 'home-card-arrow', 'aria-hidden': 'true' }, '↗')),
+      h('div', { className: 'home-destination home-tokens' }, h('span', { className: 'home-card-kicker', 'aria-hidden': 'true' }, '02 / UNDERSTAND'),
         button('Explore Runes', { className: 'home-destination-button', icon: 'ᚱ', onClick: () => ctx.navigate('satnav://runes') }),
-        h('p', {}, 'Find tokens and understand their details.')),
-      h('div', { className: 'home-destination' },
+        h('p', {}, 'Explore Bitcoin tokens. Get closer to the names, supply and mint terms.'), h('span', { className: 'home-card-arrow', 'aria-hidden': 'true' }, '↗')),
+      h('div', { className: 'home-destination home-make' }, h('span', { className: 'home-card-kicker', 'aria-hidden': 'true' }, '03 / MAKE'),
+        button('Create on Bitcoin', { className: 'home-destination-button', icon: '✦', disabled: !ctx.openCreate, onClick: () => ctx.openCreate?.() }),
+        h('p', {}, 'Make a website, an art collection, a Rune, or your next inscription.'), h('span', { className: 'home-card-arrow', 'aria-hidden': 'true' }, '↗')),
+      h('div', { className: 'home-destination home-ask' }, h('span', { className: 'home-card-kicker', 'aria-hidden': 'true' }, '04 / GO DEEPER'),
         button('Ask Bitcoin', { className: 'home-destination-button', icon: '✧', onClick: () => ctx.openAiWorkspace ? ctx.openAiWorkspace() : ctx.navigate('satnav://ai') }),
-        h('p', {}, 'Explore with your local AI. Connect LM Studio or Ollama to get started.'))),
-    h('div', { className: 'home-library-grid' },
-      renderHomeLibrarySection('history', model, ctx),
-      renderHomeLibrarySection('bookmarks', model, ctx)),
+        h('p', {}, 'An AI workspace on your computer. Bring LM Studio or Ollama.'), h('span', { className: 'home-card-arrow', 'aria-hidden': 'true' }, '↗'))));
+  const root = h('div', { className: 'home-page' },
+    h('section', { className: 'home-hero', ariaLabel: 'Welcome to Bitcoin Browser' },
+        h('div', { className: 'home-hero-copy' }, h('span', { className: 'home-kicker' }, returning ? 'WELCOME BACK TO BITCOIN BROWSER' : 'WELCOME TO BITCOIN BROWSER'),
+          h('h1', {}, 'A whole world. ', h('br'), h('span', {}, 'Built on Bitcoin.')),
+          h('p', { className: 'home-intro' }, 'Follow the chain. Find something extraordinary. Make your mark.'),
+          h('p', { className: 'home-hero-description' }, 'Your window into Bitcoin’s art, tokens, and on-chain experiences. Explore freely. Create something of your own.'),
+          h('div', { className: 'home-hero-values', 'aria-hidden': 'true' }, h('span', {}, 'EXPLORATION'), h('i'), h('span', {}, 'CREATION'), h('i'), h('span', {}, 'YOUR CONTROL'))),
+      h('div', { className: 'home-launchpad' }, lookup, examples,
+        h('p', { className: 'home-reassurance' }, 'No wallet required. Running your own node is optional.')), intro),
+    status.notice,
+    ...(returning ? [libraries, explore] : [explore, libraries]),
     h('details', { className: 'home-disclosure home-tools' },
       h('summary', {}, h('span', {}, 'Tools & setup'), h('span', { className: 'home-disclosure-hint' }, 'Wallet, local node & shortcuts')),
       h('div', { className: 'home-tools-body' },
@@ -202,18 +219,15 @@ export function renderHome(model, ctx) {
           button('Set up a local node', { icon: '⛁', onClick: () => ctx.navigate('satnav://node-setup') }),
           h('p', {}, 'Optional: a guided setup for Bitcoin Core, Ord, both, or neither. You can browse without installing a node.')),
         h('div', { className: 'quick-targets', role: 'group', ariaLabel: 'Bitcoin shortcuts' }, [
-        ['Genesis sat', 'sat:0'], ['Block height', '/r/blockheight'], ['Latest block hash', '/r/blockhash'], ['Wallet', 'satnav://wallet'], ['Local sources', 'satnav://providers']
+          ['Genesis sat', 'sat:0'], ['Block height', '/r/blockheight'], ['Latest block hash', '/r/blockhash'], ['Wallet', 'satnav://wallet'], ['Local sources', 'satnav://providers']
         ].map(([label, target]) => h('button', { className: 'chip', type: 'button', onClick: () => ctx.navigate(target) }, label))),
-        button('Browsing help', { small: true, onClick: () => ctx.navigate('satnav://documentation') }))),
-    status.details
-  );
+        button('Browsing help', { small: true, onClick: () => ctx.navigate('satnav://documentation') }))), status.details);
+  root.dispose = () => intro.dispose();
   root.retainHome = (result, next) => {
     if (result.error || result.target?.kind !== 'home' || next.activeTabId !== owner || next.requestSequence?.[owner] !== navigation) return false;
-    // Health/cache replies must not reset a typed query, native disclosure state,
-    // focus or page scroll. Explicit navigation still creates a fresh view.
-    status.update(next);
-    updateCacheViews(root, next.cache);
-    return true;
+    // Background health/cache publication preserves the search, selection,
+    // native disclosures and running scene. Explicit navigation disposes it.
+    status.update(next); updateCacheViews(root, next.cache); return true;
   };
   return root;
 }

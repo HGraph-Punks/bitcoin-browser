@@ -110,7 +110,7 @@ test('Start introduces browsing without a wallet or node and resumes the existin
   const calls = []; let resumed = 0;
   const root = renderHome(model(), { navigate: target => calls.push(target), openAiWorkspace: () => resumed++ });
   assert.match(root.querySelector('.home-reassurance').textContent, /No wallet required.*node is optional/);
-  assert.equal(root.querySelectorAll('.home-destination').length, 3);
+  assert.equal(root.querySelectorAll('.home-destination').length, 4);
   const ai = button(root, '✧Ask Bitcoin'); assert.ok(visible(ai)); assert.equal(resumed, 0); assert.deepEqual(calls, []);
   ai.listeners.click(); assert.equal(resumed, 1); assert.deepEqual(calls, [], 'Do not navigate away from or replace the existing chat owner');
 });
@@ -251,4 +251,29 @@ test('window-control inset is non-shrinking before bootstrap and non-Mac release
     const run = vm.runInNewContext(`(async () => {${source.slice(begin, end)}})`, { elements, api: { app: { bootstrap: async () => ({ application: { platform } }) } } });
     await run(); assert.equal(elements.app.dataset.platform, expected);
   }
+});
+
+
+test('welcoming examples prefill one exact identifier without navigating or sending requests', () => {
+  const calls = [], root = renderHome(model(), { navigate: target => calls.push(target) }), input = root.querySelector('input');
+  for (const [label, value] of [['The halving block', 'block:840000'], ['The very first sat', 'sat:0'], ['A Rune', 'rune:UNCOMMON•GOODS']]) {
+    button(root, label).listeners.click(); assert.equal(input.value, value); assert.equal(document.activeElement, input); assert.deepEqual(calls, []);
+  }
+  submit(root.querySelector('form')); assert.deepEqual(calls, ['rune:UNCOMMON•GOODS']);
+});
+
+test('Create on Bitcoin enters the existing native creation mode only on an explicit click', () => {
+  let creates = 0; const calls = [], root = renderHome(model(), { navigate: target => calls.push(target), openCreate: () => creates++ });
+  assert.equal(creates, 0); button(root, '✦Create on Bitcoin').listeners.click(); assert.equal(creates, 1); assert.deepEqual(calls, []);
+  assert.equal(button(renderHome(model(), { navigate() {} }), '✦Create on Bitcoin').disabled, true);
+});
+
+test('returning users get their saved places first; background publication retains the intro and query', () => {
+  const initial = model({ history: [{ canonical: 'sat:0', kind: 'sat', title: 'First sat' }] });
+  const root = renderHome(initial, { navigate() {} }), scene = root.querySelector('.home-intro-scene');
+  assert.ok(root.children.indexOf(root.querySelector('.home-library-area')) < root.children.indexOf(root.querySelector('.home-explore-area')));
+  assert.match(root.querySelector('.home-section-title').textContent, /Pick up where you left off/);
+  root.querySelector('input').value = 'my draft'; assert.equal(root.retainHome(homeResult(), initial), true);
+  assert.equal(root.querySelector('.home-intro-scene'), scene); assert.equal(root.querySelector('input').value, 'my draft');
+  root.dispose(); root.dispose(); assert.equal(scene.animationState().disposed, true);
 });

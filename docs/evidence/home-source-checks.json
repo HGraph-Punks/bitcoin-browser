@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "version": "0.2.0-rc.7",
+  "browserBaseCommit": "36b2ae3",
+  "checks": {
+    "browser": {
+      "passed": 2263,
+      "failed": 0
+    },
+    "creator": {
+      "passed": 54,
+      "failed": 0
+    },
+    "creatorTypeScript": true,
+    "browserStaticSecurity": true
+  },
+  "scope": "Full Browser regression and retained Creator domain/MCP tests. Native homepage and exact package qualification are separate receipts."
+}

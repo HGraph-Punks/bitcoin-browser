@@ -1249,7 +1249,7 @@ try {
       ['Local sources', 'satnav://providers', 'Data sources', null]
     ];
     for (const [label, canonical, expectedText, requestPath] of cases) {
-      await navigateShell(cdp, 'satnav://home', 'Find your way around Bitcoin.');
+      await navigateShell(cdp, 'satnav://home', 'A whole world. Built on Bitcoin.');
       const start = providerFixture.requests.length;
       const clicked = await cdp.evaluate(`(() => {
         const tools = document.querySelector('.home-tools');
@@ -1315,7 +1315,7 @@ try {
         await navigateShell(cdp, `inscription:${inscriptionId}`, 'Opaque sandbox');
         await readFixtureFrame(instance, cdp, `/content/${inscriptionId}`,
           'window.networkFixtureResult ?? null', (value) => value?.done === true);
-        await navigateShell(cdp, 'satnav://home', 'Find your way around Bitcoin.');
+        await navigateShell(cdp, 'satnav://home', 'A whole world. Built on Bitcoin.');
         const requestStart = fixture.requests.length;
         const connectionStart = fixture.connections.length;
         const { name, ...settings } = mode;

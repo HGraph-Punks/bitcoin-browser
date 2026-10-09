@@ -52,6 +52,7 @@ function fixture() {
         for (const child of this.children) if (child && typeof child === 'object') child.parentNode = null;
         this.children = []; this.append(...nodes);
       },
+      querySelector(selector) { return find(this, selector); },
       focus() { document.activeElement = this; },
       select() { this.selectionStart = 0; this.selectionEnd = String(this.value ?? '').length; },
       replaceWith(next) {
@@ -72,6 +73,9 @@ function fixture() {
     renderChrome() { chromeRenders += 1; }, renderDrawer() {},
     clear(node, view) { node.view = view; node.renders += 1; },
     toast: (...args) => toasts.push(args),
+    // Particle GPU lifecycle is qualified in the native harness. This bounded
+    // library fixture supplies only its decorative DOM/platform boundary.
+    createHomeIntro: () => Object.assign(h('div'), { dispose() {} }),
     h, button: (label, options) => h('button', options, label),
     badge: (text) => h('badge', {}, text),
     emptyState: (...text) => h('empty', {}, text),

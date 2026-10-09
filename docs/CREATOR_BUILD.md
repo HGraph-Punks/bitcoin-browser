@@ -1,10 +1,10 @@
 # Bitcoin Browser Create — macOS candidate
 
-Version: **0.2.0-rc.6**, macOS arm64, Electron **44.2.0**. This is a local release candidate. Developer ID signing, Apple notarization, production inscription qualification and public redistribution are distinct gates. The candidate does not claim notarization or mainnet execution qualification.
+Version: **0.2.0-rc.7**, macOS arm64, Electron **44.2.0**. This is a local release candidate. Developer ID signing, Apple notarization, production inscription qualification and public redistribution are distinct gates. The candidate does not claim notarization or mainnet execution qualification.
 
 ## Try the build
 
-Open `release/0.2.0-rc.6/mac-arm64/Bitcoin Browser.app`, then choose **Create** in the title bar. Browse and Create use the same native application window. Create opens its own project home with 24 starters and the Build → Test → Inscribe workflow. Existing browser data uses the original application identity.
+Open `release/0.2.0-rc.7/mac-arm64/Bitcoin Browser.app`, then choose **Create** in the title bar. Browse and Create use the same native application window. Create opens its own project home with 24 starters and the Build → Test → Inscribe workflow. Existing browser data uses the original application identity.
 
 Use **Explore library catalog** to search supported libraries and research inscriptions, inspect provenance/restrictions and copy an example. Drafts and published results use Bitcoin Browser's native content viewer and source preferences. There is no separate browsing engine.
 
@@ -45,11 +45,13 @@ The research UI/runtime test uses an owned loopback fixture under a research cat
 
 ## Verification
 
+RC7 adds the native WebGL Start homepage. See [homepage qualification](HOME_EXPERIENCE.md) for the current UI checks. The transaction receipts below qualify **RC6**; RC7 does not change the transaction engine and does not claim a new financial execution test.
+
 RC6 source-native qualification passed all 24 starters, native Rune/Bitmap/BRC-20/SNS authoring, exact payload copy and normalized saves across Browse switching. It also completed actual uncompressed Bitmap, BRC-20 deploy, BRC-20 mint and SNS inscriptions, with acknowledgement enforcement and explicitly unverified protocol acceptance. The real-node domain harness rejected an unmined Bitmap height before preparation. [Native protocol transaction receipt](evidence/creator-ordinals-native.json).
 
 Evidence is retained in `docs/evidence/creator-*.json`. Each receipt states its package version, driver and fixture scope. Each signed candidate is tested independently; the receipt version identifies the tested package.
 
-The final browser suite passes **2,258/2,258** checks. The creator suite passes **54/54** domain/MCP/native-boundary checks. TypeScript and the browser's static/security checks pass. The creator suite includes warning acceptance, research pinning, history/archive round trips, format checks, source failures and preservation of the publication license gate.
+The RC7 browser suite passes **2,263/2,263** checks. The creator suite passes **54/54** domain/MCP/native-boundary checks. TypeScript and the browser's static/security checks pass. The creator suite includes warning acceptance, research pinning, history/archive round trips, format checks, source failures and preservation of the publication license gate.
 
 The signed **RC6** package executed all nine real library experiences against Brotli-compressed pinned public bytes and the four added interactive art/story/card starters. It passed all 24 starters and category filters, collection editions and previews, exact Rune arithmetic, invalid-design blocking, immediate form saving on mode exit, concurrent-edit protection, managed preview synchronization and malformed-design repair. It also passed mandatory library warning acceptance, Cancel/Escape/focus restoration, accepted research execution in the opaque sandbox, sidebar Add, library search/details/clipboard, project restoration, 51 actual native-executable MCP tools and JSZip generation. See [the RC6 package experience receipt](evidence/creator-packaged.json).
 
@@ -61,7 +63,7 @@ The package driver uses a loopback Chromium renderer debugging endpoint and norm
 
 [Package integrity verification](evidence/creator-package-integrity.json) checks the ZIP hash, source inventory, packaged ASAR source/payload, unpacked worker hashes, Developer ID/hardened runtime and seven inherited release fuses. Lockfiles and TypeScript declarations are source inputs and are intentionally excluded by the packager. Runtime source and payload hashes match the final candidate.
 
-The current archive SHA-256 is recorded in `release/0.2.0-rc.6/SHA256SUMS` and its release manifest. Signing identity: `Developer ID Application: MoonScape Labs Inc (YAXG2D45G6)`. The candidate is **not notarized or published**.
+The current archive SHA-256 is recorded in `release/0.2.0-rc.7/SHA256SUMS` and its release manifest. Signing identity: `Developer ID Application: MoonScape Labs Inc (YAXG2D45G6)`. The candidate is **not notarized or published**.
 
 The interim RC1/RC2 packages are preserved in the migration checkout. Their failed compressed-result checks motivated the native negotiation/decoding fix; RC3 established the corrected behavior; RC4 retains those boundaries and adds explicit library warning acceptance. Cache/provenance retain wire bytes, while custom-protocol responses decode with output bounds and correct range/HEAD headers.
 
