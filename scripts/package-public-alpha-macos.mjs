@@ -18,7 +18,7 @@ const directory=path.join(root,'release',metadata.version),appDirectory=path.joi
 for(const destination of [appDirectory,path.join(directory,stem+'.zip'),path.join(directory,stem+'.dmg')]){try{await fs.access(destination);throw new Error('Preserve existing output: '+destination);}catch(error){if(error.code!=='ENOENT')throw error;}}
 const child=spawn(process.execPath,[path.join(root,'scripts/package.mjs'),'--unsigned','--dir','--mac','--'+arch],{cwd:root,stdio:'inherit'});
 const exit=await new Promise((resolve,reject)=>{child.once('error',reject);child.once('exit',resolve);});if(exit!==0)throw new Error('Alpha staging build failed.');
-await fs.mkdir(directory,{recursive:true});await fs.rename(path.join(root,'release/developer','mac-'+arch),appDirectory);
+await fs.mkdir(directory,{recursive:true});await fs.rename(path.join(root,'release/developer',arch==='x64'?'mac':'mac-arm64'),appDirectory);
 const appPath=path.join(appDirectory,'Bitcoin Browser.app');
 await signAsync({app:appPath,identity,platform:'darwin',type:'distribution',preAutoEntitlements:false,preEmbedProvisioningProfile:false,strictVerify:true,optionsForFile:()=>({hardenedRuntime:true,entitlements:path.join(root,'build/entitlements.mac.plist')})});
 await execute('/usr/bin/codesign',['--verify','--deep','--strict',appPath],{timeout:60000});

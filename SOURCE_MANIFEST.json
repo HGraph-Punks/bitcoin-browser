@@ -761,8 +761,8 @@
     },
     {
       "path": "scripts/package-public-alpha-macos.mjs",
-      "bytes": 5963,
-      "sha256": "5abe452e6d257d7c764d832ff7bf357db19165bcd3fd11584bd6809fbc4412c8"
+      "bytes": 5982,
+      "sha256": "dc9dc9bb33c897a928adc029e35f71c2248a578de76921b1e1b861761ab4ab66"
     },
     {
       "path": "scripts/package.mjs",
