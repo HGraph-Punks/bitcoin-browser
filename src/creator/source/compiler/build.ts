@@ -1,3 +1,4 @@
+import {isProtocolCreation,readMetaprotocol} from '../shared/metaprotocols';
 import {readCollection,readRune} from '../shared/ordinals';
 import { createHash } from 'node:crypto';
 import { brotliCompressSync, constants } from 'node:zlib';
@@ -10,16 +11,17 @@ import {safeRelativePath} from '../core/validation';
 import {scanSource,rewriteReferences,type ParsedReference,type SourceScan} from './references';
 import type { BuildArtifact,BuildResource,Finding,ProjectSnapshot,ResourceReference,Network } from '../shared/types';
 
-export const COMPILER_VERSION='2.2.0';
+export const COMPILER_VERSION='2.3.0';
 const sha=(value:string|Buffer)=>createHash('sha256').update(value).digest('hex');
 const compressed=(value:string)=>brotliCompressSync(Buffer.from(value),{params:{[constants.BROTLI_PARAM_QUALITY]:9}}).length;
 const inscriptionId=/^[a-f0-9]{64}i(?:0|[1-9][0-9]{0,9})$/;
 
 export function buildProject(project: ProjectSnapshot): BuildArtifact {
+  if(isProtocolCreation(project.template))return buildProtocol(project);
   if(typeof project.files['index.html']!=='string')throw new AppError('ENTRY_REQUIRED','The project needs an index.html entry point.');
   validateAssets(project.assets,project.files);
   const findings:Finding[]=[];let collection:ReturnType<typeof readCollection>=null,rune:ReturnType<typeof readRune>=null;
-  try{if(['collection','image','recursive'].includes(project.template)){collection=readCollection(project.files);if(!collection)throw new Error('Restore collection.json or a previous saved version.');}if(project.template==='runes'){rune=readRune(project.files);if(!rune)throw new Error('Restore rune.json or a previous saved version.');}}catch(error){findings.push({code:'INVALID_CREATOR_SPEC',severity:'error',title:'Check your creation settings',detail:(error as Error).message});}
+  try{if(['collection','image','recursive'].includes(project.template)){collection=readCollection(project.files);if(!collection)throw new Error('Restore collection.json or a previous saved version.');}}catch(error){findings.push({code:'INVALID_CREATOR_SPEC',severity:'error',title:'Check your creation settings',detail:(error as Error).message});}
   if(collection)for(const item of collection.items)if(!Object.hasOwn(project.files,item.path)&&!Object.hasOwn(project.assets,item.path)||!/^image\/(png|jpeg|gif|webp|svg\+xml)$/.test(project.assets[item.path]?.mime??mimeFor(item.path)))findings.push({code:'INVALID_COLLECTION_MEMBER',severity:'error',title:'Restore a collection image',detail:`${item.path} is missing or has an unsupported image type.`});
   if(collection&&!collection.items.length)findings.push({code:'COLLECTION_EMPTY',severity:'error',title:'Add your first image',detail:'Import at least one image before publication.'});
   const libs=resolveLibraries(project.libraries,project.libraryAcceptances);
@@ -122,4 +124,16 @@ export function prepareResource(build:BuildArtifact,filename:string,bindings:Rec
     const prepared={path:name,mime:node.mime,sha256:text===undefined?node.sourceSha256:sha(text),bytes:text===undefined?node.bytes:Buffer.byteLength(text),text,asset:node.asset,dependencies};memo.set(name,prepared);return prepared;
   }
   return prepare(filename);
+}
+
+/** Native protocol artifacts have no HTML entry or executable preview. */
+function buildProtocol(project:ProjectSnapshot):BuildArtifact{
+ validateAssets(project.assets,project.files);const findings:Finding[]=[],paths=[...Object.keys(project.files),...Object.keys(project.assets)].sort();let rune:ReturnType<typeof readRune>=null,metaprotocol:ReturnType<typeof readMetaprotocol>=null,text='',filename=project.template==='runes'?'rune.json':'inscription.txt',mime=project.template==='runes'?'application/json':'text/plain;charset=utf-8';
+ try{if(project.template==='runes'){rune=readRune(project.files);if(!rune)throw new Error('Restore rune.json.');text=JSON.stringify(rune);}else{metaprotocol=readMetaprotocol(project.files,project.template);if(!metaprotocol)throw new Error('Restore protocol.json.');text=metaprotocol.payload;filename=metaprotocol.path;mime=metaprotocol.mime;}}catch(error){findings.push({code:'INVALID_PROTOCOL_SPEC',severity:'error',title:'Complete your protocol design',detail:(error as Error).message});}
+ if(project.libraries.length)findings.push({code:'PROTOCOL_LIBRARIES',severity:'error',title:'Remove website libraries',detail:'Protocol payloads cannot execute or include website libraries.'});
+ if(metaprotocol)findings.push({code:'PROTOCOL_ACCEPTANCE_UNVERIFIED',severity:'warning',title:'Protocol acceptance needs an independent indexer',detail:metaprotocol.caution});
+ if(rune)findings.push({code:'RUNE_NODE_CHECK_REQUIRED',severity:'info',title:'Your node checks the actual etching',detail:'Name availability and unlock height are checked during preparation. Six commit confirmations are required before reveal.'});
+ const hash=sha(text),bytes=Buffer.byteLength(text),compressedBytes=metaprotocol?bytes:compressed(text),id=sha(JSON.stringify({compiler:COMPILER_VERSION,template:project.template,source:paths.map(p=>[p,project.assets[p]?.sha256??sha(project.files[p])]),payload:hash})),previewId=sha('protocol:'+id)+'i0';
+ const resource:BuildResource={path:filename,mime,kind:'text',sourceSha256:hash,sha256:hash,bytes,compressedBytes,previewId,stage:0,dependencies:[],references:[],containers:{},source:text,text};
+ return {id,projectId:project.id,revision:project.revision,html:'',sha256:hash,bytes,compressedBytes,libraries:[],findings,previewId,createdAt:new Date().toISOString(),compilerVersion:COMPILER_VERSION,resources:[resource],stages:[{index:0,paths:[filename]}],unpublishedFiles:paths.filter(p=>p!==(rune?'rune.json':'protocol.json')),totalNewBytes:bytes,hasUnresolvedDependencies:false,...(rune?{rune}:{}),...(metaprotocol?{metaprotocol}:{})};
 }

@@ -1,10 +1,10 @@
 # Bitcoin Browser Create — macOS candidate
 
-Version: **0.2.0-rc.5**, macOS arm64, Electron **44.2.0**. This is a local release candidate. Developer ID signing, Apple notarization, production inscription qualification and public redistribution are distinct gates. The candidate does not claim notarization or mainnet execution qualification.
+Version: **0.2.0-rc.6**, macOS arm64, Electron **44.2.0**. This is a local release candidate. Developer ID signing, Apple notarization, production inscription qualification and public redistribution are distinct gates. The candidate does not claim notarization or mainnet execution qualification.
 
 ## Try the build
 
-Open `release/0.2.0-rc.5/mac-arm64/Bitcoin Browser.app`, then choose **Create** in the title bar. Browse and Create use the same native application window. Create opens its own project home with 21 starters and the Build → Test → Inscribe workflow. Existing browser data uses the original application identity.
+Open `release/0.2.0-rc.6/mac-arm64/Bitcoin Browser.app`, then choose **Create** in the title bar. Browse and Create use the same native application window. Create opens its own project home with 24 starters and the Build → Test → Inscribe workflow. Existing browser data uses the original application identity.
 
 Use **Explore library catalog** to search supported libraries and research inscriptions, inspect provenance/restrictions and copy an example. Drafts and published results use Bitcoin Browser's native content viewer and source preferences. There is no separate browsing engine.
 
@@ -19,13 +19,19 @@ Choose **Image collection** or **Recursive collection gallery**. **Add images** 
 
 Publication groups members into separate-output batches of at most 16, with a conservative size budget. Actual commit/reveal weight must remain below Bitcoin's standard transaction limit; a large individual image still needs reduction before it can publish. Each batch has its own exact approval showing members, hashes, metadata, outputs, postage and fees. The gallery publishes after all images confirm and verify, using their actual IDs. Gallery display does not create parent–child provenance.
 
-Choose **Rune etching** for a dedicated design screen. Set an uppercase name with optional spacers, one Unicode symbol, divisibility, premine and an optional open mint with exact amount, cap and block windows. Exact decimal / 128-bit arithmetic prevents rounded supply values. Turbo is optional and starts disabled. The connected Ord node checks names during preparation and again before reveal.
+Choose **Runes** in the left sidebar, then **Rune etching**, for a native design screen with no website or iframe. Set an uppercase name with optional spacers, one Unicode symbol, divisibility, premine and an optional open mint with exact amount, cap and block windows. Exact decimal / 128-bit arithmetic prevents rounded supply values. Turbo is optional and starts disabled. The connected Ord node checks names during preparation and again before reveal.
 
 A Rune publication etches the actual runestone with a JSON design manifest inscription. A positive premine receives a separate wallet-owned Taproot output; its address and postage appear in the review. The commit must reach six confirmations before the saved reveal can be submitted. Use **Reconcile & resume** when mature. Restart and cancellation preserve the exact transaction; they do not silently construct or reprice another one. A verified Rune receipt opens the native Bitcoin Browser Rune viewer.
 
 Additional starters target one-of-one artwork, PFP/pixel characters, seeded generative SVG art, interactive stories and collectible artifact cards. Home filters separate collections, art, experiences and Runes. All eight added starters work without an external library. The four interactive art/story/card starters are exercised inside the native opaque draft iframe.
 
 Source, collection metadata and Rune settings share project history and portable archives. Valid form edits save automatically; navigation waits for pending edits, and invalid designs remain visible instead of publishing older settings. Scoped MCP adds `collection_configure`, `collection_duplicate` and `rune_configure`; agents still cannot authorize spending or accept library warnings.
+
+### Create a meta-protocol inscription
+
+Choose **Bitmap**, **BRC-20** or **Sats Names** in the left sidebar. Bitmap creates a mined-block district claim; BRC-20 provides legacy four-byte deployment and public minting; Sats Names provides plain or JSON registration with optional avatar/website relay. Each native editor shows exact payload, MIME and UTF-8 byte count, with save/copy actions, source/history and no website preview.
+
+Use **Test** to validate the design, then **Inscribe** for the exact Core/Ord transaction review. The protocol acknowledgement starts unchecked and is required before authorization. All three payloads publish uncompressed. Confirmation verifies bytes on-chain; protocol acceptance, availability and token balances remain unverified without a compatible indexer. [Read protocol scope and research](CREATOR_METAPROTOCOLS.md).
 
 ### Include an unqualified library
 
@@ -39,9 +45,11 @@ The research UI/runtime test uses an owned loopback fixture under a research cat
 
 ## Verification
 
+RC6 source-native qualification passed all 24 starters, native Rune/Bitmap/BRC-20/SNS authoring, exact payload copy and normalized saves across Browse switching. It also completed actual uncompressed Bitmap, BRC-20 deploy, BRC-20 mint and SNS inscriptions, with acknowledgement enforcement and explicitly unverified protocol acceptance. The real-node domain harness rejected an unmined Bitmap height before preparation. [Native protocol transaction receipt](evidence/creator-ordinals-native.json).
+
 Evidence is retained in `docs/evidence/creator-*.json`. Each receipt states its package version, driver and fixture scope. Each signed candidate is tested independently; the receipt version identifies the tested package.
 
-The final browser suite passes **2,258/2,258** checks. The creator suite passes **49/49** domain/MCP/native-boundary checks. TypeScript and the browser's static/security checks pass. The creator suite includes warning acceptance, research pinning, history/archive round trips, format checks, source failures and preservation of the publication license gate.
+The final browser suite passes **2,258/2,258** checks. The creator suite passes **54/54** domain/MCP/native-boundary checks. TypeScript and the browser's static/security checks pass. The creator suite includes warning acceptance, research pinning, history/archive round trips, format checks, source failures and preservation of the publication license gate.
 
 The signed **RC5** package executed all nine real library experiences against Brotli-compressed pinned public bytes and the four added interactive art/story/card starters. It passed all 21 starters and category filters, collection editions and previews, exact Rune arithmetic, invalid-design blocking, immediate form saving on mode exit, concurrent-edit protection, managed preview synchronization and malformed-design repair. It also passed mandatory library warning acceptance, Cancel/Escape/focus restoration, accepted research execution in the opaque sandbox, sidebar Add, library search/details/clipboard, project restoration, 50 actual native-executable MCP tools and JSZip generation. See [the RC5 package experience receipt](evidence/creator-packaged.json).
 
@@ -53,7 +61,7 @@ The package driver uses a loopback Chromium renderer debugging endpoint and norm
 
 [Package integrity verification](evidence/creator-package-integrity.json) checks the ZIP hash, source inventory, packaged ASAR source/payload, unpacked worker hashes, Developer ID/hardened runtime and seven inherited release fuses. Lockfiles and TypeScript declarations are source inputs and are intentionally excluded by the packager. Runtime source and payload hashes match the final candidate.
 
-The current archive SHA-256 is recorded in `release/0.2.0-rc.5/SHA256SUMS` and its release manifest. Signing identity: `Developer ID Application: MoonScape Labs Inc (YAXG2D45G6)`. The candidate is **not notarized or published**.
+The current archive SHA-256 is recorded in `release/0.2.0-rc.6/SHA256SUMS` and its release manifest. Signing identity: `Developer ID Application: MoonScape Labs Inc (YAXG2D45G6)`. The candidate is **not notarized or published**.
 
 The interim RC1/RC2 packages are preserved in the migration checkout. Their failed compressed-result checks motivated the native negotiation/decoding fix; RC3 established the corrected behavior; RC4 retains those boundaries and adds explicit library warning acceptance. Cache/provenance retain wire bytes, while custom-protocol responses decode with output bounds and correct range/HEAD headers.
 

@@ -1,3 +1,4 @@
+import {isProtocolCreation,isMetaprotocol,defaultMetaprotocol,metaprotocolPlan,protocolEntry,type MetaprotocolSpec} from '../shared/metaprotocols';
 import { mkdir, open, readFile, writeFile, rename, readdir, rm, lstat, realpath } from 'node:fs/promises';
 import path from 'node:path';
 import { createHash, randomUUID } from 'node:crypto';
@@ -11,7 +12,7 @@ import { mutationSchema, projectId, safeRelativePath, settingsSchema, templateSc
 import {withLibraryNotices} from '../catalog/notices';
 import { createTemplate, initialSettings, templates, updateTemplateFields,readTemplateSettings } from './templates';
 import {collectionSchema,readCollection,defaultCollection,runePlan,defaultRune,type CollectionSpec,type RuneSpec} from '../shared/ordinals';
-import {collectionHTML,runeHTML} from './ordinal-templates';
+import {collectionHTML} from './ordinal-templates';
 import {libraryAcceptancesSchema,needsLibraryWarning} from '../catalog/library-acceptance';
 import { resolveLibraries } from '../catalog/libraries';
 import {assetSchema,describeAsset,isTextFile,decodeText,validateAssets,mimeFor} from './assets';
@@ -257,11 +258,12 @@ export class ProjectStore {
     }
     const now = new Date().toISOString(), settings = initialSettings(input.template, input.title.trim());
     await mkdir(this.directory(id), { mode: 0o700,recursive:true });await this.checkDirectory(this.directory(id));
-    let content: Content = { schemaVersion:2,id,title:settings.name,template:input.template,createdAt:now,updatedAt:now,settings,libraries:templates.find(t=>t.id===input.template)!.libraries,files:{'index.html':createTemplate(input.template,settings)},assets:{} };
+    let content: Content = { schemaVersion:2,id,title:settings.name,template:input.template,createdAt:now,updatedAt:now,settings,libraries:templates.find(t=>t.id===input.template)!.libraries,files:isProtocolCreation(input.template)?{}:{'index.html':createTemplate(input.template,settings)},assets:{} };
+    if(isMetaprotocol(input.template))content.files['protocol.json']=JSON.stringify(defaultMetaprotocol(input.template),null,2)+'\n';
     if(input.template==='runes')content.files['rune.json']=JSON.stringify(defaultRune,null,2)+'\n';
     if(['collection','image','recursive'].includes(input.template))content.files['collection.json']=JSON.stringify({...defaultCollection(settings.name),layout:input.template==='image'?'showcase':'grid'},null,2)+'\n';
     if(initial){
-      if(!initial.entries.some(f=>f.path==='index.html'))throw new AppError('ENTRY_REQUIRED','The imported website needs an index.html at its root.');
+      if(!initial.entries.some(f=>f.path===protocolEntry(input.template)))throw new AppError('ENTRY_REQUIRED','The archive needs its creation design entry file.');
       resolveLibraries(initial.libraries,initial.libraryAcceptances);
       content=await this.mergeImports({...content,files:{},libraries:[...new Set(initial.libraries)],libraryAcceptances:initial.libraryAcceptances,settings:initial.settings?validate(settingsSchema,initial.settings):settings},initial.entries);
     }
@@ -314,6 +316,7 @@ export class ProjectStore {
   updateSettings(context: Mutation, changes: Partial<SiteSettings>) {
     const values=validate(settingsSchema.partial(),changes);
     return this.change(context,{type:'settings',changes:values},async content=>{
+      if(isProtocolCreation(content.template)){if(Object.keys(values).some(key=>key!=='name'))throw new AppError('PROTOCOL_DESIGN_REQUIRED','Use the protocol design editor instead of website settings.');return {content:{...content,title:values.name??content.title,settings:{...content.settings,...values}}};}
       if(values.heroImage){safeRelativePath(values.heroImage);if(!Object.hasOwn(content.files,values.heroImage)&&!Object.hasOwn(content.assets,values.heroImage))throw new AppError('ASSET_NOT_FOUND','Import the image before using it on this page.');if(!mimeFor(values.heroImage).startsWith('image/'))throw new AppError('IMAGE_REQUIRED','Choose an image for the main page.');}
       return {content:{...content,title:values.name??content.title,settings:{...content.settings,...values},files:{...content.files,'index.html':updateTemplateFields(content.files['index.html'],values,content.settings)}}};
     });
@@ -333,7 +336,6 @@ export class ProjectStore {
     // design files and custom markup remain editable; the compiler blocks an
     // invalid publication, and the repair UI preserves the original source.
     if(relative==='collection.json'&&['collection','image','recursive'].includes(content.template))try{result=this.withCollection(result,collectionSchema.parse(JSON.parse(text)));result.files[relative]=text;}catch{}
-    if(relative==='rune.json'&&content.template==='runes')try{const plan=runePlan(JSON.parse(text));result.files['index.html']=this.updateOrdinalDesign(result,runeHTML(result.settings,plan.spec,plan.supply),'rune',result.settings);}catch{}
     return result;
   }
   mergeFile(context:Mutation,request:MergeCommit,resolve:(project:Content&{revision:number})=>string|null){
@@ -372,12 +374,12 @@ export class ProjectStore {
     return this.change(context,{type:'import',files:fingerprint},async content=>({content:await this.mergeImports(content,entries)}));
   }
   replaceFiles(context:Mutation,files:Record<string,string>,assets:Record<string,SourceAsset>,operation:unknown){
-    return this.change(context,operation,async content=>{validateAssets(assets,files);if(!files['index.html'])throw new AppError('ENTRY_REQUIRED','Keep an index.html entry point in the project.');return {content:{...content,files,assets}};});
+    return this.change(context,operation,async content=>{validateAssets(assets,files);if(!Object.hasOwn(files,protocolEntry(content.template)))throw new AppError('ENTRY_REQUIRED','Keep the creation design entry file in the project.');return {content:{...content,files,assets}};});
   }
   changeFile(context:Mutation,from:string,to?:string,graph?:BuildArtifact){
     safeRelativePath(from);if(to)safeRelativePath(to);
     return this.change(context,{type:to?'file-rename':'file-remove',from,to},async(content,p)=>{
-      if((['collection','image','recursive'].includes(content.template)&&from==='collection.json')||(content.template==='runes'&&from==='rune.json'))throw new AppError('CREATOR_SPEC_REQUIRED','Keep the project design file. Edit it in Code or restore a version in History.');
+      if((['collection','image','recursive'].includes(content.template)&&from==='collection.json')||(isProtocolCreation(content.template)&&from===protocolEntry(content.template)))throw new AppError('CREATOR_SPEC_REQUIRED','Keep the project design file. Edit it in Code or restore a version in History.');
       const spec=['collection','image','recursive'].includes(content.template)?readCollection(content.files):null;if(spec?.items.some(item=>item.path===from)&&!to)throw new AppError('COLLECTION_MEMBER_REFERENCED','Remove this member from the collection before deleting its source asset.');
       const updated={...content,...changeFile({...content,revision:p.revision,canUndo:p.undo.length>0,canRedo:p.redo.length>0},from,to,graph)};
       if(spec?.items.some(item=>item.path===from)&&to)updated.files['collection.json']=JSON.stringify({...spec,items:spec.items.map(item=>item.path===from?{...item,path:to}:item)},null,2)+'\n';return {content:updated};
@@ -419,7 +421,8 @@ export class ProjectStore {
     for(const entry of entries)if(!items.some(i=>i.path===entry.path))items.push({path:entry.path,name:path.posix.basename(entry.path).replace(/\.[^.]+$/,''),description:'',attributes:[]});
     return {content:this.withCollection(imported,validate(collectionSchema,{...prior,items}))};
   });}
-  configureRune(context:Mutation,value:RuneSpec){let plan;try{plan=runePlan(value)}catch(error){throw new AppError('INVALID_RUNE',(error as Error).message)}return this.change(context,{type:'file',relative:'rune.json',value},async content=>{if(content.template!=='runes')throw new AppError('RUNE_PROJECT_REQUIRED','Create a Rune project to use this editor.');return {content:{...content,files:{...content.files,'rune.json':JSON.stringify(plan.spec,null,2)+'\n','index.html':this.updateOrdinalDesign(content,runeHTML(content.settings,plan.spec,plan.supply),'rune',content.settings)}}};});}
+  configureMetaprotocol(context:Mutation,value:MetaprotocolSpec){const plan=metaprotocolPlan(value);return this.change(context,{type:'file',relative:'protocol.json',value:plan.spec},async content=>{if(content.template!==plan.spec.protocol)throw new AppError('PROTOCOL_PROJECT_REQUIRED','Use a matching protocol creation type.');return {content:{...content,files:{...content.files,'protocol.json':JSON.stringify(plan.spec,null,2)+'\n'}}};});}
+  configureRune(context:Mutation,value:RuneSpec){let plan;try{plan=runePlan(value)}catch(error){throw new AppError('INVALID_RUNE',(error as Error).message)}return this.change(context,{type:'file',relative:'rune.json',value},async content=>{if(content.template!=='runes')throw new AppError('RUNE_PROJECT_REQUIRED','Create a Rune project to use this editor.');return {content:{...content,files:{...content.files,'rune.json':JSON.stringify(plan.spec,null,2)+'\n'}}};});}
   duplicateCollectionItem(context:Mutation,relative:string){safeRelativePath(relative);return this.change(context,{type:'collection-edition',relative},async content=>{
     const spec=readCollection(content.files),original=spec?.items.find(item=>item.path===relative);if(!spec||!original)throw new AppError('ITEM_NOT_FOUND','Select a saved collection item.');
     const extension=path.posix.extname(relative),stem=relative.slice(0,-extension.length);let next=stem+'-edition-2'+extension,n=3;while(Object.hasOwn(content.files,next)||Object.hasOwn(content.assets,next))next=stem+'-edition-'+n+++extension;
@@ -434,6 +437,7 @@ export class ProjectStore {
       if(key==='three-core-r178')throw new AppError('UNKNOWN_LIBRARY','Add Three.js to include its core dependency.');
       if(!content.libraries.includes(key)&&library.name==='p5.js'&&content.libraries.some(k=>k.startsWith('p5-')))throw new AppError('LIBRARY_CONFLICT','This site already has a p5.js version. Keep one version per page.');
       if(!content.libraries.includes(key)&&needsLibraryWarning(library)&&!acceptance)throw new AppError('LIBRARY_WARNING_REQUIRED','Click Add in the library browser and accept the warning before including this unqualified library.');
+      if(isProtocolCreation(content.template))throw new AppError('PROTOCOL_LIBRARY_UNSUPPORTED','Protocol payloads do not execute website libraries. Use a website or experience project for libraries.');
       if(content.libraries.includes(key))return {content:{...content,libraryAcceptances:acceptances,files:{...content.files,'index.html':withLibraryNotices(content.files['index.html'],content.libraries,acceptances)}}};
       if(content.libraries.length>=32)throw new AppError('LIBRARY_LIMIT','A project supports up to 32 library includes.');
       const attrs=`data-btcsite-library="${key}"`,url=`/content/${library.id}`;

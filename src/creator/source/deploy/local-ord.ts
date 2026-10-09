@@ -1,3 +1,4 @@
+import {metaprotocolPlan,type MetaprotocolPlan} from '../shared/metaprotocols';
 import {parseExactJson,verifyMetadata,validateRunestone,runeCommitment} from './ordinal-validation';
 import {runePlan,type RuneSpec} from '../shared/ordinals';
 import {execFile} from 'node:child_process';
@@ -21,7 +22,7 @@ export const localConfigSchema=z.object({network:z.enum(['mainnet','regtest']),r
 export type LocalOrdConfig=z.infer<typeof localConfigSchema>;
 const mimeExtensions:Record<string,string>={'text/html;charset=utf-8':'html','text/css':'css','text/javascript':'js','application/json':'json','image/png':'png','image/jpeg':'jpg','image/gif':'gif','image/webp':'webp','image/svg+xml':'svg','text/plain;charset=utf-8':'txt'};
 export type BatchItem={path:string;mime:string;bytes:Buffer;sha256:string;metadata?:unknown};
-export type PrepareRequest={items?:BatchItem[];rune?:RuneSpec;deploymentId:string;projectId:string;buildId:string;revision:number;path:string;resourceNumber:number;resourceCount:number;mime:string;bytes:Buffer;sha256:string;dependencies:{path:string;id:string;sha256:string}[];destination:string;feeRate:number;postageSats:number};
+export type PrepareRequest={metaprotocol?:MetaprotocolPlan;items?:BatchItem[];rune?:RuneSpec;deploymentId:string;projectId:string;buildId:string;revision:number;path:string;resourceNumber:number;resourceCount:number;mime:string;bytes:Buffer;sha256:string;dependencies:{path:string;id:string;sha256:string}[];destination:string;feeRate:number;postageSats:number};
 export type CompleteMaterial=PreparationMaterial&{unsignedCommit:string;reveal:string;recovery:NonNullable<PreparationMaterial['recovery']>};
 type DecodedTx={txid:string;weight:number;vsize:number;vin:{txid:string;vout:number;sequence:number;scriptSig:{hex:string};txinwitness?:string[]}[];vout:{n:number;value:number;scriptPubKey:{hex:string;type:string;address?:string}}[];locktime:number;version:number};
 function requireThat(condition:unknown,message:string):asserts condition{if(!condition)throw new AppError('INVALID_TRANSACTION',message);}
@@ -133,6 +134,7 @@ export class LocalOrdBackend {
     const extension=mimeExtensions[request.mime];if(!extension)throw new AppError('UNSUPPORTED_MIME','The local Ord adapter has not qualified this resource type: '+request.mime);
     if(request.bytes.length>2_000_000||sha256(request.bytes)!==request.sha256)throw new AppError('INVALID_ARTIFACT','The frozen resource is too large or its content hash changed.');
     if(request.items){requireThat(request.items.length>=1&&request.items.length<=16,'Prepare between 1 and 16 collection members per batch.');for(const item of request.items)requireThat(!!mimeExtensions[item.mime]&&item.bytes.length<=2_000_000&&sha256(item.bytes)===item.sha256,'A frozen batch member changed or uses an unsupported MIME.');}
+    if(request.metaprotocol){const plan=metaprotocolPlan(request.metaprotocol.spec);requireThat(objectHash(plan)===objectHash(request.metaprotocol)&&request.mime===plan.mime&&request.path===plan.path&&request.bytes.equals(Buffer.from(plan.payload))&&!request.items&&!request.rune,'The protocol payload differs from its reviewed design.');if(plan.spec.protocol==='bitmap'&&BigInt(plan.spec.height)>BigInt((await this.anchor()).height))throw new AppError('BITMAP_BLOCK_NOT_MINED','Choose a block height already mined on the connected chain.');}
     if(request.rune){runePlan(request.rune);await this.checkRuneName(request.rune);}
     const eligible=await this.eligible();await mkdir(this.workRoot,{recursive:true,mode:0o700});const work=await mkdtemp(path.join(this.workRoot,'prepare-'));
     const broker=new PreparationBroker(this.rpc,eligible,save,this.config.network);
@@ -141,7 +143,7 @@ export class LocalOrdBackend {
       for(const [index,item] of items.entries()){const file=path.join(work,`content-${index}.`+mimeExtensions[item.mime]);await writeFile(file,item.bytes,{mode:0o600});entries.push({file,destination:request.destination,...(item.metadata?{metadata:item.metadata}:{})});}
       let args:string[];
       if(request.items||request.rune){const batch=path.join(work,'batch.yaml'),body=JSON.stringify({mode:'separate-outputs',postage:request.postageSats,inscriptions:entries,...(request.rune?{etching:runePlan(request.rune).etching}:{})},null,2).replace(/"cap": "([0-9]+)"/g,'"cap": $1');await writeFile(batch,body,{mode:0o600});args=['batch','--batch',batch,'--fee-rate',String(request.feeRate),'--compress'];}
-      else args=['inscribe','--file',entries[0].file,'--fee-rate',String(request.feeRate),'--postage',String(request.postageSats)+'sat','--compress','--destination',request.destination];
+      else args=['inscribe','--file',entries[0].file,'--fee-rate',String(request.feeRate),'--postage',String(request.postageSats)+'sat',...(request.metaprotocol?[]:['--compress']),'--destination',request.destination];
       const cookie=await broker.start(work);
       try{await this.ordJson(['--bitcoin-rpc-url',broker.url,'--cookie-file',cookie,'wallet','--name',this.config.wallet,'--server-url',this.ordUrl,...args],work);}catch{/* Completion is established only by the broker and independent verification below. */}
       broker.assertComplete();const material=broker.material as CompleteMaterial;
@@ -176,12 +178,13 @@ export class LocalOrdBackend {
       const inscription=decoded.inscriptions[index];
       requireThat(!inscription.duplicate_field&&!inscription.incomplete_field&&!inscription.unrecognized_even_field&&!inscription.parents?.length&&(batch?inscription.pointer===index*request.postageSats:inscription.pointer==null)&&inscription.metaprotocol==null,'The inscription envelope contains an unexpected field or pointer.');
       requireThat(inscription.content_type===item.mime&&[null,undefined,'br'].includes(inscription.content_encoding)&&typeof inscription.body==='string'&&/^(?:[a-f0-9]{2})*$/.test(inscription.body),'An actual inscription MIME or encoding differs from the frozen artifact.');
+      if(request.metaprotocol)requireThat(inscription.content_encoding==null,'Protocol inscriptions must contain the uncompressed reviewed payload.');
       const stored=Buffer.from(inscription.body,'hex'),body=inscription.content_encoding==='br'?brotliDecompressSync(stored,{maxOutputLength:2_000_000}):stored;
       requireThat(body.equals(item.bytes)&&sha256(body)===item.sha256,'A transaction envelope differs from the frozen compiler bytes.');
       if(item.metadata)verifyMetadata(inscription.metadata,item.metadata);else requireThat(inscription.metadata==null,'Unreviewed metadata was added.');
       memberFacts.push({path:item.path,inscriptionId:reveal.txid+'i'+index,mime:item.mime,contentSha256:item.sha256,decodedBytes:body.length,storedBytes:stored.length,encoding:inscription.content_encoding==='br'?'br' as const:null,...(item.metadata?{metadata:item.metadata}:{})});
     }
-    return {inputs,commitOutputs,revealOutputs,...(batch?{kind:request.rune?'rune' as const:'collection' as const,items:memberFacts,...(request.rune?{rune:request.rune}:{})}:{}),commitFeeSats,revealFeeSats,commitTxid:commit.txid,revealTxid:reveal.txid,inscriptionId:reveal.txid+'i0',unsignedCommitSha256:sha256(Buffer.from(material.unsignedCommit,'hex')),revealSha256:sha256(Buffer.from(material.reveal,'hex')),commitVsizeEstimate:Math.ceil((commit.weight+2+66*commit.vin.length)/4),revealVsize:reveal.vsize,storedBytes:memberFacts.reduce((sum,item)=>sum+item.storedBytes,0),encoding:memberFacts[0].encoding,anchor:await this.anchor()};
+    return {inputs,commitOutputs,revealOutputs,...(request.metaprotocol?{kind:'metaprotocol' as const,metaprotocol:request.metaprotocol}:{}),...(batch?{kind:request.rune?'rune' as const:'collection' as const,items:memberFacts,...(request.rune?{rune:request.rune}:{})}:{}),commitFeeSats,revealFeeSats,commitTxid:commit.txid,revealTxid:reveal.txid,inscriptionId:reveal.txid+'i0',unsignedCommitSha256:sha256(Buffer.from(material.unsignedCommit,'hex')),revealSha256:sha256(Buffer.from(material.reveal,'hex')),commitVsizeEstimate:Math.ceil((commit.weight+2+66*commit.vin.length)/4),revealVsize:reveal.vsize,storedBytes:memberFacts.reduce((sum,item)=>sum+item.storedBytes,0),encoding:memberFacts[0].encoding,anchor:await this.anchor()};
   }
   async revalidate(quote:InscriptionQuote,material:CompleteMaterial){
     await this.qualify();requireThat(quote.backendId===this.id&&quote.network===this.config.network,'The prepared backend changed.');

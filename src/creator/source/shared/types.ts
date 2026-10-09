@@ -1,4 +1,4 @@
-export type TemplateId = 'website' | 'gallery' | 'three' | 'sketch' | 'sketch2' | 'game' | 'audio' | 'webgl' | 'blocks' | 'blank' | 'physics' | 'motion' | 'chart' | 'collection' | 'runes' | 'image' | 'pixel' | 'generative' | 'recursive' | 'story' | 'artifact';
+export type TemplateId = 'website' | 'gallery' | 'three' | 'sketch' | 'sketch2' | 'game' | 'audio' | 'webgl' | 'blocks' | 'blank' | 'physics' | 'motion' | 'chart' | 'collection' | 'runes' | 'image' | 'pixel' | 'generative' | 'recursive' | 'story' | 'artifact' | 'bitmap' | 'brc20' | 'sns';
 export type LibraryCategory = 'art'|'games'|'motion'|'sound'|'data'|'styles'|'utilities'|'ordinals'|'frameworks';
 export type ResearchLibrary = {id:string;name:string;aliases:string[];category:LibraryCategory;status:'pending'|'restricted'|'historical';notes:string;sourceLine:number;source:string;verification:string};
 export type Network = 'mainnet' | 'signet' | 'regtest';
@@ -45,6 +45,7 @@ export type BuildResource = {
 };
 export type PublicationStage = {index:number;paths:string[]};
 export type BuildArtifact = {
+  metaprotocol?:import('./metaprotocols').MetaprotocolPlan;
   collection?:import('./ordinals').CollectionSpec;
   rune?:import('./ordinals').RuneSpec;
   sourceCheckpointId?:string;

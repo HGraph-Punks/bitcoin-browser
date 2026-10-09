@@ -1,6 +1,5 @@
+import {isProtocolCreation} from '../shared/metaprotocols';
 import {ordinalTemplate,ordinalTemplates} from './ordinal-templates';
-import {defaultRune,runePlan} from '../shared/ordinals';
-import {runeHTML} from './ordinal-templates';
 import { parse } from 'parse5';
 import type { SiteSettings, TemplateId } from '../shared/types';
 import { AppError } from './errors';
@@ -10,6 +9,9 @@ import {withLibraryNotices} from '../catalog/notices';
 import {libraryExperienceStyle} from './library-experiences';
 
 export const templates: { id: TemplateId; name: string; description: string; tag: string; libraries: string[] }[] = [
+  {id:'bitmap',name:'Bitmap district',description:'Claim a mined block district with an exact Bitmap inscription.',tag:'Bitmap · district',libraries:[]},
+  {id:'brc20',name:'BRC-20 token',description:'Deploy a legacy token or prepare a public mint with exact amounts.',tag:'BRC-20 · token',libraries:[]},
+  {id:'sns',name:'Sats Name',description:'Register a name and optionally relay to your inscribed website.',tag:'SNS · identity',libraries:[]},
   ...Object.entries(ordinalTemplates).map(([id,value])=>({id:id as TemplateId,...value,libraries:[]})),
   { id: 'website', name: 'Personal website', description: 'A thoughtful home for your work, ideas, and links.', tag: 'Start here', libraries: [] },
   { id: 'gallery', name: 'Digital gallery', description: 'A quiet space for a collection of unique works.', tag: 'Art & collections', libraries: [] },
@@ -28,6 +30,7 @@ export const templates: { id: TemplateId; name: string; description: string; tag
 export function escapeHtml(value: string) { return value.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!); }
 export function initialSettings(template: TemplateId, name: string): SiteSettings {
   const copy: Record<TemplateId, [string, string, string]> = {
+    bitmap:['BITMAP DISTRICT','A district on Bitcoin.','An exact block-height claim.'],brc20:['BRC-20 TOKEN','A token on Bitcoin.','A legacy deploy or public mint inscription.'],sns:['SATS NAME','A name on Bitcoin.','A plain-text or JSON name registration.'],
     collection:['AN ORDINALS COLLECTION','A collection worth\nkeeping.','Independent image inscriptions, brought together in a recursive gallery.'],runes:['A NEW RUNE','Give your Rune\na clear beginning.','Design exact supply and mint terms before reviewing a Bitcoin etching.'],image:['ONE IMAGE. ONE ARTIFACT.','A singular work.\nA permanent home.','An original digital work, made to be held and explored.'],pixel:['A CHARACTER FROM A SEED','Small pixels.\nDistinct personalities.','A deterministic character generator built with compact native SVG.'],generative:['CODE. SEED. ARTIFACT.','A rule becomes\na work of art.','Explore a deterministic edition of self-contained generative geometry.'],recursive:['A GALLERY OF INSCRIPTIONS','Individual artifacts.\nA shared world.','A recursive display that links to the actual image inscriptions after publication.'],story:['A STORY ON BITCOIN','Every artifact\nhas a story.','Move through a small narrative with touch or keyboard. Shape it into your own comic or interactive story.'],artifact:['AN INDEPENDENT ARTIFACT','An object for\nthe long view.','Compact vector geometry, an edition identity, and a story that stays with the code.'],
     website: ['AN INDEPENDENT SPACE', 'Good things deserve\na place that lasts.', 'A small corner of Bitcoin for the things I make, the ideas I follow, and the work still to come.'],
     gallery: ['A COLLECTION OF POSSIBILITIES', 'Art, without\nan expiration date.', 'An open collection of experiments in shape, light, and motion. Made to be explored.'],
@@ -50,7 +53,7 @@ const baseStyle = `*{box-sizing:border-box}html{scroll-behavior:smooth}body{marg
 
 export function createTemplate(template: TemplateId, settings: SiteSettings): string {
   const ordinal=ordinalTemplate(template,settings);if(ordinal)return ordinal;
-  if(template==='runes')return runeHTML(settings,defaultRune,runePlan(defaultRune).supply);
+  if(isProtocolCreation(template))throw new AppError('PROTOCOL_TOOL_REQUIRED','Use the native protocol creation tool instead of generating a website.');
   const mediaKind=template==='blank'?'empty':['website','gallery'].includes(template)?'art':undefined;
   let visual = mediaMarkup(settings,'art');
   let scripts = '';

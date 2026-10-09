@@ -1,6 +1,6 @@
 {
   "name": "satoshi-browser",
-  "version": "0.2.0-rc.5",
+  "version": "0.2.0-rc.6",
   "description": "A sovereign Bitcoin and Ordinals desktop browser",
   "homepage": "https://github.com/HGraph-Punks/bitcoin-browser",
   "repository": {
@@ -57,7 +57,7 @@
     "afterPack": "scripts/after-pack.cjs",
     "afterSign": "scripts/after-sign.cjs",
     "directories": {
-      "output": "release/0.2.0-rc.5",
+      "output": "release/0.2.0-rc.6",
       "buildResources": "build"
     },
     "files": [

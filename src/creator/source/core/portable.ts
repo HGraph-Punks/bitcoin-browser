@@ -1,3 +1,4 @@
+import {protocolEntry} from '../shared/metaprotocols';
 import {z} from 'zod';
 import {libraryAcceptancesSchema} from '../catalog/library-acceptance';
 import {createHash} from 'node:crypto';
@@ -35,7 +36,7 @@ export function decodeProject(bytes:Buffer){
     entries.push({path:file.path,bytes:body});
   }
   if(total>8_000_000)throw new AppError('PROJECT_TOO_LARGE','The archive contains more than 8 MB of source text.');validateAssets(assets,texts);
-  if(!Object.hasOwn(texts,'index.html'))throw new AppError('ENTRY_REQUIRED','The archive must contain index.html.');
+  if(!Object.hasOwn(texts,protocolEntry(archive.template)))throw new AppError('ENTRY_REQUIRED','The archive must contain its creation design entry file.');
   return {title:archive.title,template:archive.template,settings:archive.settings,libraries:archive.libraries,libraryAcceptances:archive.libraryAcceptances,entries};
 }
 

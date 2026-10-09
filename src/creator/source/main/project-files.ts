@@ -1,3 +1,4 @@
+import {isProtocolCreation} from '../shared/metaprotocols';
 import {dialog,Menu,type BrowserWindow} from 'electron';
 import {mkdtemp,rm} from 'node:fs/promises';
 import path from 'node:path';
@@ -13,7 +14,7 @@ import {prepareResource} from '../compiler/build';
 import {readCollection,collectionItemSchema} from '../shared/ordinals';
 import type {BuildArtifact,ProjectSnapshot} from '../shared/types';
 
-type Format='archive'|'folder'|'html';
+type Format='archive'|'folder'|'html'|'payload';
 const slug=(title:string)=>title.replace(/[^a-zA-Z0-9 _-]/g,'').trim().slice(0,80)||'Bitcoin website';
 
 /** Host paths originate only from native dialogs; MCP cannot call this boundary. */
@@ -67,15 +68,18 @@ export class NativeProjectFiles {
     const items=spec.items.map(item=>{const record=matches.get(item.path);return record?{path:item.path,name:record.name,description:record.description,attributes:record.attributes}:item;});
     return {canceled:false,project:await this.store.configureCollection(p,{...spec,items})};
   }
+  async exportProtocol(payload:unknown){const p=validate(z.object({projectId}).strict(),payload),project=await this.store.read(p.projectId);if(!isProtocolCreation(project.template))throw new AppError('PROTOCOL_PROJECT_REQUIRED','Open a protocol creation.');const build=await this.compile(project);if(build.findings.some(f=>f.severity==='error'))throw new AppError('BUILD_BLOCKED','Complete your protocol design before exporting it.');const resource=build.resources[0],extension=resource.path.endsWith('.json')?'json':'txt',selection=await dialog.showSaveDialog(this.window,{title:'Save exact inscription payload',defaultPath:slug(project.title)+'.'+extension,filters:[{name:'Inscription payload',extensions:[extension]}]});if(selection.canceled||!selection.filePath)return {canceled:true};await atomicWrite(selection.filePath,resource.text!);return {canceled:false,sha256:resource.sha256,filename:path.basename(selection.filePath)};}
   async export(payload:unknown){
-    const p=validate(z.object({projectId,format:z.enum(['archive','folder','html','choose']).default('choose')}).strict(),payload);
+    const p=validate(z.object({projectId,format:z.enum(['archive','folder','html','payload','choose']).default('choose')}).strict(),payload);
     const project=await this.store.read(p.projectId);let format:Format|undefined=p.format==='choose'?undefined:p.format;
     if(p.format==='choose')format=await new Promise<Format|undefined>(resolve=>{
       let choice:Format|undefined;
-      const menu=Menu.buildFromTemplate([{label:'Project archive (.btcsite)',click:()=>{choice='archive';}},{label:'Website source folder',click:()=>{choice='folder';}},{type:'separator'},{label:'Final root HTML…',click:()=>{choice='html';}}]);
+      const menu=Menu.buildFromTemplate(isProtocolCreation(project.template)?[{label:'Creation archive (.btcsite)',click:()=>{choice='archive';}},{label:'Exact inscription payload…',click:()=>{choice='payload';}}]:[{label:'Project archive (.btcsite)',click:()=>{choice='archive';}},{label:'Website source folder',click:()=>{choice='folder';}},{type:'separator'},{label:'Final root HTML…',click:()=>{choice='html';}}]);
       menu.popup({window:this.window,callback:()=>resolve(choice)});
     });
     if(!format)return {canceled:true};
+    if(format==='payload')return this.exportProtocol({projectId:project.id});
+    if(isProtocolCreation(project.template)&&format!=='archive')throw new AppError('PROTOCOL_EXPORT_FORMAT','Export a creation archive or the exact inscription payload.');
     if(format==='folder'){
       const selection=await dialog.showOpenDialog(this.window,{title:'Choose where to save the website folder',properties:['openDirectory','createDirectory']});
       if(selection.canceled||!selection.filePaths[0])return {canceled:true};

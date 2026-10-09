@@ -1,0 +1,31 @@
+import {z} from 'zod';
+import type {TemplateId} from './types';
+export const protocolIds=['bitmap','brc20','sns'] as const;
+export type MetaprotocolId=typeof protocolIds[number];
+export const isMetaprotocol=(id:string):id is MetaprotocolId=>protocolIds.includes(id as MetaprotocolId);
+export const isProtocolCreation=(id:string)=>id==='runes'||isMetaprotocol(id);
+const decimal=z.string().regex(/^(?:0|[1-9][0-9]*)(?:\.[0-9]+)?$/,'Use a decimal amount without exponents or commas').max(60);
+const inscription=z.string().regex(/^(?:|[a-f0-9]{64}i(?:0|[1-9][0-9]{0,9}))$/,'Use a confirmed inscription ID').max(80);
+const visible=z.string().refine(value=>!/[\p{C}\p{Z}]/u.test(value),'Use visible characters without spaces or control characters');
+export const bitmapSchema=z.object({version:z.literal(1),protocol:z.literal('bitmap'),height:z.string().regex(/^(?:0|[1-9][0-9]*)$/,'Use a block height with no leading zeros').max(10)}).strict();
+export const brc20Schema=z.object({version:z.literal(1),protocol:z.literal('brc20'),operation:z.enum(['deploy','mint']),ticker:z.string().regex(/^[A-Za-z0-9]{4}$/,'Use four ASCII letters or digits for the legacy namespace'),max:decimal,limit:decimal,decimals:z.number().int().min(0).max(18),amount:decimal}).strict();
+export const snsSchema=z.object({version:z.literal(1),protocol:z.literal('sns'),name:visible.min(3).max(240).refine(value=>value.split('.').length===2&&value.split('.').every(part=>part.length>0),'Use one name and namespace, such as alice.sats'),format:z.enum(['text','json']),avatar:inscription,relay:inscription}).strict();
+export const metaprotocolSchema=z.discriminatedUnion('protocol',[bitmapSchema,brc20Schema,snsSchema]);
+export type MetaprotocolSpec=z.infer<typeof metaprotocolSchema>;
+export const protocolInfo:Record<MetaprotocolId,{name:string;operation:string;description:string;source:string;caution:string}>={
+ bitmap:{name:'Bitmap',operation:'District claim',description:'Inscribe a Bitcoin block district using the Bitmap naming standard.',source:'https://gitbook.bitmap.land/',caution:'Only the first valid district inscription is accepted. A confirmed inscription does not prove district ownership. Check an independent Bitmap indexer; this app does not verify claim availability.'},
+ brc20:{name:'BRC-20',operation:'Token deploy or mint',description:'Create a legacy four-byte token definition or inscribe a public mint.',source:'https://layer1.gitbook.io/layer1-foundation/protocols/brc-20/documentation',caution:'BRC-20 state is determined by protocol indexers. Check ticker availability before deploying, or the deployed decimals, mint limit and remaining supply before minting. Bitcoin confirmation alone does not establish a token or balance.'},
+ sns:{name:'Sats Names',operation:'Name registration',description:'Register a name such as alice.sats, optionally pointing to your inscribed website.',source:'https://docs.satsnames.org/sats-names/sns-spec/mint-names',caution:'Only the first valid name is accepted, case-insensitively. A confirmed inscription does not prove name ownership or resolution. Check an independent SNS indexer; this app does not verify availability.'}
+};
+export function defaultMetaprotocol(id:MetaprotocolId):MetaprotocolSpec{return id==='bitmap'?{version:1,protocol:id,height:'0'}:id==='brc20'?{version:1,protocol:id,operation:'deploy',ticker:'',max:'21000000',limit:'1000',decimals:18,amount:'1000'}:{version:1,protocol:id,name:'',format:'text',avatar:'',relay:''};}
+export function brc20Units(value:string,decimals:number){const parsed=decimal.parse(value),[whole,fraction='']=parsed.split('.');if(fraction.length>decimals)throw new Error(`This amount allows at most ${decimals} decimal places.`);const units=BigInt(whole)*10n**BigInt(decimals)+BigInt(fraction.padEnd(decimals,'0')||'0');if(units<=0n||units>((1n<<64n)-1n)*10n**BigInt(decimals))throw new Error('Use a positive amount within the legacy BRC-20 uint64 supply limit.');return units;}
+export type MetaprotocolPlan={spec:MetaprotocolSpec;label:string;operation:string;path:string;mime:string;payload:string;uncompressed:true;acceptance:'unverified';caution:string};
+export function metaprotocolPlan(input:unknown):MetaprotocolPlan{
+ const raw=metaprotocolSchema.parse(input);let spec=raw,payload='',path='inscription.txt',mime='text/plain;charset=utf-8',operation=protocolInfo[raw.protocol].operation;
+ if(raw.protocol==='bitmap'){if(BigInt(raw.height)>4294967295n)throw new Error('Block height exceeds the supported 32-bit range.');payload=raw.height+'.bitmap';}
+ if(raw.protocol==='brc20'){spec={...raw,ticker:raw.ticker.toLowerCase()};path='inscription.json';mime='application/json';operation=raw.operation==='deploy'?'Deploy token':'Public mint';const body=raw.operation==='deploy'?{p:'brc-20',op:'deploy',tick:spec.ticker,max:raw.max,lim:raw.limit,dec:String(raw.decimals)}:{p:'brc-20',op:'mint',tick:spec.ticker,amt:raw.amount};if(raw.operation==='deploy'){const max=brc20Units(raw.max,raw.decimals),limit=brc20Units(raw.limit,raw.decimals);if(limit>max)throw new Error('The mint limit cannot exceed maximum supply.');}else brc20Units(raw.amount,raw.decimals);payload=JSON.stringify(body);}
+ if(raw.protocol==='sns'){spec={...raw,name:raw.name.toLowerCase()};if(raw.format==='text'&&(raw.avatar||raw.relay))throw new Error('Choose JSON registration to include an avatar or website relay.');if(raw.format==='json'){path='inscription.json';mime='application/json';payload=JSON.stringify({p:'sns',op:'reg',name:spec.name,...(raw.avatar?{avatar:raw.avatar}:{}),...(raw.relay?{relay:raw.relay}:{})});}else payload=spec.name;}
+ return {spec,label:protocolInfo[raw.protocol].name,operation,path,mime,payload,uncompressed:true,acceptance:'unverified',caution:protocolInfo[raw.protocol].caution};
+}
+export function protocolEntry(template:TemplateId){return template==='runes'?'rune.json':isMetaprotocol(template)?'protocol.json':'index.html';}
+export function readMetaprotocol(files:Record<string,string>,template:string){if(!isMetaprotocol(template))return null;const value=JSON.parse(files['protocol.json']);if(value.protocol!==template)throw new Error('The protocol design does not match this creation type.');return metaprotocolPlan(value);}

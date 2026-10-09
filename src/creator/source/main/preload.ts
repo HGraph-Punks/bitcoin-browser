@@ -6,7 +6,7 @@ allowed.add('deployment.requote');allowed.add('deployment.resume-owner');
 for(const command of ['project.history-list','project.checkpoint','project.checkpoint-remove','project.restore','project.diff','project.revision-file','project.export-draft'])allowed.add(command);
 for(const command of ['file.merge-prepare','file.merge-inspect','file.merge-read','file.merge-apply'])allowed.add(command);
 allowed.add('project.inspect');
-for(const command of ['collection.configure','collection.duplicate','collection.import-images','collection.import-metadata','rune.configure'])allowed.add(command);
+for(const command of ['collection.configure','collection.duplicate','collection.import-images','collection.import-metadata','rune.configure','metaprotocol.configure','protocol.copy-payload','protocol.export-payload'])allowed.add(command);
 for(const command of ['draft.save','draft.list','draft.remove'])allowed.add(command);
 const api:DesktopAPI={
   invoke(command,payload){if(!allowed.has(command))return Promise.resolve({ok:false,error:{code:'UNKNOWN_COMMAND',message:'This command is not available.'}});return ipcRenderer.invoke('builder:command',command,payload);},

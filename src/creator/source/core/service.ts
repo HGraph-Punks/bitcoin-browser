@@ -1,3 +1,4 @@
+import {metaprotocolSchema,protocolEntry,isProtocolCreation} from '../shared/metaprotocols';
 import {createHash} from 'node:crypto';
 import {z} from 'zod';
 import {ProjectStore,checkpointIdSchema} from './project-store';
@@ -104,6 +105,7 @@ export class WorkspaceService {
       case 'template.list':validate(z.object({}).strict(),payload);return templates;
       case 'collection.duplicate':{const p=validate(mutationSchema.extend({path:z.string().max(240)}).strict(),payload);return this.store.duplicateCollectionItem(p,p.path);}
       case 'collection.configure':{const p=validate(mutationSchema.extend({collection:collectionSchema}).strict(),payload);return this.store.configureCollection(p,p.collection);}
+      case 'metaprotocol.configure':{const p=validate(mutationSchema.extend({protocol:metaprotocolSchema}).strict(),payload);return this.store.configureMetaprotocol(p,p.protocol);}
       case 'rune.configure':{const p=validate(mutationSchema.extend({rune:runeSchema}).strict(),payload);return this.store.configureRune(p,p.rune);}
       case 'library.search':{const p=validate(z.object({query:z.string().max(100).default('')}).strict(),payload);return libraries.filter(l=>matchesLibrary(l,p.query)).map(l=>({...l,guide:guideFor(l)?{category:guideFor(l)!.category,useCases:guideFor(l)!.useCases,hint:guideFor(l)!.hint,example:guideFor(l)!.example(l)}:undefined,license:{...l.license,sources:l.license.sources.map(({text,...source})=>source)}}));}
       case 'library.research':{const p=validate(z.object({query:z.string().max(100).default('')}).strict(),payload);return {scope:researchCatalog.scope,sourceSha256:researchCatalog.sourceSha256,entries:researchCatalog.entries.filter(r=>`${r.name} ${r.notes} ${r.aliases.join(' ')} ${r.id}`.toLowerCase().includes(p.query.toLowerCase()))};}
@@ -111,10 +113,10 @@ export class WorkspaceService {
       case 'library.add':{const p=validate(mutationSchema.extend({key:z.string().max(80)}).strict(),payload);return this.store.addLibrary(p,p.key);}
       case 'build.create':{const project=await this.atRevision(payload),checkpoint=await this.store.checkpointForBuild(project.id,project.revision),build={...await this.build(project),sourceCheckpointId:checkpoint.id};this.builds.set(`${project.id}:${build.id}`,build);if(this.builds.size>12)this.builds.delete(this.builds.keys().next().value!);return build;}
       case 'build.inspect':{const p=validate(z.object({projectId,buildId:z.string().regex(/^[a-f0-9]{64}$/)}).strict(),payload),build=this.builds.get(`${p.projectId}:${p.buildId}`);if(!build)throw new AppError('BUILD_NOT_FOUND','Create this build again; it is no longer in the current session.');return inspectBuild(build);}
-      case 'dependency.inspect':{const p=validate(projectInput,payload),build=await this.build(await this.store.read(p.projectId));return {projectId:p.projectId,revision:build.revision,root:{path:'index.html',sha256:build.sha256},resources:inspectBuild(build).resources,stages:build.stages,libraries:build.libraries.map(l=>({key:l.key,id:l.id,sha256:l.sha256,dependencies:l.dependencies})),findings:build.findings,unpublishedFiles:build.unpublishedFiles,coverage:'Parsed HTML, CSS, JavaScript imports/common literal requests, glTF URIs and catalog edges; dynamically constructed edges require runtime inspection.'};}
+      case 'dependency.inspect':{const p=validate(projectInput,payload),build=await this.build(await this.store.read(p.projectId));return {projectId:p.projectId,revision:build.revision,root:{path:build.metaprotocol?.path??(build.rune?'rune.json':'index.html'),sha256:build.sha256},resources:inspectBuild(build).resources,stages:build.stages,libraries:build.libraries.map(l=>({key:l.key,id:l.id,sha256:l.sha256,dependencies:l.dependencies})),findings:build.findings,unpublishedFiles:build.unpublishedFiles,coverage:'Parsed HTML, CSS, JavaScript imports/common literal requests, glTF URIs and catalog edges; dynamically constructed edges require runtime inspection.'};}
       case 'preview.start':case 'preview.reload':{
         if(!this.preview)throw new AppError('PREVIEW_UNAVAILABLE','Open the desktop app to run a preview.');
-        const project=await this.atRevision(payload),key=project.id+':'+project.revision;
+        const project=await this.atRevision(payload),key=project.id+':'+project.revision;if(isProtocolCreation(project.template))throw new AppError('PROTOCOL_NO_PREVIEW','This creation has a native protocol editor and payload review, not a website preview.');
         if(name!=='preview.reload'&&this.previewRequest?.key===key)return this.previewRequest.promise;
         const generation=++this.previewGeneration;
         const promise=this.build(project).then(build=>{if(generation!==this.previewGeneration)throw new AppError('PREVIEW_SUPERSEDED','A newer preview was requested. Inspect the current revision.');return this.preview!.start(build,name==='preview.reload');});

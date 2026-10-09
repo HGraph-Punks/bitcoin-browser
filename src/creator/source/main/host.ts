@@ -1,3 +1,5 @@
+import {isProtocolCreation} from '../shared/metaprotocols';
+import {buildProject} from '../compiler/build';
 import { app, BrowserWindow, clipboard, ipcMain, Menu, nativeTheme, protocol, session, shell, dialog } from 'electron';
 import researchCatalog from '../catalog/research-catalog.json';
 import {includeLibrary} from './library-inclusions';
@@ -75,6 +77,8 @@ async function command(name:string,payload:unknown){
     case 'library.open-source':{const p=validate(z.object({key:z.string().max(80)}).strict(),payload),library=libraries.find(l=>l.key===p.key);if(!library)throw new AppError('UNKNOWN_LIBRARY','Choose a catalog library.');await showSource(library);return {opened:true};}
     case 'deployment.open':return deployments.command(name,payload);
     case 'build.export':{const p=validate(z.object({projectId}).strict(),payload);return projectFiles.export({...p,format:'html'});}
+    case 'protocol.copy-payload':{const p=validate(z.object({projectId}).strict(),payload),project=await store.read(p.projectId);if(!isProtocolCreation(project.template))throw new AppError('PROTOCOL_PROJECT_REQUIRED','Open a protocol creation.');const build=buildProject(project);if(build.findings.some(f=>f.severity==='error'))throw new AppError('BUILD_BLOCKED','Complete your protocol design before copying its payload.');clipboard.writeText(build.resources[0].text!);return {copied:true};}
+    case 'protocol.export-payload':return projectFiles.exportProtocol(payload);
     case 'project.export':return projectFiles.export(payload);
     case 'project.export-draft':return projectFiles.exportDraft(payload);
     case 'project.open-dialog':return projectFiles.openArchive(payload);

@@ -57,7 +57,7 @@ export class NativeDeployments {
     if(!this.engine)throw new AppError('BACKEND_NOT_CONFIGURED','Connect a local Bitcoin Core / Ord backend in the Inscribe screen first.');
     if(name==='backend.receive'){validate(z.object({}).strict(),payload);return {address:await this.engine.backend.receive()};}
     if(name==='deployment.authorize'||name==='deployment.resume-owner'){
-      const p=validate(deploymentInput.extend({quoteId:z.string().uuid(),planHash:z.string().regex(/^[a-f0-9]{64}$/)}).strict(),payload);return name==='deployment.authorize'?this.engine.authorizeFromOwner(p.projectId,p.deploymentId,p.quoteId,p.planHash):this.engine.resumeFromOwner(p.projectId,p.deploymentId,p.quoteId,p.planHash);
+      const p=validate(deploymentInput.extend({quoteId:z.string().uuid(),planHash:z.string().regex(/^[a-f0-9]{64}$/),protocolAcknowledged:z.boolean().optional()}).strict(),payload);return name==='deployment.authorize'?this.engine.authorizeFromOwner(p.projectId,p.deploymentId,p.quoteId,p.planHash,p.protocolAcknowledged):this.engine.resumeFromOwner(p.projectId,p.deploymentId,p.quoteId,p.planHash);
     }
     const p=validate(deploymentInput,payload),record=this.engine.status(p.projectId,p.deploymentId);
     if(name==='deployment.refresh')return this.engine.refresh(p.projectId,p.deploymentId);

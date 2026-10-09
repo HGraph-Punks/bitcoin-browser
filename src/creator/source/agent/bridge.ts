@@ -24,7 +24,7 @@ for(const command of ['file.merge-prepare','file.merge-inspect','file.merge-read
 mutations.add('file.merge-apply');
 const publicCommands=new Set(['template.list','library.search','library.inspect','library.research']);
 allowed.add('library.research');
-for(const command of ['collection.configure','collection.duplicate','rune.configure'])allowed.add(command);
+for(const command of ['collection.configure','collection.duplicate','rune.configure','metaprotocol.configure'])allowed.add(command);
 
 // A filesystem-protected local socket is separate from every renderer session.
 // Tokens authorize only named projects and optional creation in the owned store.

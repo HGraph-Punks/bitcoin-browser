@@ -21,6 +21,7 @@ export class NativeDraftPreview {
   attach(window:BrowserWindow){window.webContents.on('console-message',this.consoleListener);}
   private record(event:Omit<PreviewEvent,'at'>){if(!this.state)return;this.state.events.push({...event,message:event.message.slice(0,2000),url:event.url?.slice(0,1000),at:new Date().toISOString()});this.state.events=this.state.events.slice(-200);this.changed();}
   async start(build:BuildArtifact,force=false){
+    if(build.rune||build.metaprotocol)throw new AppError('PROTOCOL_NO_PREVIEW','Protocol creations use native editors instead of website previews.');
     if(!force&&this.build?.id===build.id&&this.build.revision===build.revision&&this.state?.status!=='error')return this.inspect();
     this.build=build;this.epoch++;
     this.state={url:`${this.origin}/content/${build.previewId}?view=${this.epoch}`,projectId:build.projectId,revision:build.revision,buildId:build.id,profile:'ord-emulation',events:[],status:'loading'};

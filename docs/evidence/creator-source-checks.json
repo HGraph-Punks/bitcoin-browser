@@ -1,15 +1,15 @@
 {
   "schemaVersion": 1,
-  "version": "0.2.0-rc.5",
+  "version": "0.2.0-rc.6",
   "sourceBuilderCommit": "96141f4",
-  "browserBaseCommit": "3d73d1d612912a3c99ee510a72afa6e1fedca925",
+  "browserBaseCommit": "5ed3dcee60f2b0c07c8541ecb3e484fbbe447f43",
   "checks": {
     "browser": {
       "passed": 2258,
       "failed": 0
     },
     "creator": {
-      "passed": 49,
+      "passed": 54,
       "failed": 0
     },
     "creatorTypeScript": true,
