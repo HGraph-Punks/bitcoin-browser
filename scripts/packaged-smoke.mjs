@@ -168,7 +168,7 @@ async function navigateShell(cdp, input, expectedText) {
     page: document.querySelector('#page')?.innerText,
     network: document.querySelector('#network-status')?.textContent,
     cache: document.querySelector('#cache-status')?.textContent
-  }))()`)), (value) => value.busy === 'false' && value.loading === false && value.page?.includes(expectedText), stepTimeoutMs, `rendered ${input}`);
+  }))()`)), (value) => value.busy === 'false' && value.loading === false && value.page?.replace(/\s+/g, ' ').includes(expectedText.replace(/\s+/g, ' ')), stepTimeoutMs, `rendered ${input}`);
   } catch (error) {
     error.evidence = { expectedText, lastSnapshot: lastSnapshot && { ...lastSnapshot, page: lastSnapshot.page?.slice(0, 4096) } };
     throw error;

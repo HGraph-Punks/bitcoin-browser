@@ -826,8 +826,8 @@
     },
     {
       "path": "scripts/packaged-smoke.mjs",
-      "bytes": 114273,
-      "sha256": "029dc69477c50b963dac7a4944d84747dfb76ed31ac45b3d4bdaa36e3ccd20fa"
+      "bytes": 114315,
+      "sha256": "9181bf005e6dd8acbe33c633dfb6af63a2cdfe9a6f5cb63fb6fda6c8f99d3e84"
     },
     {
       "path": "scripts/packaged-startup-readiness.mjs",
