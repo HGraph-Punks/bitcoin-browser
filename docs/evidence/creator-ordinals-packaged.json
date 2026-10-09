@@ -1,8 +1,8 @@
 {
-  "at": "2026-10-08T23:12:00.264Z",
-  "version": "0.2.0-rc.5",
+  "at": "2026-10-09T00:08:36.075Z",
+  "version": "0.2.0-rc.6",
   "packaged": true,
-  "archiveSha256": "db25869b16b176e2502541eef2881bce8e22209f575306a53a0d667c02acaaf8",
+  "archiveSha256": "14d9f579785a3bf14135cb339a55e82fccb099a15876563d831df6cc50ca855e",
   "scope": "Owned disposable regtest wallet; real desktop approval and OS-protected transaction vault; no owner wallet or mainnet spending",
   "checks": {
     "nativeMultiImageChooser": false,
@@ -14,59 +14,190 @@
     "zeroPremineEtched": true,
     "disabledEarlyRuneResume": true,
     "sixConfirmationRuneReveal": true,
-    "nativeRuneNavigation": true
+    "nativeRuneNavigation": true,
+    "nativeMetaprotocolCreators": true,
+    "protocolAcknowledgementRequired": true,
+    "uncompressedProtocolPayloads": true,
+    "protocolAcceptanceNotClaimed": true,
+    "nativeProtocolNavigation": true
   },
+  "protocols": [
+    {
+      "protocol": "bitmap",
+      "payload": "100.bitmap",
+      "mime": "text/plain;charset=utf-8",
+      "encoding": null,
+      "receipt": {
+        "rootId": "8e85e1039b76fc3258a2a3f985b3086c458d961730f3cd1fca07cd207c6f23e8i0",
+        "network": "regtest",
+        "sourceRevision": 1,
+        "buildId": "00f84cef27eacb8e2d7d67345f300f54a473bd47f2bbe73acd9f0e8d3c9b868b",
+        "compilerVersion": "2.3.0",
+        "totalFeeSats": 294,
+        "totalPostageSats": 10000,
+        "resources": [
+          {
+            "path": "inscription.txt",
+            "id": "8e85e1039b76fc3258a2a3f985b3086c458d961730f3cd1fca07cd207c6f23e8i0",
+            "sha256": "c0862974425ef3be4e915d15e38b1e3f98950c3e758568b02f53c89e945792ca",
+            "commit": "1aa7a11586bd936ffa2450b8c86de40b1c1381a18a9f5960cd1b9b3049b5b4c8",
+            "reveal": "8e85e1039b76fc3258a2a3f985b3086c458d961730f3cd1fca07cd207c6f23e8",
+            "blockHash": "6227f854f9eb005b1fe18f1daa7bef2c99e363b386377ede8a9d194b08c7f4a4"
+          }
+        ],
+        "metaprotocol": {
+          "protocol": "bitmap",
+          "label": "Bitmap",
+          "operation": "District claim",
+          "acceptance": "unverified"
+        }
+      }
+    },
+    {
+      "protocol": "brc20",
+      "payload": "{\"p\":\"brc-20\",\"op\":\"deploy\",\"tick\":\"btst\",\"max\":\"21000000\",\"lim\":\"1000\",\"dec\":\"18\"}",
+      "mime": "application/json",
+      "encoding": null,
+      "receipt": {
+        "rootId": "817f1d8a003098aa8b3b950940bf63727ac6a05f102d6052a6c74424dae7d4c1i0",
+        "network": "regtest",
+        "sourceRevision": 1,
+        "buildId": "4b27ed8b8351c03814ba26a857f8f6e217cf8d2f900ed3e770b2d9b30ad44830",
+        "compilerVersion": "2.3.0",
+        "totalFeeSats": 311,
+        "totalPostageSats": 10000,
+        "resources": [
+          {
+            "path": "inscription.json",
+            "id": "817f1d8a003098aa8b3b950940bf63727ac6a05f102d6052a6c74424dae7d4c1i0",
+            "sha256": "1d6370110b27132e486cb87fcd0095f3828042a494f6874b41398614090d4863",
+            "commit": "80314b406668fb79a328429d1f6bc6bb042ccc6244ecd3051db1adc069fa8a16",
+            "reveal": "817f1d8a003098aa8b3b950940bf63727ac6a05f102d6052a6c74424dae7d4c1",
+            "blockHash": "1fac5fbad023eb72cb994afb8bf95ea3b1cccea26adb6894d3d1188634958f17"
+          }
+        ],
+        "metaprotocol": {
+          "protocol": "brc20",
+          "label": "BRC-20",
+          "operation": "Deploy token",
+          "acceptance": "unverified"
+        }
+      }
+    },
+    {
+      "protocol": "brc20",
+      "payload": "{\"p\":\"brc-20\",\"op\":\"mint\",\"tick\":\"btst\",\"amt\":\"1000\"}",
+      "mime": "application/json",
+      "encoding": null,
+      "receipt": {
+        "rootId": "ed84fa9f9afc1be9ed46944b5f4507c4bbb3f3682a919d73b3301708b9721ac5i0",
+        "network": "regtest",
+        "sourceRevision": 1,
+        "buildId": "1ae823a35bf77df4f242192aca0a40e98a16505bdbf4adbe2c936ef3271c24e3",
+        "compilerVersion": "2.3.0",
+        "totalFeeSats": 303,
+        "totalPostageSats": 10000,
+        "resources": [
+          {
+            "path": "inscription.json",
+            "id": "ed84fa9f9afc1be9ed46944b5f4507c4bbb3f3682a919d73b3301708b9721ac5i0",
+            "sha256": "6d3de2a43073de6234ff885d78ab45ba7c2906976fe0baeb753ba50c12af3d53",
+            "commit": "947d7a7167d56d3e3ebd22aee600cde4ce73f57a3cb737bb3ad89591463aa53d",
+            "reveal": "ed84fa9f9afc1be9ed46944b5f4507c4bbb3f3682a919d73b3301708b9721ac5",
+            "blockHash": "721c9a2bf645476cc882d6df0f94a2120b3fc52cf21c1da6e9554ae79a8bb1e2"
+          }
+        ],
+        "metaprotocol": {
+          "protocol": "brc20",
+          "label": "BRC-20",
+          "operation": "Public mint",
+          "acceptance": "unverified"
+        }
+      }
+    },
+    {
+      "protocol": "sns",
+      "payload": "native.sats",
+      "mime": "text/plain;charset=utf-8",
+      "encoding": null,
+      "receipt": {
+        "rootId": "d6e192fdf3135a250def00d7ea7c3e9f234206bba30ab04c5c60aa4e48b0efdfi0",
+        "network": "regtest",
+        "sourceRevision": 1,
+        "buildId": "006fdd90adc0a598fcc8aff0e8048233edf60d30df01de1850c1d61d7c8eca62",
+        "compilerVersion": "2.3.0",
+        "totalFeeSats": 294,
+        "totalPostageSats": 10000,
+        "resources": [
+          {
+            "path": "inscription.txt",
+            "id": "d6e192fdf3135a250def00d7ea7c3e9f234206bba30ab04c5c60aa4e48b0efdfi0",
+            "sha256": "7b23665a193484e77b6c679905e772a30e9ee0fd1b829c10177a557ea604aca8",
+            "commit": "9b52cd1659cda4ae28e36b5c0d1d805f16beb7b4581647bb19d6088c031dc4e2",
+            "reveal": "d6e192fdf3135a250def00d7ea7c3e9f234206bba30ab04c5c60aa4e48b0efdf",
+            "blockHash": "6214f56e2815edf7bbf1c0e8b33c69fe782b7726cda4b1e22a8de27fa76a9bfb"
+          }
+        ],
+        "metaprotocol": {
+          "protocol": "sns",
+          "label": "Sats Names",
+          "operation": "Name registration",
+          "acceptance": "unverified"
+        }
+      }
+    }
+  ],
   "collection": {
-    "rootId": "fc7776248f654e264b5ab725086385e821a6d68c186f0dafb28118ec9e830a31i0",
+    "rootId": "ee332f4561e1777a0f162acc111ff35b9a15775fdf6f1d416e3c2172204787bei0",
     "network": "regtest",
     "sourceRevision": 3,
-    "buildId": "f20c344d1349b9453cdca78673160262b335cd27cf213c3c94fa01ce500b1488",
-    "compilerVersion": "2.2.0",
-    "totalFeeSats": 1056,
+    "buildId": "5a71f71cdc1a4732ffc4c5134597569fe199a99136cb6a9de62c81a754e954ed",
+    "compilerVersion": "2.3.0",
+    "totalFeeSats": 1057,
     "totalPostageSats": 30000,
     "resources": [
       {
         "path": "assets/art.svg",
-        "id": "30a5e6727bac5d2fb5e88b502db08f61e3036da22411d98f813f1b8ca18e4a65i0",
+        "id": "44f4f24165b020dc6bd096226b937c5e59f1b79a2c7cb7e5c9bfa1f75b8e02e6i0",
         "sha256": "2361adddfaa21c27fd9cb013c4d6ee691958f973c182e4fe8cd68d6fefbd3ebe",
-        "commit": "be03b1dfa07ea1a782177fbb3b59b4636ad0bcf89461fff5fba5d23e942b9aab",
-        "reveal": "30a5e6727bac5d2fb5e88b502db08f61e3036da22411d98f813f1b8ca18e4a65",
-        "blockHash": "33ec89beda908be82b5e1d6f8e76292bd186516737fa5c8345e69f1b6273117b"
+        "commit": "6bc63a66f7118e9192f266ad39bdebd3e352722a6a2a01d8411e50607590a1ae",
+        "reveal": "44f4f24165b020dc6bd096226b937c5e59f1b79a2c7cb7e5c9bfa1f75b8e02e6",
+        "blockHash": "08b076124edfbe84db75618d234d255c14d227b702733eedcf2b0b521f41cf37"
       },
       {
         "path": "assets/pixel.png",
-        "id": "30a5e6727bac5d2fb5e88b502db08f61e3036da22411d98f813f1b8ca18e4a65i1",
+        "id": "44f4f24165b020dc6bd096226b937c5e59f1b79a2c7cb7e5c9bfa1f75b8e02e6i1",
         "sha256": "6b1048f8a6d40bac0b2954c18fefa40c4ea7a96120fc2e54b7317c0e43c2bbec",
-        "commit": "be03b1dfa07ea1a782177fbb3b59b4636ad0bcf89461fff5fba5d23e942b9aab",
-        "reveal": "30a5e6727bac5d2fb5e88b502db08f61e3036da22411d98f813f1b8ca18e4a65",
-        "blockHash": "33ec89beda908be82b5e1d6f8e76292bd186516737fa5c8345e69f1b6273117b"
+        "commit": "6bc63a66f7118e9192f266ad39bdebd3e352722a6a2a01d8411e50607590a1ae",
+        "reveal": "44f4f24165b020dc6bd096226b937c5e59f1b79a2c7cb7e5c9bfa1f75b8e02e6",
+        "blockHash": "08b076124edfbe84db75618d234d255c14d227b702733eedcf2b0b521f41cf37"
       },
       {
         "path": "index.html",
-        "id": "fc7776248f654e264b5ab725086385e821a6d68c186f0dafb28118ec9e830a31i0",
-        "sha256": "69e7d22b3a77054f9249e1f0107f7b4d3b7d03a8388b1f380e07bf09d7746a12",
-        "commit": "94f9a6e986f7886967f05536418890561cae0920ca1228147494551a6b852387",
-        "reveal": "fc7776248f654e264b5ab725086385e821a6d68c186f0dafb28118ec9e830a31",
-        "blockHash": "1743dbe8c6abac6b6e033762490e28de12d84c97d342c004637ef58521265fc3"
+        "id": "ee332f4561e1777a0f162acc111ff35b9a15775fdf6f1d416e3c2172204787bei0",
+        "sha256": "2b0bf0a788d684b88a2e0820e0fc26912d5cc0814c6c1fa530084c46ea7066f3",
+        "commit": "a471ce365941613e5d0f16468a0e193db6a69448dfde4b0bbb6322c09e0da10a",
+        "reveal": "ee332f4561e1777a0f162acc111ff35b9a15775fdf6f1d416e3c2172204787be",
+        "blockHash": "1b8363c6feb5f4687afa771f6cb587edff06625f41d73405d8f0ac52e96732c6"
       }
     ]
   },
   "rune": {
-    "rootId": "9dd04e16eb12a931f2b02f6c6cbacf97c0b9d9ea8688e979c02e7e4a26c78d10i0",
+    "rootId": "724eac8ecc24e8371cba6ec0f8ddcb3ccb9fd6611f96dcd41967fa3af24070b6i0",
     "network": "regtest",
     "sourceRevision": 1,
-    "buildId": "413e50285ea0ae1e2de792cd17c10611a0744078ddd5771d7c70f65d3f52a44e",
-    "compilerVersion": "2.2.0",
-    "totalFeeSats": 372,
+    "buildId": "5f4309d1bca14248716405e0d7e542d725f5d06670268f8aeeef41e265874ba6",
+    "compilerVersion": "2.3.0",
+    "totalFeeSats": 368,
     "totalPostageSats": 10000,
     "resources": [
       {
         "path": "rune.json",
-        "id": "9dd04e16eb12a931f2b02f6c6cbacf97c0b9d9ea8688e979c02e7e4a26c78d10i0",
-        "sha256": "10c68a41f473283ae1d16027950f60bddcabc72e17d5595c56e9cf5dd0476226",
-        "commit": "9f253f92ba0ffa660490901fd4180df3b4c1b955be562f700cb716108d67595e",
-        "reveal": "9dd04e16eb12a931f2b02f6c6cbacf97c0b9d9ea8688e979c02e7e4a26c78d10",
-        "blockHash": "12ba8f8262a5061e1d079b0f72a11471b3b10d02dc95107216238b7be1f066c1"
+        "id": "724eac8ecc24e8371cba6ec0f8ddcb3ccb9fd6611f96dcd41967fa3af24070b6i0",
+        "sha256": "a7ca79b3dca1362a32bc5c5a01cfa30a38521bab06687de5493962e40fa4cca5",
+        "commit": "9a2ea01f90f4c60bd03ffcf92b93fd6716d9cf57a4d069e973de7842a4feffbf",
+        "reveal": "724eac8ecc24e8371cba6ec0f8ddcb3ccb9fd6611f96dcd41967fa3af24070b6",
+        "blockHash": "31e8a9574a426ba34bbd70891e06ebcef3ea984131a6a2c3138243bedf91878f"
       }
     ],
     "rune": {
@@ -74,5 +205,5 @@
       "id": "111:1"
     }
   },
-  "localEvidence": "/private/tmp/btc-ordinal-native-McIj08"
+  "localEvidence": "/private/tmp/btc-ordinal-native-EdEqVf"
 }

@@ -1,16 +1,16 @@
 {
-  "checkedAt": "2026-10-08T23:12:47.478Z",
-  "applicationVersion": "0.2.0-rc.5",
+  "checkedAt": "2026-10-09T00:06:14.894Z",
+  "applicationVersion": "0.2.0-rc.6",
   "packaged": true,
   "driver": "renderer-cdp-with-main-inspection-disabled",
-  "archiveSha256": "db25869b16b176e2502541eef2881bce8e22209f575306a53a0d667c02acaaf8",
+  "archiveSha256": "14d9f579785a3bf14135cb339a55e82fccb099a15876563d831df6cc50ca855e",
   "config": {
     "chain": "regtest",
     "coreVersion": 31.1,
     "ordVersion": "0.29.0",
     "height": 102
   },
-  "localEvidence": "../../../../../private/tmp/btc-create-packaged-Pr6qJA",
+  "localEvidence": "../../../../../private/tmp/btc-create-packaged-JUUy3T",
   "checks": {
     "encryptedFundingWallet": true,
     "lockedWalletDeniedBeforeBroadcast": true,
@@ -40,29 +40,29 @@
     }
   },
   "receipt": {
-    "rootId": "311acbb437317549b1fe3dd2d617b1058dba6519ebd04bd446c4ed8b49401aa6i0",
+    "rootId": "b7117efe3cb224c70a8fc19c1f0805f3554065ef8c91ca75e95d079fdf2a91bfi0",
     "network": "regtest",
     "sourceRevision": 2,
-    "buildId": "aac90125986bbfd610db0f268fcf546f67d5028e2e39e24a9833ba85132ad6f1",
-    "compilerVersion": "2.2.0",
+    "buildId": "5fad87db0f59e0e36a3d9f613a624f4770af272c1e94546c54e104964d1d3f4b",
+    "compilerVersion": "2.3.0",
     "totalFeeSats": 628,
     "totalPostageSats": 20000,
     "resources": [
       {
         "path": "app.js",
-        "id": "28e6a07e281a788a96fff9bae475b0276df85f21cc33d58b2ca13a37205dacaei0",
+        "id": "db055d583317f69514f130033e916470bb7649123abb002c197f40bf90a3ee3ei0",
         "sha256": "16f71b4f49b00e77264b5fca99a1c0e217a7aa87bb051b081af9e44c5f86fff3",
-        "commit": "aeaf371de07e3528c287fa584ceaad7880d0cea87c36af20b61a16c00ed79eba",
-        "reveal": "28e6a07e281a788a96fff9bae475b0276df85f21cc33d58b2ca13a37205dacae",
-        "blockHash": "6dc1c1270b24504f0fe7b817d7173084976903cb5fc3a122422fe0d9f16727fe"
+        "commit": "144984281ff7b425ed0e9143c05f5f2966f6e50b579a67c21e161041181c09e1",
+        "reveal": "db055d583317f69514f130033e916470bb7649123abb002c197f40bf90a3ee3e",
+        "blockHash": "4bb9562f4d1a849b530c1ce4460a10731568d05f3e21d0ce32ed76184ba18fd6"
       },
       {
         "path": "index.html",
-        "id": "311acbb437317549b1fe3dd2d617b1058dba6519ebd04bd446c4ed8b49401aa6i0",
-        "sha256": "19247fea48281725d309b644c91304bee3dd1b482f2fc4bff63c13611e0698a6",
-        "commit": "bcfa60ab9e50d023d3d25f7040c9d1b6e7a823de0f57cedf925c62c52fd7eba8",
-        "reveal": "311acbb437317549b1fe3dd2d617b1058dba6519ebd04bd446c4ed8b49401aa6",
-        "blockHash": "7134fa821497e7429991df4ed6a8dfac1805293d20b88e644419e42791a8fe45"
+        "id": "b7117efe3cb224c70a8fc19c1f0805f3554065ef8c91ca75e95d079fdf2a91bfi0",
+        "sha256": "72ff0af0aee4c18dd64aedfb68c9864e3dabd6d9ada5a13ad9996570bf34569c",
+        "commit": "98168bdb6a539f114908c0498f023261bd08ac5467a060d66745b98b70191de9",
+        "reveal": "b7117efe3cb224c70a8fc19c1f0805f3554065ef8c91ca75e95d079fdf2a91bf",
+        "blockHash": "3bc67bdd056e35363156782f3a4c1e75862c857a4cf6beebf8ae100c25605372"
       }
     ]
   }
