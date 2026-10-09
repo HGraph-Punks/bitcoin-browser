@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "version": "0.2.0-rc.6",
+  "version": "0.2.0-rc.7",
   "packaged": true,
   "driver": "renderer-cdp-with-main-inspection-disabled",
-  "archiveSha256": "14d9f579785a3bf14135cb339a55e82fccb099a15876563d831df6cc50ca855e",
-  "at": "2026-10-09T00:04:32.364Z",
-  "profile": "/private/tmp/btc-create-native-2Hbd8M/profile",
+  "archiveSha256": "f5057a1f26010d2fe2649568df6045b98511c44e4ff5a615593d399c813efd22",
+  "at": "2026-10-09T02:35:44.739Z",
+  "profile": "/private/tmp/btc-create-native-He66s8/profile",
   "checks": [
     {
       "name": "Distinct native creation mode with 24 starters",
@@ -65,7 +65,7 @@
       "graphics": {
         "width": 645,
         "height": 645,
-        "colored": 212186,
+        "colored": 211988,
         "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
       },
       "buildId": "b85c91f412b43a71f4d1df77a5fe84f49eb23485ea78036929253f62b0746962",
@@ -74,13 +74,13 @@
           "type": "resource",
           "message": "Three.js r178 · native browser source · content hash matches",
           "url": "/content/a4a6f99205628bdc3ca2143a4e380f7ebc576b4414c16dffdb34be28337ffe83i0",
-          "at": "2026-10-09T00:04:15.029Z"
+          "at": "2026-10-09T02:35:28.220Z"
         },
         {
           "type": "resource",
           "message": "Three.js core r178 · native browser source · content hash matches",
           "url": "/content/35aee6992ab002de22acf9df65e7067779512a8038e131a3af6c1757a6da90f5i0",
-          "at": "2026-10-09T00:04:15.049Z"
+          "at": "2026-10-09T02:35:28.234Z"
         }
       ]
     },
@@ -111,7 +111,7 @@
           "type": "resource",
           "message": "p5.js 1.11.2 · native browser source · content hash matches",
           "url": "/content/13a5c8e41dfc110514b450b2f15317988c0aaf276d3dbdcca9aa3c7d0b2188a7i0",
-          "at": "2026-10-09T00:04:15.838Z"
+          "at": "2026-10-09T02:35:28.923Z"
         }
       ]
     },
@@ -142,7 +142,7 @@
           "type": "resource",
           "message": "p5.js 2.0.1 · native browser source · content hash matches",
           "url": "/content/bed725759768159b0868fe0e6c9cd26a4c437f9e0903f70893edad280e35d843i0",
-          "at": "2026-10-09T00:04:17.033Z"
+          "at": "2026-10-09T02:35:30.039Z"
         }
       ]
     },
@@ -165,7 +165,7 @@
           "type": "resource",
           "message": "Phaser 3.80.1 · native browser source · content hash matches",
           "url": "/content/0d1a04b71975ec948b36cf3ccdff415fca851b9c17144413997395f5ea166e42i0",
-          "at": "2026-10-09T00:04:18.133Z"
+          "at": "2026-10-09T02:35:31.046Z"
         }
       ]
     },
@@ -183,8 +183,8 @@
         "context": "suspended"
       },
       "waveform": {
-        "peak": 0.07257919758558273,
-        "rms": 0.046950997844648686,
+        "peak": 0.07259504497051239,
+        "rms": 0.0469600344129093,
         "state": "running"
       },
       "trustedGesture": true,
@@ -199,7 +199,7 @@
           "type": "resource",
           "message": "Tone.js 15.0.4 · native browser source · content hash matches",
           "url": "/content/04813d7748d918bd8a3069cb1823ebc9586f0ce16cd6a97a784581ec38d13062i0",
-          "at": "2026-10-09T00:04:24.427Z"
+          "at": "2026-10-09T02:35:37.219Z"
         }
       ]
     },
@@ -246,7 +246,7 @@
           "type": "resource",
           "message": "Matter.js 0.19.0 · native browser source · content hash matches",
           "url": "/content/9d567e6ef8bd6b13458cc67cc5e8339395a4433e45db4554ff83c88a5df8bae2i0",
-          "at": "2026-10-09T00:04:26.839Z"
+          "at": "2026-10-09T02:35:39.396Z"
         }
       ]
     },
@@ -269,7 +269,7 @@
           "type": "resource",
           "message": "anime.js 3.2.1 · native browser source · content hash matches",
           "url": "/content/23ad98a190933e5c238b57e05814acc154d55928edf02d298cc82f4fac0313fei0",
-          "at": "2026-10-09T00:04:28.301Z"
+          "at": "2026-10-09T02:35:40.932Z"
         }
       ]
     },
@@ -294,7 +294,7 @@
           "type": "resource",
           "message": "D3 7.8.5 · native browser source · content hash matches",
           "url": "/content/dcc251660ca7ce393f94c812642d214d8d2c440f314b542a8059c18404c57bf0i2",
-          "at": "2026-10-09T00:04:29.478Z"
+          "at": "2026-10-09T02:35:42.058Z"
         }
       ]
     }

@@ -22,7 +22,13 @@ The native harness uses disposable fresh and returning profiles with no configur
 
 The full Browser suite passes **2,263/2,263**, retained Creator tests **54/54**, and TypeScript/static/security checks pass. See [the source-check receipt](evidence/home-source-checks.json).
 
-[Source-native receipt](evidence/home-native.json) records the checked version and local screenshots. Exact signed-package qualification is recorded separately after packaging. UI qualification does not claim wallet or transaction execution. Existing RC6 inscription receipts remain documented in [the Create guide](CREATOR_BUILD.md).
+[Source-native receipt](evidence/home-native.json) records the checked version and local screenshots. The [exact signed-package receipt](evidence/home-packaged.json) independently passes all 11 checks against the MoonScape Developer ID app, with no renderer errors. The live scene contains 2,257 particles. The [package integrity receipt](evidence/creator-package-integrity.json) verifies the source/payload inventory, signature, hardened runtime and seven release fuses. The [RC7 native Creator receipt](evidence/creator-packaged.json) also passes the retained 24 starters, native protocol editors, mode switching, mandatory library warning, 51 MCP tools, nine interactive library experiences and JSZip generation.
+
+The signed RC7 archive SHA-256 is `f5057a1f26010d2fe2649568df6045b98511c44e4ff5a615593d399c813efd22`.
+
+Inspected package screenshots: [dark homepage](evidence/home-ui/home-desktop-rc7.png), [light theme](evidence/home-ui/home-light-rc7.png), [narrow layout](evidence/home-ui/home-small-rc7.png), [reduced motion](evidence/home-ui/home-reduced-motion-rc7.png), [discovery cards](evidence/home-ui/home-discovery-rc7.png) and [returning users](evidence/home-ui/home-returning-rc7.png).
+
+UI qualification does not claim wallet or transaction execution. Existing RC6 inscription receipts remain documented in [the Create guide](CREATOR_BUILD.md).
 
 Reproduce after installing the repository’s locked development dependencies and building the creator:
 
