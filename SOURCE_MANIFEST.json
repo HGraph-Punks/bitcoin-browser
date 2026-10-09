@@ -631,8 +631,8 @@
     },
     {
       "path": "scripts/beta-release.mjs",
-      "bytes": 12098,
-      "sha256": "8b740cb16e29193abe3e137bba6637bd7dd813b3112d11babcd0210285a9fbf0"
+      "bytes": 12238,
+      "sha256": "7e349d267cf63d91ae8ce0e070ea9eff4b503b07d9c82d718c5ca7c08a7eb050"
     },
     {
       "path": "scripts/beta-security.mjs",
@@ -766,13 +766,13 @@
     },
     {
       "path": "scripts/package.mjs",
-      "bytes": 1629,
-      "sha256": "dd2e3abee9cb347ff9f7b3b15f38a2e9ed90a2016f818b1a88adb347e21d701e"
+      "bytes": 1630,
+      "sha256": "349f6353562886f203b19823988b9c8f19203d3ccbcbcebe0e2a2894618acdf7"
     },
     {
       "path": "scripts/packaged-creator-mode-checks.mjs",
-      "bytes": 2797,
-      "sha256": "b7133491ef9d178e194f3d9bffa4b1c8aa68a443f19157c5695490a1a41561d8"
+      "bytes": 2836,
+      "sha256": "0cd1be62e710e50b8fccb74b01e7abf4bca7ba3245e590318d97af0565d76548"
     },
     {
       "path": "scripts/packaged-diagnostic-cdp.mjs",
@@ -826,8 +826,8 @@
     },
     {
       "path": "scripts/packaged-smoke.mjs",
-      "bytes": 114010,
-      "sha256": "3b1dfd04d7e6c3c0c377089da1be950c05eabe51cbb3390ef44e10701616cf2f"
+      "bytes": 114273,
+      "sha256": "029dc69477c50b963dac7a4944d84747dfb76ed31ac45b3d4bdaa36e3ccd20fa"
     },
     {
       "path": "scripts/packaged-startup-readiness.mjs",
@@ -1741,8 +1741,8 @@
     },
     {
       "path": "src/main/preload.cjs",
-      "bytes": 12133,
-      "sha256": "a3ec16e462653f30c6e418d260d14a752df8f2c2e838441771ab281ba6bb03f7"
+      "bytes": 12221,
+      "sha256": "c085967d940c9987936ac74cb46a1000456ba5a041937c866cd252f5a4415d2a"
     },
     {
       "path": "src/main/provider-credential-coordinator.js",
@@ -1941,8 +1941,8 @@
     },
     {
       "path": "src/renderer/creator-mode.css",
-      "bytes": 1247,
-      "sha256": "ba23f52c5dcfea2a6a1558be7575ca7cfbca8562d49090956f4450f024ecd838"
+      "bytes": 1415,
+      "sha256": "3401bce014f882fdd2c956e7b93f2fa7b2176927e46ce2bafa6691dc42f1b2e6"
     },
     {
       "path": "src/renderer/creator-mode.js",
@@ -2901,8 +2901,8 @@
     },
     {
       "path": "tests/preload-contract.test.js",
-      "bytes": 4288,
-      "sha256": "c04397ee7e5f152d2c136fa9323cdbe1838eaef0cae385d79c3281a3fd37a938"
+      "bytes": 5081,
+      "sha256": "267fc8448606bcce3280195070d49800e43d59f1c0d0e9314d181200967ce5e5"
     },
     {
       "path": "tests/provider-adapters.test.js",

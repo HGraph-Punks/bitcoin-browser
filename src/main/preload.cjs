@@ -117,6 +117,7 @@ async function resolveNavigation(input, options, requestId) {
   }
 }
 
+if(typeof location==='undefined' || location.href==='app://app/renderer/index.html'){
 contextBridge.exposeInMainWorld('satBrowser', {
   creator: {open:()=>invoke('creator:open')},
   app: {
@@ -160,6 +161,7 @@ contextBridge.exposeInMainWorld('satBrowser', {
   },
   diagnostics: { export: () => invoke(C.DIAGNOSTICS_EXPORT) }
 });
+}
 
 // CREATOR_PRELOAD_INSERTION_POINT
 if(typeof location!=='undefined' && location.href==='app://app/creator/generated/renderer/index.html'){

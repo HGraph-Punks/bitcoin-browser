@@ -158,7 +158,7 @@ async function main() {
     console.log(`Native runner confirmed: ${requireNativeTarget(process.argv[3]).id}`);
   } else if (command === 'stage') {
     requireNativeTarget(process.argv[3]);
-    console.log((await stageAssets(path.join(root, 'release'), version, process.argv[3], windowsSigning, macosSigning)).join('\n'));
+    console.log((await stageAssets(process.platform==='linux'?path.resolve(root,JSON.parse(await fs.readFile(path.join(root,'package.json'),'utf8')).build.directories.output):path.join(root, 'release'), version, process.argv[3], windowsSigning, macosSigning)).join('\n'));
   } else if (command === 'draft') {
     validateBetaTag(tag, version);
     const repository = process.env.GITHUB_REPOSITORY;

@@ -7,3 +7,5 @@
 @media(max-width:980px){.browser-mode-switch{margin-left:4px}.browser-mode-switch button{padding:0 9px}.title-row .brand-name{display:none}}
 
 .mode-alpha{display:inline-flex;align-items:center;padding:2px 5px;border:1px solid color-mix(in srgb,var(--accent) 45%,transparent);border-radius:4px;background:var(--accent-bg);color:var(--accent-ink);font-size:8px;font-weight:700;line-height:1.2;letter-spacing:.06em;text-transform:uppercase}
+
+@media(max-width:480px){.title-row{padding:0 6px;gap:4px}.title-row .brand{display:none}.browser-mode-switch{margin-left:0}.browser-mode-switch button{padding:0 6px}}

@@ -105,3 +105,23 @@ test('preload normalizes IPC transport failures to a serializable record', async
     return true;
   });
 });
+
+
+test('native mode navigation exposes only its own API and unrelated pages receive neither API', () => {
+  for (const [url, expected] of [
+    ['app://app/renderer/index.html', ['satBrowser']],
+    ['app://app/creator/generated/renderer/index.html', ['builder']],
+    ['app://app/renderer/other.html', []],
+    ['https://example.com/', []]
+  ]) {
+    const exposed = new Map();
+    vm.runInNewContext(preloadSource, {
+      location: { href: url },
+      require(specifier) {
+        assert.equal(specifier, 'electron');
+        return { contextBridge: { exposeInMainWorld: (name, value) => exposed.set(name, value) }, ipcRenderer: { invoke() {}, on() {}, removeListener() {} } };
+      }
+    }, { filename: 'preload.cjs' });
+    assert.deepEqual([...exposed.keys()], expected, url);
+  }
+});

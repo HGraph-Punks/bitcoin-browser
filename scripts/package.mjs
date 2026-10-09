@@ -7,8 +7,6 @@ import { createPackagingPlan, inspectPackagingArguments, targetsMacDistribution 
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const input = process.argv.slice(2);
-const creatorBuild=spawnSync(process.execPath,[path.join(root,'scripts/build-creator.mjs')],{cwd:root,stdio:'inherit'});
-if(creatorBuild.status!==0)process.exit(creatorBuild.status??1);
 let plan;
 try {
   const { unsigned, unsignedMacosBeta, args } = inspectPackagingArguments(input);
@@ -21,6 +19,9 @@ try {
   console.error(error.message);
   process.exit(1);
 }
+
+const creatorBuild=spawnSync(process.execPath,[path.join(root,'scripts/build-creator.mjs')],{cwd:root,stdio:'inherit'});
+if(creatorBuild.status!==0)process.exit(creatorBuild.status??1);
 
 const cli = path.join(root, 'node_modules', 'electron-builder', 'cli.js');
 const child = spawn(process.execPath, [cli, ...plan.args], {
