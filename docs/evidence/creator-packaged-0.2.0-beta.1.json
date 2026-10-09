@@ -1,0 +1,355 @@
+{
+  "schemaVersion": 1,
+  "version": "0.2.0-beta.1",
+  "packaged": true,
+  "driver": "renderer-cdp-with-main-inspection-disabled",
+  "archiveSha256": "4641feeb5099dd4beb2f5d6f3d246361e116624b18184934f9ab67dc698f7ab2",
+  "at": "2026-10-09T04:04:36.157Z",
+  "profile": "/private/tmp/btc-create-native-lJvb6h/profile",
+  "checks": [
+    {
+      "name": "Distinct native creation mode with 24 starters",
+      "passed": true
+    },
+    {
+      "name": "Library search, detail and native example clipboard",
+      "passed": true
+    },
+    {
+      "name": "Unsaved source saved on mode exit, last project restored and browser has no creator bridge",
+      "passed": true
+    },
+    {
+      "name": "51 scoped MCP tools through the actual Electron executable",
+      "passed": true
+    },
+    {
+      "name": "Dedicated left-side creation types, native Rune/Bitmap/BRC-20/SNS forms without website previews, exact payload clipboard and saved designs across Browse switching",
+      "passed": true
+    },
+    {
+      "name": "Curated template filters, collection editions, exact Rune arithmetic, form save before mode exit, invalid traits blocked and four original interactive starters",
+      "passed": true
+    },
+    {
+      "name": "Unqualified Add requires unchecked explicit consent; Cancel and Escape preserve source and focus; accepted research remains unqualified and runs in the native opaque sandbox",
+      "passed": true,
+      "fixtureScope": "Research ID served by owned loopback fixture, not qualification of the real DOMPurify inscription"
+    },
+    {
+      "name": "Nine real interactive experiences in the native ord iframe",
+      "passed": true
+    },
+    {
+      "name": "Sidebar Add shares mandatory warning for a supported library with pending review",
+      "passed": true
+    },
+    {
+      "name": "JSZip trusted click creates an archive inside native content",
+      "passed": true
+    },
+    {
+      "name": "Separate inscription workflow with native backend configuration and exact review",
+      "passed": true
+    }
+  ],
+  "experiences": [
+    {
+      "template": "three",
+      "isolation": {
+        "node": "undefined",
+        "bridge": "undefined",
+        "path": "/content/dd2a946ca1f50178f51e94ac15b88e20d1df564b248ebd0d535a1a2a68c1c672i0",
+        "reducedMotion": false
+      },
+      "graphics": {
+        "width": 645,
+        "height": 645,
+        "colored": 212151,
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+      },
+      "buildId": "b85c91f412b43a71f4d1df77a5fe84f49eb23485ea78036929253f62b0746962",
+      "events": [
+        {
+          "type": "resource",
+          "message": "Three.js r178 · native browser source · content hash matches",
+          "url": "/content/a4a6f99205628bdc3ca2143a4e380f7ebc576b4414c16dffdb34be28337ffe83i0",
+          "at": "2026-10-09T04:04:18.917Z"
+        },
+        {
+          "type": "resource",
+          "message": "Three.js core r178 · native browser source · content hash matches",
+          "url": "/content/35aee6992ab002de22acf9df65e7067779512a8038e131a3af6c1757a6da90f5i0",
+          "at": "2026-10-09T04:04:18.937Z"
+        }
+      ]
+    },
+    {
+      "template": "sketch",
+      "isolation": {
+        "node": "undefined",
+        "bridge": "undefined",
+        "path": "/content/ad0cf604ec07b8a73d73ee244c069d03bc1c3011fa4cfb7b9700bbfbe9c5ade6i0",
+        "reducedMotion": true
+      },
+      "reducedMotion": true,
+      "version": "1.11.2",
+      "initialPause": "Play motion",
+      "pixels": {
+        "width": 646,
+        "height": 646,
+        "colored": 54568
+      },
+      "variationHashes": [
+        "540ed0e70113886a40cafe9ca6d949abe0a991b10f95deff790ba881d046d568",
+        "3835c50b37b5e8a9c48b8b11a245caced536e070f6c0df1e12f6546b4a9abcad"
+      ],
+      "playControl": true,
+      "buildId": "8df375ec5b9f7220255e71aeed3053822d751bd160a110376438cd6d580f8ec9",
+      "events": [
+        {
+          "type": "resource",
+          "message": "p5.js 1.11.2 · native browser source · content hash matches",
+          "url": "/content/13a5c8e41dfc110514b450b2f15317988c0aaf276d3dbdcca9aa3c7d0b2188a7i0",
+          "at": "2026-10-09T04:04:19.716Z"
+        }
+      ]
+    },
+    {
+      "template": "sketch2",
+      "isolation": {
+        "node": "undefined",
+        "bridge": "undefined",
+        "path": "/content/ab6bec5c6cfdaa7788b0b1c804f1a12a8eacde1d2ec69ff0d9d617215d151d41i0",
+        "reducedMotion": true
+      },
+      "reducedMotion": true,
+      "version": "2.0.1",
+      "initialPause": "Play motion",
+      "pixels": {
+        "width": 646,
+        "height": 646,
+        "colored": 20841
+      },
+      "variationHashes": [
+        "1cd6fc91d434bfce065048a0806f8a155502c3ffa614a464c9dcf93dc694dc65",
+        "dbf2c840ddbf3d02104463d11f702be138e2668d7c13060ddba2bfc2605977b6"
+      ],
+      "playControl": true,
+      "buildId": "9d886fdea6b006f988d930d9a31e55c945bd093adfc00611f02e2ee869ddec74",
+      "events": [
+        {
+          "type": "resource",
+          "message": "p5.js 2.0.1 · native browser source · content hash matches",
+          "url": "/content/bed725759768159b0868fe0e6c9cd26a4c437f9e0903f70893edad280e35d843i0",
+          "at": "2026-10-09T04:04:20.935Z"
+        }
+      ]
+    },
+    {
+      "template": "game",
+      "isolation": {
+        "node": "undefined",
+        "bridge": "undefined",
+        "path": "/content/36ab5a53d5c65eda9a0d240257f4a7a33856fb0f90896a4811a426a16d76cc2ci0",
+        "reducedMotion": true
+      },
+      "version": "3.80.1",
+      "movementButtons": true,
+      "completed": true,
+      "reset": true,
+      "keyboard": true,
+      "buildId": "06348e1a581b935d0cbf4492522d986fa5743e746c296706a8fbc5123668d876",
+      "events": [
+        {
+          "type": "resource",
+          "message": "Phaser 3.80.1 · native browser source · content hash matches",
+          "url": "/content/0d1a04b71975ec948b36cf3ccdff415fca851b9c17144413997395f5ea166e42i0",
+          "at": "2026-10-09T04:04:22.056Z"
+        }
+      ]
+    },
+    {
+      "template": "audio",
+      "isolation": {
+        "node": "undefined",
+        "bridge": "undefined",
+        "path": "/content/9067ed66b8e081ffa5931e220f5910908e89932df763184a610ec236bc9a4907i0",
+        "reducedMotion": true
+      },
+      "initial": {
+        "disabled": true,
+        "version": "15.0.4",
+        "context": "suspended"
+      },
+      "waveform": {
+        "peak": 0.07257919758558273,
+        "rms": 0.046950997844648686,
+        "state": "running"
+      },
+      "trustedGesture": true,
+      "stopped": {
+        "context": "suspended",
+        "label": "Enable sound",
+        "padsDisabled": true
+      },
+      "buildId": "4a1589fac04ae0e4758a790558f365943fd759fc8c32fea13cf65daf237cbab4",
+      "events": [
+        {
+          "type": "resource",
+          "message": "Tone.js 15.0.4 · native browser source · content hash matches",
+          "url": "/content/04813d7748d918bd8a3069cb1823ebc9586f0ce16cd6a97a784581ec38d13062i0",
+          "at": "2026-10-09T04:04:28.228Z"
+        }
+      ]
+    },
+    {
+      "template": "webgl",
+      "isolation": {
+        "node": "undefined",
+        "bridge": "undefined",
+        "path": "/content/7dd1b1b04d5576183b01f9c818e10408df922051243487f315197c8edc169c22i0",
+        "reducedMotion": true
+      },
+      "reducedMotion": true,
+      "graphics": {
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "width": 646,
+        "height": 646,
+        "fallback": false
+      },
+      "variationHashes": [
+        "e2cbe774dc158e669c2b9309ad7266346cdb87fb6005fd01ba592e560b6f713f",
+        "6ff7044d9a78160401d49208b1ba7e5322c74419daa73d7a796535e2c9acf007"
+      ],
+      "contextLossAndRestore": true,
+      "buildId": "c2a70ebd09f74e70b30d5df0edf566a8a07007220eb2fa86d6a18a3e3174d635",
+      "events": []
+    },
+    {
+      "template": "physics",
+      "isolation": {
+        "node": "undefined",
+        "bridge": "undefined",
+        "path": "/content/38c97d7d42fba04165aefd4f144e2c3a7fac91c585abc5e1be1a568938dc9b72i0",
+        "reducedMotion": true
+      },
+      "reducedMotion": true,
+      "version": "0.19.0",
+      "drop": true,
+      "gravity": true,
+      "pause": true,
+      "reset": true,
+      "buildId": "0dce2e134c0646b267503544f7d1a09f1d88ea7f7345521e0f26f0bef3aa6a3d",
+      "events": [
+        {
+          "type": "resource",
+          "message": "Matter.js 0.19.0 · native browser source · content hash matches",
+          "url": "/content/9d567e6ef8bd6b13458cc67cc5e8339395a4433e45db4554ff83c88a5df8bae2i0",
+          "at": "2026-10-09T04:04:30.689Z"
+        }
+      ]
+    },
+    {
+      "template": "motion",
+      "isolation": {
+        "node": "undefined",
+        "bridge": "undefined",
+        "path": "/content/830b1fe3d2b91394c5082be3aeea15a596b69119dfbaf3ed6c4f31f15e07b609i0",
+        "reducedMotion": true
+      },
+      "reducedMotion": true,
+      "version": "3.2.1",
+      "rearrange": true,
+      "play": true,
+      "pause": true,
+      "buildId": "930c0a6657e6286e359bd16a8bd42c7fbf86d0a76edd7e5db4db2da7bee60150",
+      "events": [
+        {
+          "type": "resource",
+          "message": "anime.js 3.2.1 · native browser source · content hash matches",
+          "url": "/content/23ad98a190933e5c238b57e05814acc154d55928edf02d298cc82f4fac0313fei0",
+          "at": "2026-10-09T04:04:32.157Z"
+        }
+      ]
+    },
+    {
+      "template": "chart",
+      "isolation": {
+        "node": "undefined",
+        "bridge": "undefined",
+        "path": "/content/2da2482fea810cb80a028bf9ff8e84d533de32237e5b3f26c8bfdb0db5603d10i0",
+        "reducedMotion": true
+      },
+      "version": "7.8.5",
+      "values": [
+        "Create: 33Collect: 52Explore: 71Play: 90Share: 33",
+        "Create: 46Collect: 65Explore: 84Play: 27Share: 46"
+      ],
+      "reset": true,
+      "accessibleValues": true,
+      "buildId": "4f9ad7a65912ae527406b9eac134e50e7282061079b08e16eab6fa338ffb28f7",
+      "events": [
+        {
+          "type": "resource",
+          "message": "D3 7.8.5 · native browser source · content hash matches",
+          "url": "/content/dcc251660ca7ce393f94c812642d214d8d2c440f314b542a8059c18404c57bf0i2",
+          "at": "2026-10-09T04:04:33.352Z"
+        }
+      ]
+    }
+  ],
+  "libraryHashes": [
+    {
+      "key": "three-r178",
+      "id": "a4a6f99205628bdc3ca2143a4e380f7ebc576b4414c16dffdb34be28337ffe83i0",
+      "sha256": "6cece4198426265684ba8f67878dde76591abfab63b5270618738d7d9a2a8ea8"
+    },
+    {
+      "key": "three-core-r178",
+      "id": "35aee6992ab002de22acf9df65e7067779512a8038e131a3af6c1757a6da90f5i0",
+      "sha256": "065c1e27e1e87051cf65e2d41d2f8f102b5dc0e5decf87d3da5fd79da6432110"
+    },
+    {
+      "key": "p5-1.11.2",
+      "id": "13a5c8e41dfc110514b450b2f15317988c0aaf276d3dbdcca9aa3c7d0b2188a7i0",
+      "sha256": "2ee031e707ccbd2cc8551c985fd1ebf5f59fea0abe186a7b23606568a1a306a1"
+    },
+    {
+      "key": "p5-2.0.1",
+      "id": "bed725759768159b0868fe0e6c9cd26a4c437f9e0903f70893edad280e35d843i0",
+      "sha256": "435e39b3ee2cb46f6d8cc616916b7dabb05f2b8fdd5cbde5f87c870ff6f2278d"
+    },
+    {
+      "key": "phaser-3.80.1",
+      "id": "0d1a04b71975ec948b36cf3ccdff415fca851b9c17144413997395f5ea166e42i0",
+      "sha256": "62081f6a1b51d040473f919ffedef9009953c20833518e146da5a8d1c9405ea8"
+    },
+    {
+      "key": "tone-15.0.4",
+      "id": "04813d7748d918bd8a3069cb1823ebc9586f0ce16cd6a97a784581ec38d13062i0",
+      "sha256": "33c3fdc2f26f66f203631deb2c51a5ade54cdffb8271d2d98106c295de89bc0d"
+    },
+    {
+      "key": "matter-0.19.0",
+      "id": "9d567e6ef8bd6b13458cc67cc5e8339395a4433e45db4554ff83c88a5df8bae2i0",
+      "sha256": "bdf68e297d6c4ec85b8dd693b8781d99db0090449c9a3ba69948eede08c9275a"
+    },
+    {
+      "key": "anime-3.2.1",
+      "id": "23ad98a190933e5c238b57e05814acc154d55928edf02d298cc82f4fac0313fei0",
+      "sha256": "5cbda29ea5096ac9404c59c77493a2f467d0eb4a27f16c750b61fc0d888dd716"
+    },
+    {
+      "key": "jszip-3.10.1",
+      "id": "372c5388030820daed356d25d7a1218d0b88d78a6d051d27c91d0f25ac4c3c5ei0",
+      "sha256": "acc7e41455a80765b5fd9c7ee1b8078a6d160bbbca455aeae854de65c947d59e"
+    },
+    {
+      "key": "d3-7.8.5",
+      "id": "dcc251660ca7ce393f94c812642d214d8d2c440f314b542a8059c18404c57bf0i2",
+      "sha256": "d6b03aefc9f6c44c7bc78713679c78c295028fa914319119e5cc4b4954855b1c"
+    }
+  ],
+  "scope": "Owned loopback source with exact pinned public library bytes; no mainnet wallet or spending; production publication still requires separate qualification."
+}

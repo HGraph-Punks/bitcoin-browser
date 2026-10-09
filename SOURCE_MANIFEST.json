@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "project": "satoshi-browser",
   "version": "0.2.0-beta.1",
-  "fileCount": 651,
+  "fileCount": 655,
   "files": [
     {
       "path": ".editorconfig",
@@ -261,8 +261,8 @@
     },
     {
       "path": "docs/PUBLIC_ALPHA_RELEASE.md",
-      "bytes": 3266,
-      "sha256": "5f94ad75d027dd493ae2b9f43303db596f6751bd28c79067b7af8ae2e02ece09"
+      "bytes": 5661,
+      "sha256": "151cc7c15eea4d7044d10b3b83354d4bb2a7ea980b7e4d5404d3f4d945277838"
     },
     {
       "path": "docs/PUBLIC_BETA_SIGNING.md",
@@ -390,9 +390,24 @@
       "sha256": "18cb2303c7ec3a985941dba0da0bae275723ca23a8e5ba9d77ba92752f8304a2"
     },
     {
+      "path": "docs/evidence/creator-package-integrity-0.2.0-beta.1.json",
+      "bytes": 554,
+      "sha256": "dad9f985a83757469952ae74b38e80ecbcdcc9e226ae92c88f6d0f4169af8f24"
+    },
+    {
+      "path": "docs/evidence/creator-package-integrity-macos-x64-0.2.0-beta.1.json",
+      "bytes": 554,
+      "sha256": "7da5379e46e0d0a7ea3d0cbc40f9c4277d3d3151bb15ea8e3a6f605e23d3c211"
+    },
+    {
       "path": "docs/evidence/creator-package-integrity.json",
       "bytes": 552,
       "sha256": "525debf0752d559eec361dbe83bd605c3292b1a7f5529be6f42ca26a04ca1bcd"
+    },
+    {
+      "path": "docs/evidence/creator-packaged-0.2.0-beta.1.json",
+      "bytes": 12492,
+      "sha256": "83538d86d69b2aab9ea353646c6be8a7cbcbd9b152eeeb58536fb215b72e15b1"
     },
     {
       "path": "docs/evidence/creator-packaged-regtest.json",
@@ -503,6 +518,11 @@
       "path": "docs/evidence/home-native.json",
       "bytes": 2136,
       "sha256": "0cd8a36de1affa27b39de7ebc0a3b7773be795bd156b6ad20b1f47291fd224be"
+    },
+    {
+      "path": "docs/evidence/home-packaged-0.2.0-beta.1.json",
+      "bytes": 2233,
+      "sha256": "e346a826069e56d6c2c0d6cef5fffc8a7cf40a0f0a0ebac0e0e52e6b4200524b"
     },
     {
       "path": "docs/evidence/home-packaged.json",

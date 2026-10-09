@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "version": "0.2.0-beta.1",
+  "packaged": true,
+  "driver": "renderer-cdp-with-main-inspection-disabled",
+  "archiveSha256": "4641feeb5099dd4beb2f5d6f3d246361e116624b18184934f9ab67dc698f7ab2",
+  "at": "2026-10-09T04:03:35.928Z",
+  "localEvidence": "/private/tmp/btc-home-native-V8SZ2f",
+  "checks": [
+    "Real native WebGL shaders assemble the bundled logo and enter ambient animation without GL errors",
+    "Pause freezes frames and time; Resume advances; Replay restarts assembly",
+    "Examples focus and prefill search without navigation; four explicit discovery actions",
+    "Animation suspends offscreen and resumes when visible",
+    "Reduced motion releases WebGL, presents the real logo, and responds to live preference changes",
+    "Navigating away disposes the previous scene and native Home creates a fresh one",
+    "Homepage Create opens the dedicated native 24-starter creator and Browse returns to the browser",
+    "Native light theme and narrow layouts retain search before decoration without horizontal overflow",
+    "Actual WebGL context loss switches to the static logo while keeping search usable",
+    "Unavailable WebGL has a static bundled fallback with usable search",
+    "Returning users receive a welcome back and recent places/bookmarks before discovery cards"
+  ],
+  "initial": {
+    "state": "ambient",
+    "frames": 89,
+    "elapsed": 3.366505999999998,
+    "particles": 2257,
+    "renderer": "webgl",
+    "disposed": false
+  },
+  "screenshots": [
+    "/private/tmp/btc-home-native-V8SZ2f/home-desktop.png",
+    "/private/tmp/btc-home-native-V8SZ2f/home-discovery.png",
+    "/private/tmp/btc-home-native-V8SZ2f/home-assembling.png",
+    "/private/tmp/btc-home-native-V8SZ2f/home-reduced-motion.png",
+    "/private/tmp/btc-home-native-V8SZ2f/home-light.png",
+    "/private/tmp/btc-home-native-V8SZ2f/home-narrow.png",
+    "/private/tmp/btc-home-native-V8SZ2f/home-small.png",
+    "/private/tmp/btc-home-native-V8SZ2f/home-context-fallback.png",
+    "/private/tmp/btc-home-native-V8SZ2f/home-returning.png"
+  ],
+  "rendererErrors": [],
+  "scope": "Owned fresh and returning profiles; native homepage and Create navigation only. No wallet or financial transaction test."
+}
