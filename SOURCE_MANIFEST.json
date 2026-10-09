@@ -1481,8 +1481,8 @@
     },
     {
       "path": "src/creator/tests/metaprotocols.test.ts",
-      "bytes": 5689,
-      "sha256": "c5d6743e37378c61c4a487fb3b288c4b205d9da5163ecc7e0740b9318618a9e4"
+      "bytes": 5765,
+      "sha256": "092c733f970a8a9e9b41e967bee091839019136883ec98a985bd515402f1888d"
     },
     {
       "path": "src/creator/tests/native-preview.test.ts",
@@ -1491,8 +1491,8 @@
     },
     {
       "path": "src/creator/tests/ordinals-creators.test.ts",
-      "bytes": 7355,
-      "sha256": "e91ccf7f4c805d6e98f1e36fd9574f07a02e784311b1fcf75de00efa65ba8c92"
+      "bytes": 7441,
+      "sha256": "e1b05e6a3a6a82b2856bfa07ba688ae1081c72c2113759001c6a9d1f65dee56a"
     },
     {
       "path": "src/creator/tests/production-inscription.test.ts",
